@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/view/signup_selection.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/view/intro/intro_content.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -61,21 +61,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   height: 50,
                 ),
                 onLastPage
-                    ? GestureDetector(
-                        onTap: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const HomeScreen();
-                          }));
+                    ? CustomButton(
+                        text: 'Get Started',
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, '/signupSelection');
                         },
-                        child: Container(
-                          alignment: Alignment.center,
-                          //padding: const EdgeInsets.all(8),
-                          color: Colors.green,
-                          width: 170,
-                          height: 40,
-                          child: const Text('Get Started'),
-                        ))
+                      )
                     : Align(
                         alignment: const Alignment(1, 1),
                         child: GestureDetector(
@@ -95,46 +87,3 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     ));
   }
 }
-
-
-// class _IntroductionScreenState extends State<IntroductionScreen> {
-//   int currentPage = 0;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return PageView(
-//       controller: PageController(initialPage: currentPage),
-//       children: [
-//         // Introduction screen 1
-//         Scaffold(
-//           appBar: AppBar(
-//             title: Text('Introduction Screen 1'),
-//           ),
-//           body: Center(
-//             child: Text('This is the first introduction screen.'),
-//           ),
-//         ),
-
-//         // Introduction screen 2
-//         Scaffold(
-//           appBar: AppBar(
-//             title: Text('Introduction Screen 2'),
-//           ),
-//           body: Center(
-//             child: Text('This is the second introduction screen.'),
-//           ),
-//         ),
-
-//         // Introduction screen 3
-//         Scaffold(
-//           appBar: AppBar(
-//             title: Text('Introduction Screen 3'),
-//           ),
-//           body: Center(
-//             child: Text('This is the third and final introduction screen.'),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }

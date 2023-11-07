@@ -17,9 +17,7 @@ class IntroPage extends StatelessWidget {
         child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const SizedBox(
-          height: 90,
-        ),
+        const SizedBox(height: 90),
         Image.asset(imagePath),
         const SizedBox(
           height: 40,

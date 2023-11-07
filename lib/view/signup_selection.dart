@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/view/client_login/login.dart';
+import 'package:pragyan_cdc/constants/styles/styles.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class SignupSelection extends StatelessWidget {
+  const SignupSelection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +13,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text(
-              'Welcome Back!',
-              style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ),
+            const Text('Welcome Back!', style: kTextStyle2),
             const SizedBox(
               height: 30,
             ),
@@ -33,11 +27,7 @@ class HomeScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return const ClientLogin();
-                  },
-                ));
+                Navigator.pushNamed(context, '/clientLogin');
               },
               child: Container(
                 decoration: const BoxDecoration(
@@ -66,8 +56,7 @@ class HomeScreen extends StatelessWidget {
               leading: Image.asset('assets/images/Group 10128.png'),
               title: const Text(
                 'Therapists Only',
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                style: khintTextStyle,
               ),
               trailing: const CircleAvatar(
                   backgroundColor: Colors.white,
@@ -80,8 +69,7 @@ class HomeScreen extends StatelessWidget {
               leading: Image.asset('assets/images/Vector (1).png'),
               title: const Text(
                 'Admin Only',
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                style: khintTextStyle,
               ),
               trailing: const CircleAvatar(
                   backgroundColor: Colors.white,
