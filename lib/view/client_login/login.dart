@@ -3,9 +3,63 @@ import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/view/dashboard/dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ClientLogin extends StatelessWidget {
+class ClientLogin extends StatefulWidget {
   const ClientLogin({super.key});
+
+  @override
+  State<ClientLogin> createState() => _ClientLoginState();
+}
+
+class _ClientLoginState extends State<ClientLogin> {
+  final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn();
+  }
+
+  void _checkIfLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedMobile = prefs.getString('mobile');
+    String? savedPassword = prefs.getString('password');
+
+    if (savedMobile != null && savedPassword != null) {
+      _mobileController.text = savedMobile;
+      _passwordController.text = savedPassword;
+
+      // You can now proceed with authentication if needed.
+      _login();
+    }
+  }
+
+  void _login() {
+    // Implement your authentication logic here.
+    // Once authenticated, you can save the credentials.
+    String mobile = _mobileController.text;
+    String password = _passwordController.text;
+
+    if ((mobile == '9876543210') && (password == 'user123')) {
+      _saveCredentials(mobile, password);
+    }
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) {
+        return const DashBoard();
+      },
+    ));
+
+    // Add the navigation logic here.
+  }
+
+  void _saveCredentials(String mobile, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('mobile', mobile);
+    await prefs.setString('password', password);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +84,11 @@ class ClientLogin extends StatelessWidget {
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),
                     const Text('Login to access your account.'),
-                    const CustomTextFormField(
+                    CustomTextFormField(
+                      controller: _mobileController,
                       hintText: 'Mobile Number',
                       keyboardType: TextInputType.phone,
-                      iconData: Icon(Icons.phone),
+                      iconData: const Icon(Icons.phone),
                     ),
                     CustomTextFormField(
                       obscureText: true,
@@ -41,7 +96,9 @@ class ClientLogin extends StatelessWidget {
                       iconData: IconButton(
                         icon: const Icon(Icons.visibility_off),
                         onPressed: () {
-                          const PasswordToggle();
+                          PasswordToggle(
+                            controller: _passwordController,
+                          );
                         },
                       ),
                     ),
@@ -52,7 +109,11 @@ class ClientLogin extends StatelessWidget {
                         style: kTextStyle1,
                       ),
                     ),
-                    CustomButton(text: 'Login', onPressed: () {}),
+                    CustomButton(
+                        text: 'Login',
+                        onPressed: () {
+                          _login();
+                        }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -80,7 +141,9 @@ class ClientLogin extends StatelessWidget {
 }
 
 class PasswordToggle extends StatefulWidget {
-  const PasswordToggle({super.key});
+  final TextEditingController controller;
+
+  const PasswordToggle({super.key, required this.controller});
 
   @override
   _PasswordToggleState createState() => _PasswordToggleState();
@@ -99,6 +162,7 @@ class _PasswordToggleState extends State<PasswordToggle> {
   Widget build(BuildContext context) {
     return TextField(
       obscureText: _obscureText,
+      controller: widget.controller, // Pass the controller here.
       decoration: InputDecoration(
         labelText: 'Password',
         suffixIcon: IconButton(

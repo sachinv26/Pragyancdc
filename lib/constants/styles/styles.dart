@@ -15,6 +15,11 @@ const khintTextStyle =
     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 15);
 const kTextStyle2 =
     TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 24);
+const kTextStyle3 = TextStyle(
+  color: Colors.grey,
+  fontSize: 13,
+  fontWeight: FontWeight.bold,
+);
 
 SizedBox kheight10 = const SizedBox(
   height: 10,

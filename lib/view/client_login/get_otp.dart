@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/view/client_login/login.dart';
 
 class GetOtp extends StatelessWidget {
   const GetOtp({super.key});
@@ -67,7 +68,25 @@ class GetOtp extends StatelessWidget {
             ),
             kheight60,
             kheight60,
-            const CustomButton(text: 'Verify')
+            // const CustomButton(text: 'Verify'),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) {
+                    return const ClientLogin();
+                  },
+                ));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.green, // Set the background color directly here
+                minimumSize: const Size(170, 40),
+              ),
+              child: const Text(
+                'Verify',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
           ],
         ),
       ),
