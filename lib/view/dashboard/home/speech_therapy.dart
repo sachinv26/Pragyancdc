@@ -3,8 +3,14 @@ import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/view/dashboard/home/appointment/schedule_appointment_time.dart';
 
-class SpeechTherapy extends StatelessWidget {
-  SpeechTherapy({super.key});
+class SpeechTherapy extends StatefulWidget {
+  const SpeechTherapy({super.key});
+
+  @override
+  State<SpeechTherapy> createState() => _SpeechTherapyState();
+}
+
+class _SpeechTherapyState extends State<SpeechTherapy> {
   List<Map<String, String>> therapistData = [
     {
       'name': 'Dr. Amrita Rao',
@@ -19,6 +25,10 @@ class SpeechTherapy extends StatelessWidget {
       'category': 'ABA Therapy/Behaviour Therapy',
     },
   ];
+
+  String _selectedRepeatOption = 'None';
+
+  final List<String> _selectedChildren = [];
 
   @override
   Widget build(BuildContext context) {
@@ -78,14 +88,117 @@ class SpeechTherapy extends StatelessWidget {
             // )
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
+                showDialog(
+                  context: context,
                   builder: (context) {
-                    return const ScheduleAppointment();
+                    return AlertDialog(
+                      title: const Text(
+                        'Schedule for:',
+                        style: kTextStyle1,
+                      ),
+                      content: SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          // crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8.0),
+                            CheckboxListTile(
+                              title: const Text('1. Arun '),
+                              // value: _selectedChildren.contains('Arun'),
+                              value: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value!) {
+                                    _selectedChildren.add(' Arun');
+                                  } else {
+                                    _selectedChildren.remove('Arun');
+                                  }
+                                });
+                              },
+                            ),
+                            CheckboxListTile(
+                              title: const Text('2. Amrita'),
+                              value: false,
+                              //  value: _selectedChildren.contains('Amrita'),
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value!) {
+                                    _selectedChildren.add('Amrita ');
+                                  } else {
+                                    _selectedChildren.remove('Amrita');
+                                  }
+                                });
+                              },
+                            ),
+                            // const Text(
+                            //   'Repeat Booking',
+                            //   style: kTextStyle1,
+                            // ),
+                            DropdownButton<String>(
+                              value: _selectedRepeatOption,
+                              items: const [
+                                DropdownMenuItem(
+                                    value: 'None',
+                                    child: Text(
+                                      'Repeat Booking',
+                                    )),
+                                DropdownMenuItem(
+                                    value: '4 Weeks', child: Text('4 Weeks')),
+                                DropdownMenuItem(
+                                    value: '8 Weeks', child: Text('8 Weeks')),
+                                DropdownMenuItem(
+                                    value: '12 Weeks', child: Text('12 Weeks')),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRepeatOption = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16.0),
+
+                            // Add more CheckboxListTile widgets for additional children
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                                return const ScheduleAppointment();
+                              },
+                            ));
+                            // Handle schedule button press here
+                            // print('Schedule clicked with options:');
+                            // print('Repeat Option: $_selectedRepeatOption');
+                            // print('Selected Children: $_selectedChildren');
+                            //Navigator.pop(context);
+                          },
+                          child: const Text('Done'),
+                        ),
+                      ],
+                    );
                   },
-                ));
+                );
               },
+              //  {
+              //   Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) {
+              //       return const ScheduleAppointment();
+              //     },
+              //   ));
+              // },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Background color (constant)
+                // backgroundColor: Colors.green, // Background color (constant)
                 minimumSize:
                     const Size(170, 40), // Width and height of the button
               ),

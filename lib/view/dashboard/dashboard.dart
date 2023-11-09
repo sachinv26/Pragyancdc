@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/view/appointments.dart/my_appointment.dart';
 import 'package:pragyan_cdc/view/dashboard/home/homescreen.dart';
 
 class DashBoard extends StatefulWidget {
@@ -13,7 +14,7 @@ class _DashBoardState extends State<DashBoard> {
 
   final List<Widget> pages = [
     const HomeScreen(),
-    const Center(child: Text('My Appointments')),
+    const AppointmentScreen(),
     const Center(child: Text('Support')),
     const Center(child: Text('Wallet')),
   ];
@@ -27,46 +28,6 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/cute_little_girl.png'),
-            ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(width: 10),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Arun',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    'Gowtham',
-                    style: TextStyle(fontSize: 12, color: Colors.black),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                ),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
         body: pages[_currentIndex],
         bottomNavigationBar: Theme(
           data: ThemeData(
