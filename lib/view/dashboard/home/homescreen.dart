@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/view/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/view/dashboard/home/location_search.dart';
+import 'package:pragyan_cdc/view/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/view/dashboard/home/speech_therapy.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,6 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -43,7 +47,13 @@ class HomeScreen extends StatelessWidget {
                 Icons.notifications,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return const NotificationScreen();
+                  },
+                ));
+              },
             ),
           ],
         ),
@@ -262,6 +272,130 @@ class ServiceItem extends StatelessWidget {
                 maxLines: 2, // Optional: Allow maximum 2 lines for the text
                 overflow: TextOverflow.ellipsis, // Optional: Handle overflow
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Drawer Header
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 25,
+                    backgroundImage: AssetImage(
+                        'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png'),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Dr. Amrita Rao', style: kTextStyle1),
+                      kheight10,
+                      const Text('Speech & Language Therapy',
+                          style: TextStyle(color: Colors.black)),
+                      kheight10,
+                      const Text('AmritaraoSpeech05@gmail.com',
+                          style: TextStyle(color: Colors.black)),
+                      kheight10,
+                      const Text('9876543210',
+                          style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Separation Line
+            //   const Divider(),
+            // Edit Profile
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit Profile'),
+              onTap: () {
+                // Handle Edit Profile
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const EditProfile()));
+              },
+            ),
+            // List of items
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About Pragyan'),
+              onTap: () {
+                // Handle About Pragyan
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Get Help & Support'),
+              onTap: () {
+                // Handle Get Help & Support
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: const Text('History'),
+              onTap: () {
+                // Handle History
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.payment),
+              title: const Text('Payment issue'),
+              onTap: () {
+                // Handle Payment issue
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Setting'),
+              onTap: () {
+                // Handle Setting
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.feedback),
+              title: const Text('Feedback'),
+              onTap: () {
+                // Handle Feedback
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: const Text('Terms and Conditions'),
+              onTap: () {
+                // Handle Terms and Conditions
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_add),
+              title: const Text('Add Child'),
+              onTap: () {
+                // Handle Add Child
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                // Handle Logout
+              },
             ),
           ],
         ),
