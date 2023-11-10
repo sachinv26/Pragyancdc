@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final Widget? iconData;
   final double width;
   final double height;
+  final Widget? prefixIcon;
 
   const CustomTextFormField(
       {Key? key,
@@ -19,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
       this.obscureText = false,
       this.iconData,
       this.height = 55.0,
+      this.prefixIcon,
       this.width = double.infinity})
       : super(key: key);
 
@@ -36,7 +38,8 @@ class CustomTextFormField extends StatelessWidget {
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(10),
             hintText: hintText,
-            hintStyle: khintTextStyle, // Change the color as needed
+            hintStyle: khintTextStyle,
+            prefixIcon: prefixIcon, // Change the color as needed
             suffixIcon: iconData,
             border: InputBorder.none,
             constraints: BoxConstraints(maxHeight: height, maxWidth: width)),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/view/appointments.dart/my_appointment.dart';
 import 'package:pragyan_cdc/view/dashboard/home/homescreen.dart';
+import 'package:pragyan_cdc/view/support/support.dart';
+import 'package:pragyan_cdc/view/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -15,8 +17,8 @@ class _DashBoardState extends State<DashBoard> {
   final List<Widget> pages = [
     const HomeScreen(),
     const AppointmentScreen(),
-    const Center(child: Text('Support')),
-    const Center(child: Text('Wallet')),
+    const SupportScreen(),
+    const WalletScreen(),
   ];
 
   void _onItemTapped(int index) {
