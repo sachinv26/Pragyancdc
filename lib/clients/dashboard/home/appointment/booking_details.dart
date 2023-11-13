@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/home/payment/payment_modes.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/payment/payment_modes.dart';
 
 class BookingDetails extends StatelessWidget {
   const BookingDetails({super.key});

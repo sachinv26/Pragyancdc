@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/home/edit_profile.dart';
-import 'package:pragyan_cdc/view/dashboard/home/location_search.dart';
-import 'package:pragyan_cdc/view/dashboard/home/notification_screen.dart';
-import 'package:pragyan_cdc/view/dashboard/home/speech_therapy.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

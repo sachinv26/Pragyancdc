@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/support/chat_screen.dart';
+import 'package:pragyan_cdc/clients/support/chat_screen.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/view/appointments.dart/my_appointment.dart';
-import 'package:pragyan_cdc/view/dashboard/home/homescreen.dart';
-import 'package:pragyan_cdc/view/support/support.dart';
-import 'package:pragyan_cdc/view/wallet/wallet_screen.dart';
+import 'package:pragyan_cdc/clients/appointments.dart/my_appointment.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
+import 'package:pragyan_cdc/clients/support/support.dart';
+import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});

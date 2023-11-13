@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/view/client_login/get_otp.dart';
-import 'package:pragyan_cdc/view/client_login/login.dart';
-import 'package:pragyan_cdc/view/client_login/signup.dart';
-import 'package:pragyan_cdc/view/client_login/signup2.dart';
-import 'package:pragyan_cdc/view/signup_selection.dart';
-import 'package:pragyan_cdc/view/intro/intro_outline.dart';
-import 'package:pragyan_cdc/view/splash.dart';
+import 'package:pragyan_cdc/clients/client_login/get_otp.dart';
+import 'package:pragyan_cdc/clients/client_login/login.dart';
+import 'package:pragyan_cdc/clients/client_login/signup.dart';
+import 'package:pragyan_cdc/clients/client_login/signup2.dart';
+import 'package:pragyan_cdc/clients/signup_selection.dart';
+import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
+import 'package:pragyan_cdc/clients/splash.dart';
 
 void main() {
   runApp(const Pragyan());

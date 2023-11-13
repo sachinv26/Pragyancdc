@@ -1,66 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/dashboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pragyan_cdc/therapists/view/dashboard.dart';
 
-class ClientLogin extends StatefulWidget {
-  const ClientLogin({super.key});
+class TherapistLogin extends StatefulWidget {
+  const TherapistLogin({super.key});
 
   @override
-  State<ClientLogin> createState() => _ClientLoginState();
+  State<TherapistLogin> createState() => _TherapistLoginState();
 }
 
-class _ClientLoginState extends State<ClientLogin> {
+class _TherapistLoginState extends State<TherapistLogin> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _checkIfLoggedIn();
-  }
-
-  void _checkIfLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedMobile = prefs.getString('mobile');
-    String? savedPassword = prefs.getString('password');
-
-    if (savedMobile != null && savedPassword != null) {
-      _mobileController.text = savedMobile;
-      _passwordController.text = savedPassword;
-
-      // You can now proceed with authentication if needed.
-      _login();
-    }
-  }
-
-  void _login() {
-    // Implement your authentication logic here.
-    // Once authenticated, you can save the credentials.
-    String mobile = _mobileController.text;
-    String password = _passwordController.text;
-
-    if ((mobile == '9876543210') && (password == 'user123')) {
-      _saveCredentials(mobile, password);
-    }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) {
-        return const DashBoard();
-      },
-    ));
-
-    // Add the navigation logic here.
-  }
-
-  void _saveCredentials(String mobile, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mobile', mobile);
-    await prefs.setString('password', password);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +38,7 @@ class _ClientLoginState extends State<ClientLogin> {
                       style: TextStyle(
                           color: Colors.green, fontWeight: FontWeight.bold),
                     ),
-                    const Text('Login to access your account.'),
+                    const Text('Login to access your therapist account.'),
                     CustomTextFormField(
                       controller: _mobileController,
                       hintText: 'Mobile Number',
@@ -112,7 +67,12 @@ class _ClientLoginState extends State<ClientLogin> {
                     CustomButton(
                         text: 'Login',
                         onPressed: () {
-                          _login();
+                          // if (_mobileController.text == '1234' &&
+                          //     _passwordController.text == '1234') {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => TherapistDashBoard()));
+                          // }
+                          //  _login();
                         }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -137,41 +97,5 @@ class _ClientLoginState extends State<ClientLogin> {
         )
         //assets\images\2 94701.png
         );
-  }
-}
-
-class PasswordToggle extends StatefulWidget {
-  final TextEditingController controller;
-
-  const PasswordToggle({super.key, required this.controller});
-
-  @override
-  _PasswordToggleState createState() => _PasswordToggleState();
-}
-
-class _PasswordToggleState extends State<PasswordToggle> {
-  bool _obscureText = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      obscureText: _obscureText,
-      controller: widget.controller, // Pass the controller here.
-      decoration: InputDecoration(
-        labelText: 'Password',
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-          ),
-          onPressed: _togglePasswordVisibility,
-        ),
-      ),
-    );
   }
 }

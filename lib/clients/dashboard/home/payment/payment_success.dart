@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/dashboard.dart';
+import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 
 class SuccessfulPayment extends StatelessWidget {
   const SuccessfulPayment({super.key});

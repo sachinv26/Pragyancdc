@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
-import 'package:pragyan_cdc/view/intro/intro_content.dart';
+import 'package:pragyan_cdc/clients/intro/intro_content.dart';
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

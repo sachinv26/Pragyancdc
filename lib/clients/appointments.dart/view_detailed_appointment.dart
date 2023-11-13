@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/home/appointment/booking_details.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/booking_details.dart';
 
 class AppointmentInfo extends StatelessWidget {
   const AppointmentInfo({super.key});

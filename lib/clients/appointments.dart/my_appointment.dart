@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/appointments.dart/view_detailed_appointment.dart';
+import 'package:pragyan_cdc/clients/appointments.dart/view_detailed_appointment.dart';
 
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});

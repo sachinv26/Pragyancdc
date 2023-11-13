@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/home/appointment/schedule_appointment_time.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_appointment_time.dart';
 
 class SpeechTherapy extends StatefulWidget {
   const SpeechTherapy({super.key});

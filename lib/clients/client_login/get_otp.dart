@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/client_login/login.dart';
+import 'package:pragyan_cdc/clients/client_login/login.dart';
 
 class GetOtp extends StatelessWidget {
   const GetOtp({super.key});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/therapists/view/login.dart';
 
 class SignupSelection extends StatelessWidget {
   const SignupSelection({super.key});
@@ -52,18 +53,24 @@ class SignupSelection extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            ListTile(
-              leading: Image.asset('assets/images/Group 10128.png'),
-              title: const Text(
-                'Therapists Only',
-                style: khintTextStyle,
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const TherapistLogin()));
+              },
+              child: ListTile(
+                leading: Image.asset('assets/images/Group 10128.png'),
+                title: const Text(
+                  'Therapists Only',
+                  style: khintTextStyle,
+                ),
+                trailing: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 7,
+                    child: CircleAvatar(
+                      radius: 5,
+                    )),
               ),
-              trailing: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 7,
-                  child: CircleAvatar(
-                    radius: 5,
-                  )),
             ),
             ListTile(
               leading: Image.asset('assets/images/Vector (1).png'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/view/dashboard/home/appointment/book_appointment.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/book_appointment.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleAppointment extends StatefulWidget {
