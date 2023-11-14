@@ -30,38 +30,7 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      //   leading: const Padding(
-      //     padding: EdgeInsets.all(8.0),
-      //     child: CircleAvatar(
-      //       backgroundImage: AssetImage(
-      //           'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png'),
-      //     ),
-      //   ),
-      //   title: const Column(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       Text(
-      //         'Amrita Rao',
-      //         style: kTextStyle1,
-      //       ),
-      //       // You can add more details here, like the therapist's designation or status.
-      //     ],
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(
-      //         Icons.notifications,
-      //         color: Colors.black,
-      //       ),
-      //       onPressed: () {
-      //         // Handle notification icon press.
-      //       },
-      //     ),
-      //   ],
-      // ),
+      //
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const [

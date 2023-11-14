@@ -30,3 +30,9 @@ SizedBox kheight30 = const SizedBox(
 SizedBox kheight60 = const SizedBox(
   height: 60,
 );
+SizedBox kwidth10 = const SizedBox(
+  width: 10,
+);
+SizedBox kwidth30 = const SizedBox(
+  width: 30,
+);
