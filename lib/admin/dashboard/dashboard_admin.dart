@@ -15,9 +15,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   final List<Widget> pages = [
     const AdminHome(),
-    const Center(
-      child: Text('My Appointment'),
-    ),
     const SupportScreen(),
     const WalletScreen(),
   ];
@@ -42,10 +39,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Appointments',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),

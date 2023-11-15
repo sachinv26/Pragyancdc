@@ -228,28 +228,58 @@ class AdminAppointmentsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return const Card(
+        return Card(
           child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Location : HSR Brach'),
-                    Text('Child Name : Arun'),
-                    Text('Parents Name : Gowtham'),
-                    Text('visiting :Speech & Language Therapy'),
-                    Text('Therapy : Dr. Amrita Rao'),
-                    Text('Fees Amount : Paid'),
-                  ],
-                ),
-                Column(
-                  children: [Text('🕑 09:30 AM '), Text('📆 16/10/2023')],
-                )
-              ],
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Location : HSR Brach',
+                        style: kTextStyle4,
+                        // style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Text(
+                        'Child Name : Arun',
+                        style: kTextStyle4,
+                      ),
+                      Text(
+                        'Parents Name : Gowtham',
+                        style: kTextStyle4,
+                      ),
+                      Text(
+                        'visiting :Speech & Language Therapy',
+                        style: kTextStyle4,
+                      ),
+                      Text(
+                        'Therapy : Dr. Amrita Rao',
+                        style: kTextStyle4,
+                      ),
+                      Text(
+                        'Fees Amount : Paid',
+                        style: kTextStyle4,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        '🕑 09:30 AM ',
+                        style: kTextStyle4,
+                      ),
+                      Text(
+                        '📆 16/10/2023',
+                        style: kTextStyle4,
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         );

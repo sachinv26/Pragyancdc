@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/booked_client_details.dart';
@@ -86,12 +85,17 @@ class _TherapistHomeState extends State<TherapistHome>
             ),
           )),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                LocationSearch(),
+                const Text(
+                  'HSR Branch',
+                  style: kTextStyle1,
+                ),
+                //LocationSearch(),
                 kheight30, // Your widget for searching location
                 TabBar(
                   unselectedLabelColor: Colors.black,

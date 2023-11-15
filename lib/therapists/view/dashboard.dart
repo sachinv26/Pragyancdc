@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/therapists/view/home.dart';
+import 'package:pragyan_cdc/therapists/view/my_appointments.dart';
 
 class TherapistDashBoard extends StatefulWidget {
   const TherapistDashBoard({super.key});
@@ -14,9 +15,7 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
 
   final List<Widget> pages = [
     const TherapistHome(),
-    const Center(
-      child: Text('My Appointment'),
-    ),
+    const MyAppointments(),
     const Center(
       child: Text('Group Therapy'),
     ),

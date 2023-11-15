@@ -6,8 +6,10 @@ import 'package:pragyan_cdc/clients/client_login/signup2.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
+import 'package:pragyan_cdc/constants/size_config.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const Pragyan());
 }
 
@@ -16,8 +18,17 @@ class Pragyan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context); // Initialize SizeConfig
     return MaterialApp(
       theme: ThemeData(
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(
+              fontSize: 1.7 * SizeConfig.textMultiplier,
+            ),
+            bodySmall: TextStyle(
+              fontSize: 1.7 * SizeConfig.textMultiplier,
+            ),
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primarySwatch: Colors.green),
       title: 'Pragyan',
