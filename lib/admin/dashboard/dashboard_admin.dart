@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
-import 'package:pragyan_cdc/therapists/view/home.dart';
+import 'package:pragyan_cdc/admin/dashboard/admin_home.dart';
+import 'package:pragyan_cdc/clients/support/support.dart';
+import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
-class TherapistDashBoard extends StatefulWidget {
-  const TherapistDashBoard({super.key});
+class AdminDashboard extends StatefulWidget {
+  const AdminDashboard({super.key});
 
   @override
-  _TherapistDashBoardState createState() => _TherapistDashBoardState();
+  _AdminDashboardState createState() => _AdminDashboardState();
 }
 
-class _TherapistDashBoardState extends State<TherapistDashBoard> {
+class _AdminDashboardState extends State<AdminDashboard> {
   int _currentIndex = 0;
 
   final List<Widget> pages = [
-    const TherapistHome(),
+    const AdminHome(),
     const Center(
       child: Text('My Appointment'),
     ),
-    const Center(
-      child: Text('Group Therapy'),
-    ),
+    const SupportScreen(),
+    const WalletScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -31,10 +31,13 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(),
+      //drawer: const AppDrawer(),
       //
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        unselectedLabelStyle: const TextStyle(color: Colors.black),
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.green,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -42,14 +45,18 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event),
-            label: 'My Appointments',
+            label: 'Appointments',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Group Therapy',
+            icon: Icon(Icons.chat),
+            label: 'Support',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wallet),
+            label: 'Wallet',
           ),
         ],
-        currentIndex: 0, // Set the initial selected index.
+        currentIndex: _currentIndex, // Set the initial selected index.
         onTap: (index) {
           _onItemTapped(index);
           // Handle navigation to different tabs.

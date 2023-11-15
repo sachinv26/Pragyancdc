@@ -44,6 +44,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 text2: 'Every Child\'s Potential')
           ],
         ),
+        GestureDetector(
+          onTap: () {
+            _controller.jumpToPage(2);
+          },
+          child: const Text('Skip'),
+        ),
         Positioned(
             left: 0,
             right: 0,

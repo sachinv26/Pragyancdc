@@ -43,7 +43,7 @@ class _ClientLoginState extends State<ClientLogin> {
     String mobile = _mobileController.text;
     String password = _passwordController.text;
 
-    if ((mobile == '9876543210') && (password == 'user123')) {
+    if ((mobile == '1234') && (password == 'user123')) {
       _saveCredentials(mobile, password);
     }
     Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -93,6 +93,7 @@ class _ClientLoginState extends State<ClientLogin> {
                     CustomTextFormField(
                       obscureText: true,
                       hintText: 'Password',
+                      controller: _passwordController,
                       iconData: IconButton(
                         icon: const Icon(Icons.visibility_off),
                         onPressed: () {

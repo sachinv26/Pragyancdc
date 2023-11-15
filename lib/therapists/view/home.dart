@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/booked_client_details.dart';
 
@@ -73,6 +74,11 @@ class _TherapistHomeState extends State<TherapistHome>
                     color: Colors.black,
                   ),
                   onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return const NotificationScreen();
+                      },
+                    ));
                     // Handle notification icon press.
                   },
                 ),

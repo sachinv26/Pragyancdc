@@ -37,12 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
           // If the loader progress has reached 100%, navigate to the next step.
           // Cancel the timer when progress reaches 1.0
           timer.cancel();
-          if (hasSeenIntroduction) {
-            // If the user has seen the introduction pages before, navigate to the home page.
-            Navigator.pushReplacementNamed(context, '/home');
-          } else {
-            // If the user has not seen the introduction pages before, navigate to the introduction screens.
+          if (!hasSeenIntroduction) {
+            // If the user has not seen the introduction pages before,
+            // navigate to the introduction screens and update the flag.
             Navigator.pushReplacementNamed(context, '/introduction');
+            prefs.setBool('hasSeenIntroduction', true);
+          } else {
+            // If the user has seen the introduction pages before,
+            // navigate to the sign-up selection screen.
+            Navigator.pushReplacementNamed(context, '/signupSelection');
           }
         }
       });

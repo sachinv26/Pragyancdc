@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/admin/admin_login.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/login.dart';
 
@@ -72,18 +73,30 @@ class SignupSelection extends StatelessWidget {
                     )),
               ),
             ),
-            ListTile(
-              leading: Image.asset('assets/images/Vector (1).png'),
-              title: const Text(
-                'Admin Only',
-                style: khintTextStyle,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const AdminLogin();
+                    },
+                  ),
+                );
+              },
+              child: ListTile(
+                leading: Image.asset('assets/images/Vector (1).png'),
+                title: const Text(
+                  'Admin Only',
+                  style: khintTextStyle,
+                ),
+                trailing: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 7,
+                    child: CircleAvatar(
+                      radius: 5,
+                    )),
               ),
-              trailing: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 7,
-                  child: CircleAvatar(
-                    radius: 5,
-                  )),
             )
           ],
         ),
