@@ -172,7 +172,7 @@ class HoursSlot extends StatelessWidget {
   }
 }
 
-class TimeSlot extends StatelessWidget {
+class TimeSlot extends StatefulWidget {
   final String time;
   const TimeSlot({
     required this.time,
@@ -180,20 +180,40 @@ class TimeSlot extends StatelessWidget {
   });
 
   @override
+  State<TimeSlot> createState() => _TimeSlotState();
+}
+
+class _TimeSlotState extends State<TimeSlot> {
+  int selectedIndex = -1; // Default value is -1, indicating no selection
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(6, (index) {
-        return Container(
-          margin:
-              const EdgeInsets.only(right: 8), // Add margin between containers
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Text(
-            time,
+        bool isSelected = index == selectedIndex;
+
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              // Toggle selection on tap
+              selectedIndex = isSelected ? -1 : index;
+            });
+          },
+          child: Container(
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(5),
+              color: isSelected ? Colors.green : Colors.transparent,
+            ),
+            child: Text(
+              widget.time,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black,
+              ),
+            ),
           ),
         );
       }),

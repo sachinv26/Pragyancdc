@@ -28,27 +28,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             });
           },
           controller: _controller,
-          children: const [
+          children: [
             IntroPage(
               imagePath: 'assets/images/13918555_5385996.png',
               text1: 'We\'re here to support your',
               text2: 'child\'s growth and development.',
+              showSkipButton: true,
+              onSkipPressed: () {
+                Navigator.pushReplacementNamed(context, '/signupSelection');
+              },
+              controller: _controller, // Pass the PageController
             ),
-            IntroPage(
+            const IntroPage(
                 imagePath: 'assets/images/Group 10125.png',
                 text1: 'Unlocking Potential, Empowering Futures:',
                 text2: 'Children with Developmental Disorders'),
-            IntroPage(
+            const IntroPage(
                 imagePath: 'assets/images/Group.png',
                 text1: 'Accessible Excellence: Empowering',
                 text2: 'Every Child\'s Potential')
           ],
-        ),
-        GestureDetector(
-          onTap: () {
-            _controller.jumpToPage(2);
-          },
-          child: const Text('Skip'),
         ),
         Positioned(
             left: 0,

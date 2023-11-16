@@ -26,7 +26,7 @@ class _SpeechTherapyState extends State<SpeechTherapy> {
     },
   ];
 
-  String _selectedRepeatOption = 'None';
+  String selectedRepeatOption = 'No';
 
   final List<String> _selectedChildren = [];
 
@@ -131,30 +131,28 @@ class _SpeechTherapyState extends State<SpeechTherapy> {
                                 });
                               },
                             ),
-                            // const Text(
-                            //   'Repeat Booking',
-                            //   style: kTextStyle1,
-                            // ),
+                            kheight30,
+
+                            Text('Repeat Booking: $selectedRepeatOption'),
+                            kheight10,
                             DropdownButton<String>(
-                              value: _selectedRepeatOption,
-                              items: const [
-                                DropdownMenuItem(
-                                    value: 'None',
-                                    child: Text(
-                                      'Repeat Booking',
-                                    )),
-                                DropdownMenuItem(
-                                    value: '4 Weeks', child: Text('4 Weeks')),
-                                DropdownMenuItem(
-                                    value: '8 Weeks', child: Text('8 Weeks')),
-                                DropdownMenuItem(
-                                    value: '12 Weeks', child: Text('12 Weeks')),
-                              ],
-                              onChanged: (value) {
+                              value: selectedRepeatOption,
+                              onChanged: (String? newValue) {
                                 setState(() {
-                                  _selectedRepeatOption = value!;
+                                  selectedRepeatOption = newValue!;
                                 });
                               },
+                              items: <String>[
+                                'No',
+                                '4 weeks',
+                                '8 weeks',
+                                '12 weeks'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
                             const SizedBox(height: 16.0),
 
