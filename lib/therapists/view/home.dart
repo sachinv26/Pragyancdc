@@ -92,7 +92,7 @@ class _TherapistHomeState extends State<TherapistHome>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'HSR Branch',
+                  'Location: HSR Branch',
                   style: kTextStyle1,
                 ),
                 //LocationSearch(),
