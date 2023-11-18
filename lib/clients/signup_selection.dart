@@ -42,7 +42,7 @@ class SignupSelection extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'For a Client',
+                      'For Parent',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -62,7 +62,7 @@ class SignupSelection extends StatelessWidget {
               child: ListTile(
                 leading: Image.asset('assets/images/Group 10128.png'),
                 title: const Text(
-                  'Therapists Only',
+                  'Therapist Only',
                   style: khintTextStyle,
                 ),
                 trailing: const CircleAvatar(

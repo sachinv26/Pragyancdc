@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(),
+      drawer: const ClientAppDrawer(),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -280,6 +280,127 @@ class ServiceItem extends StatelessWidget {
   }
 }
 
+class ClientAppDrawer extends StatelessWidget {
+  const ClientAppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Drawer Header
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 25,
+                    backgroundImage:
+                        AssetImage('assets/images/cute_little_girl.png'),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Arun Gawtham', style: kTextStyle1),
+                      kheight10,
+                      const Text('arungawtham@gmail.com',
+                          style: TextStyle(color: Colors.black)),
+                      kheight10,
+                      const Text('9876543210',
+                          style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Separation Line
+            //   const Divider(),
+            // Edit Profile
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Edit Profile'),
+              onTap: () {
+                // Handle Edit Profile
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const EditProfile()));
+              },
+            ),
+            // List of items
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About Pragyan'),
+              onTap: () {
+                // Handle About Pragyan
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.help),
+              title: const Text('Get Help & Support'),
+              onTap: () {
+                // Handle Get Help & Support
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.history),
+              title: const Text('History'),
+              onTap: () {
+                // Handle History
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.payment),
+              title: const Text('Payment issue'),
+              onTap: () {
+                // Handle Payment issue
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Setting'),
+              onTap: () {
+                // Handle Setting
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.feedback),
+              title: const Text('Feedback'),
+              onTap: () {
+                // Handle Feedback
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: const Text('Terms and Conditions'),
+              onTap: () {
+                // Handle Terms and Conditions
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_add),
+              title: const Text('Add Child'),
+              onTap: () {
+                // Handle Add Child
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                // Handle Logout
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
@@ -383,13 +504,7 @@ class AppDrawer extends StatelessWidget {
                 // Handle Terms and Conditions
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person_add),
-              title: const Text('Add Child'),
-              onTap: () {
-                // Handle Add Child
-              },
-            ),
+
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),

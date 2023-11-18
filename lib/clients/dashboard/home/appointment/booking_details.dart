@@ -106,20 +106,20 @@ class BookingDetails extends StatelessWidget {
             //   ),
             // ),
             BookingInfo(),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Add Another Payment'),
-                    IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add_circle_outline))
-                  ],
-                ),
-              ),
-            ),
+            // Card(
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(left: 8.0),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         const Text('Add Another Payment'),
+            //         IconButton(
+            //             onPressed: () {},
+            //             icon: const Icon(Icons.add_circle_outline))
+            //       ],
+            //     ),
+            //   ),
+            // ),
             kheight10,
             const Text(
               'Select Payment Method',
