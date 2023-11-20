@@ -322,6 +322,7 @@ class ClientAppDrawer extends StatelessWidget {
             //   const Divider(),
             // Edit Profile
             ListTile(
+              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
               leading: const Icon(Icons.edit),
               title: const Text('Edit Profile'),
               onTap: () {
@@ -332,6 +333,7 @@ class ClientAppDrawer extends StatelessWidget {
             ),
             // List of items
             ListTile(
+              visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
               leading: const Icon(Icons.info),
               title: const Text('About Pragyan'),
               onTap: () {

@@ -39,6 +39,8 @@ class _AdminLoginState extends State<AdminLogin> {
   }
 
   void _login() {
+    // print(_mobileController.text);
+    // print(_passwordController.text);
     // Check if the entered username and password match the dummy values.
     if (_mobileController.text == 'admin' &&
         _passwordController.text == 'admin123') {

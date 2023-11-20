@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/admin/dashboard/admin_home.dart';
 import 'package:pragyan_cdc/clients/support/support.dart';
-import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -15,8 +14,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   final List<Widget> pages = [
     const AdminHome(),
+    const Center(
+      child: Text('Group Therapy'),
+    ),
     const SupportScreen(),
-    const WalletScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,12 +42,12 @@ class _AdminDashboardState extends State<AdminDashboard> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Support',
+            icon: Icon(Icons.group),
+            label: 'Group Therapy',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.wallet),
-            label: 'Wallet',
+            label: 'Support',
           ),
         ],
         currentIndex: _currentIndex, // Set the initial selected index.
