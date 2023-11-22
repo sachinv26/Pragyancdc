@@ -24,14 +24,14 @@ class _TherapistLoginState extends State<TherapistLogin> {
     String mobile = _mobileController.text;
     String password = _passwordController.text;
 
-    if ((mobile == '1234') && (password == 'dr123')) {
+    if ((mobile == '7777123456') && (password == 'dr123')) {
       _saveCredentials(mobile, password);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) {
+          return const TherapistDashBoard();
+        },
+      ));
     }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) {
-        return const TherapistDashBoard();
-      },
-    ));
 
     // Add the navigation logic here.
   }

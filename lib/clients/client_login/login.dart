@@ -43,14 +43,14 @@ class _ClientLoginState extends State<ClientLogin> {
     String mobile = _mobileController.text;
     String password = _passwordController.text;
 
-    if ((mobile == '1234') && (password == 'user123')) {
+    if ((mobile == '9876543210') && (password == 'user123')) {
       _saveCredentials(mobile, password);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) {
+          return const DashBoard();
+        },
+      ));
     }
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) {
-        return const DashBoard();
-      },
-    ));
 
     // Add the navigation logic here.
   }

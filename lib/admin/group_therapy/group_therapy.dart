@@ -13,12 +13,14 @@ class GroupTherapy extends StatefulWidget {
 class _GroupTherapyState extends State<GroupTherapy>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedRadioValue = 0;
+  final int _selectedRadioValue = -1;
+  List<bool> isChildSelected = List.generate(10, (index) => false);
+  List<bool> isTherapistSelected = List.generate(10, (index) => false);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -26,7 +28,7 @@ class _GroupTherapyState extends State<GroupTherapy>
     return Scaffold(
       appBar: customAppBar(title: 'Group Therapy'),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(children: [
           LocationSearch(),
           kheight10,
@@ -49,17 +51,16 @@ class _GroupTherapyState extends State<GroupTherapy>
                 Tab(
                   text: 'Therapists',
                 ),
-                Tab(
-                  text: 'Group Details',
-                )
+                // Tab(
+                //   text: 'Group Details',
+                // )
               ]),
           Expanded(
               child: TabBarView(controller: _tabController, children: [
             Container(
-              margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               child: ListView.builder(
-                itemCount: 8,
+                itemCount: 10,
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
@@ -74,12 +75,13 @@ class _GroupTherapyState extends State<GroupTherapy>
                       const SizedBox(
                         width: 50,
                       ),
-                      Radio(
-                        value: false,
-                        groupValue: _selectedRadioValue,
-                        onChanged: (value) => setState(() {
-                          _selectedRadioValue = value as int;
-                        }),
+                      Checkbox(
+                        value: isChildSelected[index],
+                        onChanged: (value) {
+                          setState(() {
+                            isChildSelected[index] = value!;
+                          });
+                        },
                       ),
                     ],
                   );
@@ -90,7 +92,7 @@ class _GroupTherapyState extends State<GroupTherapy>
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(10),
               child: ListView.builder(
-                itemCount: 8,
+                itemCount: 10,
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
@@ -105,27 +107,37 @@ class _GroupTherapyState extends State<GroupTherapy>
                       const SizedBox(
                         width: 50,
                       ),
-                      Radio(
-                        value: false,
-                        groupValue: _selectedRadioValue,
-                        onChanged: (value) => setState(() {
-                          _selectedRadioValue = value as int;
-                        }),
-                      ),
+                      Checkbox(
+                        value: isTherapistSelected[index],
+                        onChanged: (value) {
+                          setState(() {
+                            isTherapistSelected[index] = value!;
+                          });
+                        },
+                      )
                     ],
                   );
                 },
               ),
             ),
-            // const Center(
-            //   child: Text('Therapist Details'),
-            // ),
-            const Center(
-              child: Text('Group Details'),
-            ),
-          ]))
+          ])),
+          ElevatedButton(
+            onPressed: () {
+              // Add your logic for handling the completion here
+              // For example, you can print the selected items
+              print('Selected Children: $isChildSelected');
+              print('Selected Therapists: $isTherapistSelected');
+            },
+            child: const Text('Done'),
+          ),
         ]),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }

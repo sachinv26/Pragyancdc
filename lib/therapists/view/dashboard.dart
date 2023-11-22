@@ -29,7 +29,7 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(),
+      drawer: const TherapistAppDrawer(),
       //
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
