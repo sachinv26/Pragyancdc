@@ -42,12 +42,14 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
             children: [
               // Text('Selected day = ${today.toString().split(" ")[0]}'),
               Container(
-                padding: const EdgeInsets.all(8),
+                // padding: const EdgeInsets.all(8),
                 child: TableCalendar(
+                  calendarStyle:
+                      const CalendarStyle(cellMargin: EdgeInsets.all(8)),
                   firstDay: DateTime.utc(2023, 9, 1),
                   focusedDay: today,
                   lastDay: DateTime.utc(2029, 9, 1),
-                  rowHeight: 35,
+                  rowHeight: 38,
                   weekendDays: const [DateTime.sunday],
                   headerStyle: const HeaderStyle(
                       formatButtonVisible: false,
@@ -57,6 +59,25 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                   onDaySelected: _onDaySelected,
                   selectedDayPredicate: (day) => isSameDay(day, today),
                   calendarBuilders: CalendarBuilders(
+                    defaultBuilder: (context, day, focusedDay) {
+                      if (day.weekday == DateTime.sunday) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color:
+                                    const Color.fromARGB(255, 199, 135, 130)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              day.day.toString(),
+                              style: const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return null;
+                      }
+                    },
                     selectedBuilder: (context, date, events) {
                       return Container(
                         margin: const EdgeInsets.all(4),
@@ -150,10 +171,10 @@ class HoursSlot extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(6, (index) {
+      children: List.generate(7, (index) {
         return Container(
-          margin:
-              const EdgeInsets.only(right: 8), // Add margin between containers
+          // margin:
+          //     const EdgeInsets.only(right: 8), // Add margin between containers
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
@@ -162,6 +183,7 @@ class HoursSlot extends StatelessWidget {
           child: const Text(
             'Hours',
             style: TextStyle(
+              fontSize: 8,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -190,7 +212,7 @@ class _TimeSlotState extends State<TimeSlot> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(6, (index) {
+      children: List.generate(7, (index) {
         bool isSelected = index == selectedIndex;
 
         return GestureDetector(
@@ -201,7 +223,7 @@ class _TimeSlotState extends State<TimeSlot> {
             });
           },
           child: Container(
-            margin: const EdgeInsets.only(right: 8),
+            //  margin: const EdgeInsets.only(right: 8),
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
@@ -211,6 +233,8 @@ class _TimeSlotState extends State<TimeSlot> {
             child: Text(
               widget.time,
               style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
                 color: isSelected ? Colors.white : Colors.black,
               ),
             ),

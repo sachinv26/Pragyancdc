@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
@@ -331,6 +332,14 @@ class ClientAppDrawer extends StatelessWidget {
               // Handle Edit Profile
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => const EditProfile()));
+            },
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            leading: const FaIcon(FontAwesomeIcons.whatsapp),
+            title: const Text('Chat Support'),
+            onTap: () {
+              // Take to whatsapp
             },
           ),
           // List of items

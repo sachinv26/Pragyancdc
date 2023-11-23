@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/admin/dashboard/admin_home.dart';
 import 'package:pragyan_cdc/admin/group_therapy/group_therapy.dart';
-import 'package:pragyan_cdc/clients/support/support.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -16,7 +15,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
   final List<Widget> pages = [
     const AdminHome(),
     const GroupTherapy(),
-    const SupportScreen(),
   ];
 
   void _onItemTapped(int index) {

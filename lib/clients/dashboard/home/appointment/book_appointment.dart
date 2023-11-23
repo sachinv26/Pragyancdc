@@ -11,17 +11,18 @@ class BookAppointment extends StatelessWidget {
     return Scaffold(
       appBar: customAppBar(title: 'Book Appointment'),
       body: Padding(
-        padding: const EdgeInsets.only(left: 15, top: 35, right: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Your Appointment Timing',
+              'Note Your Appointment Timing:',
               style: kTextStyle1,
             ),
             kheight30,
             PhysicalModel(
               color: Colors.white,
-              elevation: 8,
+              elevation: 6,
               shadowColor: Colors.grey,
               borderRadius: BorderRadius.circular(20),
               child: Column(
@@ -75,97 +76,10 @@ class BookAppointment extends StatelessWidget {
                 ],
               ),
             ),
-//             Container(
-//               padding: const EdgeInsets.all(10),
-//               decoration: const BoxDecoration(
-//                 boxShadow: [
-//                   BoxShadow(
-
-//                       color: Colors.white,
-//                       spreadRadius: 2,
-//                       blurRadius: 5,
-//                       offset: Offset(0, 3))
-//                 ],
-//               ),
-
-// //
-//               child: Column(
-//                 children: [
-//                   kheight10,
-//                   const Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Text('📆 16/10/2023'),
-//                       Text('🕝 09:30 AM'),
-//                       Text('Morning')
-//                     ],
-//                   ),
-//                   kheight10,
-//                   const Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Text('📆 17/10/2023'),
-//                       Text('🕝 12:30 PM'),
-//                       Text('Morning')
-//                     ],
-//                   ),
-//                   kheight10,
-//                   const Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Text('📆 18/10/2023'),
-//                       Text('🕝 09:30 AM'),
-//                       Text('Morning')
-//                     ],
-//                   ),
-//                   kheight10,
-//                   const Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Text('📆 19/10/2023'),
-//                       Text('🕝 02:45 PM'),
-//                       Text('Afternoon')
-//                     ],
-//                   ),
-//                   kheight10,
-//                   const Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                     children: [
-//                       Text('📆 20/10/2023'),
-//                       Text('🕝 01:15 PM'),
-//                       Text('Morning')
-//                     ],
-//                   ),
-//                   kheight10,
-//                 ],
-//               ),
-//             ),
-//             kheight30,
-            // Card(
-            //   elevation: 3,
-            //   child: Column(
-            //     children: [
-            //       const Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //         children: [
-            //           Text('Repeat Booking'),
-            //           Icon(Icons.arrow_drop_down)
-            //         ],
-            //       ),
-            //       kheight10,
-            //       const Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //         children: [
-            //           Text('Add Group Therapy'),
-            //           Icon(Icons.arrow_drop_down)
-            //         ],
-            //       ),
-            //       kheight10,
-            //     ],
-            //   ),
-            // ),
             kheight60,
-            kheight30,
+//
+
+            kheight10,
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(

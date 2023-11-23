@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/appointments.dart/view_detailed_appointment.dart';
 
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
@@ -26,32 +25,51 @@ class AppointmentScreen extends StatelessWidget {
                         color: const Color.fromARGB(255, 221, 218, 218)),
                     borderRadius: const BorderRadius.all(Radius.circular(10))),
                 padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    const Text('Child & Parent Name:  Arun, Gowtham'),
-                    kheight10,
-                    const Text('visiting: Speech & Language Therapy'),
-                    kheight10,
-                    const Text('Location : HSR Branch'),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Booking : Pragyan75767'),
-                          OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.red),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const AppointmentInfo()));
-                              },
-                              child: const Text(
-                                'Modify',
-                                style: kTextStyle1,
-                              )),
-                        ])
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Child',
+                          style: kTextStyle1,
+                        ),
+                        kheight10,
+                        const Text(
+                          'Parent',
+                          style: kTextStyle1,
+                        ),
+                        kheight10,
+                        const Text(
+                          'Visiting',
+                          style: kTextStyle1,
+                        ),
+                        kheight10,
+                        const Text(
+                          'Location',
+                          style: kTextStyle1,
+                        ),
+                        kheight10,
+                        const Text(
+                          'Booking',
+                          style: kTextStyle1,
+                        )
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(': Arun'),
+                        kheight10,
+                        const Text(': Gawtham'),
+                        kheight10,
+                        const Text(': Speech & Language Therapy'),
+                        kheight10,
+                        const Text(': HSR Branch'),
+                        kheight10,
+                        const Text(': Pragyan75767')
+                      ],
+                    )
                   ],
                 ),
               );

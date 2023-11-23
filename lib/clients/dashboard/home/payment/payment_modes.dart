@@ -36,8 +36,12 @@ class PaymentModes extends StatelessWidget {
                         border: Border.all(
                             width: 1,
                             color: const Color.fromARGB(255, 207, 207, 207))),
-                    child: paymentMethod(
-                        " Card", "assets/images/credit-card_955066.png"),
+                    child: Column(children: [
+                      paymentMethod(
+                          " Card", "assets/images/credit-card_955066.png"),
+                      paymentMethod('HDFC',
+                          "assets/images/png-clipart-hdfc-logo-thumbnail-bank-logos-thumbnail.png")
+                    ]),
                   ),
                   kheight10,
                   Container(
