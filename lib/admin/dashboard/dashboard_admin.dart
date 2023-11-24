@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/admin/dashboard/admin_home.dart';
 import 'package:pragyan_cdc/admin/group_therapy/group_therapy.dart';
+import 'package:pragyan_cdc/admin/therapist_view/admin_therapist_view.dart.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -15,6 +17,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   final List<Widget> pages = [
     const AdminHome(),
     const GroupTherapy(),
+    const ViewTherapistList()
   ];
 
   void _onItemTapped(int index) {
@@ -43,8 +46,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
             label: 'Group Therapy',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.wallet),
-            label: 'Support',
+            icon: FaIcon(FontAwesomeIcons.userDoctor),
+            label: 'Therapists',
           ),
         ],
         currentIndex: _currentIndex, // Set the initial selected index.

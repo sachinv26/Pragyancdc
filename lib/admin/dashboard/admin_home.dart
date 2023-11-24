@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/admin/add_therapy/add_therapy.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/therapists/view/booked_client_details.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -45,23 +45,6 @@ class _AdminHomeState extends State<AdminHome>
                     color: Colors.black,
                     fontWeight: FontWeight.bold),
               ),
-
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) {
-                        return const NotificationScreen();
-                      },
-                    ));
-                    // Handle notification icon press.
-                  },
-                ),
-              ],
             ),
           )),
       body: Padding(
@@ -88,7 +71,7 @@ class _AdminHomeState extends State<AdminHome>
                       borderRadius: BorderRadius.circular(5)),
                   tabs: const <Widget>[
                     Tab(
-                      text: 'All Appointments',
+                      text: 'Today\'s Appointments',
                     ),
                     Tab(
                       text: 'Upcoming schedule',
@@ -123,57 +106,66 @@ class AdminAppointmentsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Location : HSR Brach',
-                        style: kTextStyle4,
-                        // style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      Text(
-                        'Child Name : Arun',
-                        style: kTextStyle4,
-                      ),
-                      Text(
-                        'Parents Name : Gowtham',
-                        style: kTextStyle4,
-                      ),
-                      Text(
-                        'visiting :Speech & Language Therapy',
-                        style: kTextStyle4,
-                      ),
-                      Text(
-                        'Therapy : Dr. Amrita Rao',
-                        style: kTextStyle4,
-                      ),
-                      Text(
-                        'Fees Amount : Paid',
-                        style: kTextStyle4,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        '🕑 09:30 AM ',
-                        style: kTextStyle4,
-                      ),
-                      Text(
-                        '📆 16/10/2023',
-                        style: kTextStyle4,
-                      )
-                    ],
-                  )
-                ],
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return const ClientDetails();
+              },
+            ));
+          },
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Location : HSR Brach',
+                          style: kTextStyle4,
+                          // style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          'Child Name : Arun',
+                          style: kTextStyle4,
+                        ),
+                        Text(
+                          'Parents Name : Gowtham',
+                          style: kTextStyle4,
+                        ),
+                        Text(
+                          'visiting :Speech & Language Therapy',
+                          style: kTextStyle4,
+                        ),
+                        Text(
+                          'Therapy : Dr. Amrita Rao',
+                          style: kTextStyle4,
+                        ),
+                        Text(
+                          'Fees Amount : Paid',
+                          style: kTextStyle4,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          '🕑 09:30 AM ',
+                          style: kTextStyle4,
+                        ),
+                        Text(
+                          '📆 16/10/2023',
+                          style: kTextStyle4,
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -221,8 +213,8 @@ class AdminDrawer extends StatelessWidget {
           ),
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.account_circle),
-            title: const Text('About'),
+            leading: const FaIcon(FontAwesomeIcons.whatsapp),
+            title: const Text('Chat Support'),
             onTap: () {
               // Navigator.push(
               //   context,
@@ -252,28 +244,28 @@ class AdminDrawer extends StatelessWidget {
               // );
             },
           ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.credit_card),
-            title: const Text('Payment Issue'),
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => PaymentIssuePage()),
-              // );
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => SettingsPage()),
-              // );
-            },
-          ),
+          // ListTile(
+          //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+          //   leading: const Icon(Icons.credit_card),
+          //   title: const Text('Payment Issue'),
+          //   onTap: () {
+          //     // Navigator.push(
+          //     //   context,
+          //     //   MaterialPageRoute(builder: (context) => PaymentIssuePage()),
+          //     // );
+          //   },
+          // ),
+          // ListTile(
+          //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+          //   leading: const Icon(Icons.settings),
+          //   title: const Text('Settings'),
+          //   onTap: () {
+          //     // Navigator.push(
+          //     //   context,
+          //     //   MaterialPageRoute(builder: (context) => SettingsPage()),
+          //     // );
+          //   },
+          // ),
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: const Icon(Icons.feedback),
@@ -297,17 +289,17 @@ class AdminDrawer extends StatelessWidget {
               // );
             },
           ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.add),
-            title: const Text('Add Therapy'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddTherapist()),
-              );
-            },
-          ),
+          // ListTile(
+          //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+          //   leading: const Icon(Icons.add),
+          //   title: const Text('Add Therapy'),
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => const AddTherapist()),
+          //     );
+          //   },
+          // ),
           kheight30,
           ListTile(
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),

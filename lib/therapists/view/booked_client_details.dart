@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/clients/feedback/feedback_form.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
@@ -13,8 +14,8 @@ class ClientDetails extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.all(5),
         padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
               elevation: 3,
@@ -78,19 +79,19 @@ class ClientDetails extends StatelessWidget {
                   )),
             ),
             kheight30,
-            const Text(
-              'Status:',
-              style: kTextStyle1,
-            ),
-            Card(
-              elevation: 3,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
-                height: 90,
-                child: const Text('Notes:'),
-              ),
-            ),
+            // const Text(
+            //   'Status:',
+            //   style: kTextStyle1,
+            // ),
+            // Card(
+            //   elevation: 3,
+            //   child: Container(
+            //     padding: const EdgeInsets.all(10),
+            //     width: double.infinity,
+            //     height: 90,
+            //     child: const Text('Notes:'),
+            //   ),
+            // ),
             FeesAmountRadioButtons(
               onChanged: (value) {},
               isPaid: true,
@@ -102,13 +103,67 @@ class ClientDetails extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 97, 93, 93),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      TextEditingController reasonController =
+                          TextEditingController();
+
+                      showGeneralDialog(
+                        transitionDuration: const Duration(milliseconds: 400),
+                        context: context,
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          return Container();
+                        },
+                        transitionBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return AlertDialog(
+                            title: const Text('Notes'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                TextField(
+                                  controller:
+                                      reasonController, // Use the controller to manage the text field
+                                  decoration: const InputDecoration(
+                                    labelText: 'Enter reason',
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(
+                                            context); // Close the popup
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // Handle submit logic
+                                        print(reasonController
+                                            .text); // Access the text field value using the controller
+                                        Navigator.pop(
+                                            context); // Close the popup
+                                      },
+                                      child: const Text('Submit'),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide.none),
+                          );
+                        },
+                      );
+                    },
                     child: const Text('Pending')),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) {
-                          return const FeedbackForm();
+                          return const HomeScreen();
                         },
                       ));
                     },

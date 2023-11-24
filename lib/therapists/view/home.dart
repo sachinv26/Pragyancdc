@@ -82,31 +82,30 @@ class _TherapistHomeState extends State<TherapistHome>
                 ],
               ),
 
-              // actions: [
-              //   IconButton(
-              //     icon: const Icon(
-              //       Icons.notifications,
-              //       color: Colors.black,
-              //     ),
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) {
-              //           return const NotificationScreen();
-              //         },
-              //       ));
-              //       // Handle notification icon press.
-              //     },
-              //   ),
+              // actions: const [
+              //   Text(
+              //     'HSR Branch',
+              //     style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+              //   )
               // ],
             ),
           )),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'HSR Branch',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
                 //LocationSearch(),
                 // Your widget for searching location
                 TabBar(
