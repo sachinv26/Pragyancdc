@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/booked_client_details.dart';
+import 'package:pragyan_cdc/therapists/view/widgets/upcoming_schedule.dart';
 
 class TherapistHome extends StatefulWidget {
   const TherapistHome({super.key});
@@ -13,6 +13,7 @@ class TherapistHome extends StatefulWidget {
 class _TherapistHomeState extends State<TherapistHome>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -26,6 +27,21 @@ class _TherapistHomeState extends State<TherapistHome>
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -66,22 +82,22 @@ class _TherapistHomeState extends State<TherapistHome>
                 ],
               ),
 
-              actions: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications,
-                    color: Colors.black,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) {
-                        return const NotificationScreen();
-                      },
-                    ));
-                    // Handle notification icon press.
-                  },
-                ),
-              ],
+              // actions: [
+              //   IconButton(
+              //     icon: const Icon(
+              //       Icons.notifications,
+              //       color: Colors.black,
+              //     ),
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) {
+              //           return const NotificationScreen();
+              //         },
+              //       ));
+              //       // Handle notification icon press.
+              //     },
+              //   ),
+              // ],
             ),
           )),
       body: Padding(
@@ -91,12 +107,8 @@ class _TherapistHomeState extends State<TherapistHome>
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Location: HSR Branch',
-                  style: kTextStyle1,
-                ),
                 //LocationSearch(),
-                kheight30, // Your widget for searching location
+                // Your widget for searching location
                 TabBar(
                   unselectedLabelColor: Colors.black,
                   indicatorColor: Colors.green,
@@ -123,10 +135,37 @@ class _TherapistHomeState extends State<TherapistHome>
                     controller: _tabController,
                     children: const <Widget>[
                       // Content for the "Today Appointments" tab
-                      AppointmentDetails()
-                      // Content for the "Upcoming schedule" tab
-                      ,
                       AppointmentDetails(),
+
+                      // Content for the "Upcoming schedule" tab
+                      UpcomingSchedule(),
+
+                      // Column(
+                      //   children: [
+                      //     // GestureDetector(
+                      //     //   onTap: () => _selectDate(context),
+                      //     //   child: Container(
+                      //     //     margin: const EdgeInsets.all(15),
+                      //     //     padding: const EdgeInsets.all(10.0),
+                      //     //     // decoration: BoxDecoration(
+                      //     //     //   border: Border.all(color: Colors.grey),
+                      //     //     //   borderRadius: BorderRadius.circular(5.0),
+                      //     //     // ),
+                      //     //     child: Row(
+                      //     //       mainAxisAlignment: MainAxisAlignment.center,
+                      //     //       children: [
+                      //     //         const Icon(Icons.calendar_today),
+                      //     //         const SizedBox(width: 10.0),
+                      //     //         Text(
+                      //     //           "${selectedDate.toLocal()}".split(' ')[0],
+                      //     //           style: const TextStyle(fontSize: 16.0),
+                      //     //         ),
+                      //     //       ],
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //     const Expanded(child: AppointmentDetails()),
+                      //   ],
                     ],
                   ),
                 ),
