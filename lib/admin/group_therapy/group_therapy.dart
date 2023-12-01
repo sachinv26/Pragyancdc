@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
@@ -30,9 +29,12 @@ class _GroupTherapyState extends State<GroupTherapy>
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(children: [
-          LocationSearch(),
-          kheight10,
-          const Text('Appointment for this week'),
+          TextFormField(
+            decoration: const InputDecoration(
+                hintText: 'Search by location', prefixIcon: Icon(Icons.search)),
+          ),
+          // kheight10,
+          // const Text('Appointment for this week'),
           kheight10,
           TabBar(
               labelColor: Colors.green,

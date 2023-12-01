@@ -16,7 +16,10 @@ class ViewTherapistList extends StatelessWidget {
           child: Expanded(
             child: Column(
               children: [
-                LocationSearch(),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search), hintText: 'Search'),
+                ),
                 kheight10,
                 Expanded(
                   child: ListView.builder(

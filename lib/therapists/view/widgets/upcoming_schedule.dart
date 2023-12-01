@@ -90,34 +90,43 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          contentPadding: EdgeInsets.zero,
           title: const Text('Select Location'),
-          content: Column(
-            children: [
-              ListTile(
-                title: const Text('Location A'),
-                onTap: () {
-                  Navigator.pop(context, 'Location A');
-                },
-              ),
-              ListTile(
-                title: const Text('Location B'),
-                onTap: () {
-                  Navigator.pop(context, 'Location B');
-                },
-              ),
-              ListTile(
-                title: const Text('Location C'),
-                onTap: () {
-                  Navigator.pop(context, 'Location C');
-                },
-              ),
-              ListTile(
-                title: const Text('Location D'),
-                onTap: () {
-                  Navigator.pop(context, 'Location D');
-                },
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                ListTile(
+                  title: const Text('Rajajinagar Branch '),
+                  onTap: () {
+                    Navigator.pop(context, 'Rajajinagar Branch');
+                  },
+                ),
+                ListTile(
+                  title: const Text('Nagarbhavi Branch'),
+                  onTap: () {
+                    Navigator.pop(context, 'Nagarbhavi Branch');
+                  },
+                ),
+                ListTile(
+                  title: const Text('HSR Branch'),
+                  onTap: () {
+                    Navigator.pop(context, 'HSR Branch');
+                  },
+                ),
+                ListTile(
+                  title: const Text('Marathahalli Branch'),
+                  onTap: () {
+                    Navigator.pop(context, 'Marathahalli Branch');
+                  },
+                ),
+                ListTile(
+                  title: const Text('Nagasandra Branch'),
+                  onTap: () {
+                    Navigator.pop(context, 'Nagasandra Branch');
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -53,7 +53,10 @@ class _AdminHomeState extends State<AdminHome>
           builder: (context, constraints) {
             return Column(
               children: [
-                LocationSearch(),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      hintText: 'Search..', prefixIcon: Icon(Icons.search)),
+                ),
                 kheight10,
                 ElevatedButton(
                     onPressed: () {}, child: const Text('Book Apointments')),

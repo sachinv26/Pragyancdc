@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final double width;
   final double height;
   final Widget? prefixIcon;
+  final bool enabled;
 
   const CustomTextFormField(
       {Key? key,
@@ -21,6 +22,7 @@ class CustomTextFormField extends StatelessWidget {
       this.iconData,
       this.height = 55.0,
       this.prefixIcon,
+      this.enabled = true,
       this.width = double.infinity})
       : super(key: key);
 
@@ -32,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextFormField(
+        enabled: enabled,
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
