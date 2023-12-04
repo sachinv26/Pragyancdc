@@ -4,7 +4,8 @@ import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/provider/temp_user_model.dart';
+import 'package:pragyan_cdc/model/temp_signup_model.dart';
+
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
@@ -94,7 +95,7 @@ class ClientSignUp extends StatelessWidget {
                       text: 'Next',
                       onPressed: () {
                         // Save data to temp model class
-                        TempModel tempModel = TempModel(
+                        TempModel tempModeltoPass = TempModel(
                           parentName:
                               signUpDataProvider.parentNameController.text,
                           childName:
@@ -104,15 +105,19 @@ class ClientSignUp extends StatelessWidget {
                           location: signUpDataProvider.locationController.text,
                           address: signUpDataProvider.addressController.text,
                         );
+                        print(tempModeltoPass);
+
                         //print(tempModel);
                         // Set TempModel using TempModelProvider
-                        Provider.of<TempModelProvider>(context, listen: false)
-                            .setTempModel(tempModel);
+                        // Provider.of<TempModelProvider>(context, listen: false)
+                        //     .setTempModel(tempModel);
 
                         // // Navigate to the next screen with the data
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) {
-                            return SignupSecond();
+                            return SignupSecond(
+                              tempModel: tempModeltoPass,
+                            );
                           },
                         ));
                         // Navigator.pushNamed(context, '/clientSignupSecond',
@@ -152,9 +157,9 @@ class ClientSignUp extends StatelessWidget {
       BuildContext context, SignUpDataProvider signUpDataProvider) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      initialDate: DateTime(2012),
+      firstDate: DateTime(2006),
+      lastDate: DateTime.now(),
     );
 
     if (picked != null && picked != DateTime.now()) {
@@ -167,35 +172,6 @@ class ClientSignUp extends StatelessWidget {
   }
 }
 
-// Model class to hold temporary data
-class TempModel {
-  final String parentName;
-  final String childName;
-  final String childDOB;
-  final String mailId;
-  final String location;
-  final String address;
-
-  TempModel({
-    required this.parentName,
-    required this.childName,
-    required this.childDOB,
-    required this.mailId,
-    required this.location,
-    required this.address,
-  });
-  @override
-  String toString() {
-    return 'TempModel(\n'
-        '  parentName: $parentName,\n'
-        '  childName: $childName,\n'
-        '  childDOB: $childDOB,\n'
-        '  mailId: $mailId,\n'
-        '  location: $location,\n'
-        '  address: $address\n'
-        ')';
-  }
-}
 
 
 // class ClientSignUp extends StatelessWidget {

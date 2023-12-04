@@ -4,20 +4,19 @@ import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/full_signup_model.dart';
-import 'package:pragyan_cdc/provider/temp_user_model.dart';
+import 'package:pragyan_cdc/model/temp_signup_model.dart';
+
+import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
 class SignupSecond extends StatelessWidget {
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TempModel tempModel;
 
-  SignupSecond({super.key});
+  const SignupSecond({required this.tempModel, super.key});
 
   @override
   Widget build(BuildContext context) {
-    var tempModelProvider = Provider.of<TempModelProvider>(context);
-    var tempModel = tempModelProvider.tempModel;
-
+    var signUpDataProvider = Provider.of<SignUpDataProvider>(context);
     return Scaffold(
       appBar: customAppBar(),
       body: SingleChildScrollView(
@@ -43,7 +42,7 @@ class SignupSecond extends StatelessWidget {
                 const Text('Create your account to get started.'),
                 CustomTextFormField(
                   hintText: 'Create Password',
-                  controller: passwordController,
+                  controller: signUpDataProvider.passwordController,
                   obscureText: true,
                   iconData: const Icon(Icons.visibility_off),
                 ),
@@ -53,41 +52,44 @@ class SignupSecond extends StatelessWidget {
                 //   obscureText: true,
                 // ),
                 CustomTextFormField(
+                  keyboardType: TextInputType.phone,
                   hintText: 'Mobile Number',
-                  controller: phoneNumberController,
+                  controller: signUpDataProvider.phoneNumberController,
                   iconData: const Icon(Icons.phone),
                 ),
                 kheight60,
                 Center(
                   child: CustomButton(
-                    text: 'Create Account',
-                    onPressed: () {
-                      if (tempModel != null) {
-                        String password = passwordController.text;
-                        String phoneNumber = phoneNumberController.text;
+                      text: 'Create Account',
+                      onPressed: () {
+                        // String password = passwordController.text;
+                        // String phoneNumber = phoneNumberController.text;
 
                         // Combine data into FullSignUpModel
                         FullSignUpModel fullSignUpModel = FullSignUpModel(
-                          parentName: tempModel.parentName,
-                          childName: tempModel.childName,
-                          childDOB: tempModel.childDOB,
-                          email: tempModel.mailId,
-                          location: tempModel.location,
-                          address: tempModel.address,
-                          password: password,
-                          phoneNumber: phoneNumber,
+                          parentName:
+                              signUpDataProvider.parentNameController.text,
+                          childName:
+                              signUpDataProvider.childNameController.text,
+                          childDOB: signUpDataProvider.childDOBController.text,
+                          email: signUpDataProvider.mailIdController.text,
+                          location: signUpDataProvider.locationController.text,
+                          address: signUpDataProvider.addressController.text,
+                          password: signUpDataProvider.passwordController.text,
+                          phoneNumber:
+                              signUpDataProvider.phoneNumberController.text,
                         );
 
                         // Set the combined model to the provider
-                        Provider.of<TempModelProvider>(context, listen: false)
-                            .setFullSignUpModel(fullSignUpModel);
+                        Provider.of<SignUpDataProvider>(context, listen: false)
+                            .submitForm();
                         //create account api
                         print('account created');
-                        print(tempModel);
+                        print(fullSignUpModel);
                       }
                       // Make API call using fullSignUpModel
-                    },
-                  ),
+
+                      ),
                 )
                 // Center(
                 //     child: CustomButton(
