@@ -1,12 +1,13 @@
 class FullSignUpModel {
   final String parentName;
   final String childName;
-  final String childDOB;
+  final DateTime childDOB;
   final String email;
   final String location;
   final String address;
   final String password;
   final String phoneNumber;
+  //final String? profileImage;
 
   FullSignUpModel({
     required this.parentName,
@@ -17,7 +18,24 @@ class FullSignUpModel {
     required this.address,
     required this.password,
     required this.phoneNumber,
+    // this.profileImage
   });
+
+  // Factory method to create a FullSignUpModel from a JSON map
+  factory FullSignUpModel.fromJson(Map<String, dynamic> json) {
+    return FullSignUpModel(
+      parentName: json['ParentName'] as String,
+      childName: json['ChildName'] as String,
+      // Parse the string into a DateTime
+      childDOB: json['DOB'],
+      email: json['Email'] as String,
+      location: json['Location'] as String,
+      address: json['Address'] as String,
+      phoneNumber: json['MobileNumber'] as String,
+      password: json['Password'] as String,
+      // profileImage: json['ProfileImage'] as String,
+    );
+  }
 
   //to print the model class
   @override
@@ -32,5 +50,19 @@ class FullSignUpModel {
         '  phoneNumber: $phoneNumber\n'
         '  password: $password\n'
         ')';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ParentName': parentName,
+      'ChildName': childName,
+      'DOB': childDOB.toIso8601String(),
+      'Email': email,
+      'Location': location,
+      'Address': address,
+      'Password': password,
+      //'ProfileImage': profileImage,
+      'MobileNumber': phoneNumber,
+    };
   }
 }

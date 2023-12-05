@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/api/user_api/user_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -61,17 +62,14 @@ class SignupSecond extends StatelessWidget {
                 Center(
                   child: CustomButton(
                       text: 'Create Account',
-                      onPressed: () {
-                        // String password = passwordController.text;
-                        // String phoneNumber = phoneNumberController.text;
-
+                      onPressed: () async {
                         // Combine data into FullSignUpModel
                         FullSignUpModel fullSignUpModel = FullSignUpModel(
                           parentName:
                               signUpDataProvider.parentNameController.text,
                           childName:
                               signUpDataProvider.childNameController.text,
-                          childDOB: signUpDataProvider.childDOBController.text,
+                          childDOB: signUpDataProvider.childDOB,
                           email: signUpDataProvider.mailIdController.text,
                           location: signUpDataProvider.locationController.text,
                           address: signUpDataProvider.addressController.text,
@@ -80,12 +78,26 @@ class SignupSecond extends StatelessWidget {
                               signUpDataProvider.phoneNumberController.text,
                         );
 
+                        Map<String, dynamic> jsonData =
+                            fullSignUpModel.toJson();
+                        print(jsonData);
+                        try {
+                          final response = await UserAPI.registerUser(jsonData);
+                          if (response.statusCode == 200) {
+                            print('User registered successfully!');
+                          } else {
+                            print(
+                                'Error registering user ${response.statusCode}');
+                            print(response.body);
+                          }
+                        } catch (e) {
+                          print('Exception during API call: $e');
+                        }
+
                         // Set the combined model to the provider
-                        Provider.of<SignUpDataProvider>(context, listen: false)
-                            .submitForm();
+                        // Provider.of<SignUpDataProvider>(context, listen: false)
+                        //     .submitForm();
                         //create account api
-                        print('account created');
-                        print(fullSignUpModel);
                       }
                       // Make API call using fullSignUpModel
 
