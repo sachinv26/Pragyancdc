@@ -1,17 +1,29 @@
 import 'package:dio/dio.dart';
+import 'dart:io';
 
 class UserAPI {
   static const String baseUrl = 'http://192.168.1.212:8080/user-api/';
 
   static Future<Response> registerUser(Map<String, dynamic> jsonData) async {
+    print('entered function');
     final url = Uri.parse('${baseUrl}create-user');
 
     try {
+      print('inside try');
+      File imageFile = File([], jsonData['imagePath']);
+      if (imageFile.existsSync) {
+        FormData formData = FormData.fromMap({
+          ...jsonData,
+          // Add image field to the form data
+          'profileImage': await MultipartFile.fromFile(jsonData['imagePath']),
+        });
+      }
+      print('formdata created');
       final response = await Dio().post(
         url.toString(),
-        data: jsonData,
+        data: formData,
         options: Options(
-          contentType: 'application/json',
+          contentType: 'multipart/form-data',
           sendTimeout: const Duration(milliseconds: 5000),
           receiveTimeout: const Duration(milliseconds: 5000),
         ),
@@ -24,7 +36,7 @@ class UserAPI {
       return response;
     } catch (error) {
       // Handle error as needed
-      if (error is DioError) {
+      if (error is DioException) {
         if (error.response != null) {
           // The request was made and the server responded with a status code
           print(

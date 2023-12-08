@@ -80,10 +80,15 @@ class ClientSignUp extends StatelessWidget {
                     onTap: () async {
                       await signUpDataProvider.pickImage();
                     },
-                    child: const CustomTextFormField(
+                    child: CustomTextFormField(
                       hintText: 'Upload Picture ',
                       enabled: false,
-                      iconData: Icon(Icons.camera_alt),
+                      iconData: signUpDataProvider.imagePath != null
+                          ? Text(
+                              signUpDataProvider.imagePath!,
+                              style: TextStyle(color: Colors.blue),
+                            )
+                          : null,
                     ),
                   ),
                   CustomTextFormField(
@@ -114,6 +119,7 @@ class ClientSignUp extends StatelessWidget {
                           mailId: signUpDataProvider.mailIdController.text,
                           location: signUpDataProvider.locationController.text,
                           address: signUpDataProvider.addressController.text,
+                          imagePath: signUpDataProvider.imagePath,
                         );
                         print(tempModeltoPass);
 

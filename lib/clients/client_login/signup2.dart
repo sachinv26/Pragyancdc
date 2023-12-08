@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
@@ -65,21 +66,26 @@ class SignupSecond extends StatelessWidget {
                       onPressed: () async {
                         // Combine data into FullSignUpModel
                         FullSignUpModel fullSignUpModel = FullSignUpModel(
-                          parentName:
-                              signUpDataProvider.parentNameController.text,
-                          childName:
-                              signUpDataProvider.childNameController.text,
-                          childDOB: signUpDataProvider.childDOB,
-                          email: signUpDataProvider.mailIdController.text,
-                          location: signUpDataProvider.locationController.text,
-                          address: signUpDataProvider.addressController.text,
-                          password: signUpDataProvider.passwordController.text,
-                          phoneNumber:
-                              signUpDataProvider.phoneNumberController.text,
-                        );
+                            parentName:
+                                signUpDataProvider.parentNameController.text,
+                            childName:
+                                signUpDataProvider.childNameController.text,
+                            childDOB: signUpDataProvider.childDOB,
+                            email: signUpDataProvider.mailIdController.text,
+                            location:
+                                signUpDataProvider.locationController.text,
+                            address: signUpDataProvider.addressController.text,
+                            password:
+                                signUpDataProvider.passwordController.text,
+                            phoneNumber:
+                                signUpDataProvider.phoneNumberController.text,
+                            imagePath: signUpDataProvider.imagePath);
 
                         Map<String, dynamic> jsonData =
                             fullSignUpModel.toJson();
+                        print('Before calling api:');
+                        print(jsonData);
+                        await checkAndRequestPermissions();
 
                         await UserAPI.registerUser(jsonData);
 
@@ -117,5 +123,27 @@ class SignupSecond extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> checkAndRequestPermissions() async {
+    // Check if the permission is already granted
+    PermissionStatus status = await Permission.storage.status;
+
+    if (status.isGranted) {
+      // Permission is already granted, proceed with file access
+      print('Permission already granted');
+      return;
+    } else {
+      // Request permission
+      PermissionStatus result = await Permission.storage.request();
+
+      if (result.isGranted) {
+        // Permission granted, proceed with file access
+        print('Permission granted');
+      } else {
+        // Permission denied, handle accordingly
+        print('Permission denied');
+      }
+    }
   }
 }

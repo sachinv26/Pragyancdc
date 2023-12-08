@@ -44,6 +44,7 @@ dependencies:
   http: ^1.1.0
   dio: ^5.4.0
   image_picker: ^1.0.4
+  permission_handler: ^11.0.1
   
 
 

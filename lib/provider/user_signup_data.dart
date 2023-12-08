@@ -33,6 +33,9 @@ class SignUpDataProvider extends ChangeNotifier {
     }
   }
 
+  // Method to get the path of the picked image
+  String? get imagePath => _imageFile?.path;
+
   @override
   void dispose() {
     parentNameController.dispose();

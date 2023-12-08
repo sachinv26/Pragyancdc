@@ -7,7 +7,7 @@ class FullSignUpModel {
   final String address;
   final String password;
   final String phoneNumber;
-  //final String? profileImage;
+  final String? imagePath; // New field for the image path
 
   FullSignUpModel({
     required this.parentName,
@@ -18,7 +18,7 @@ class FullSignUpModel {
     required this.address,
     required this.password,
     required this.phoneNumber,
-    // this.profileImage
+    this.imagePath, // Pass the image path in the constructor
   });
 
   // Factory method to create a FullSignUpModel from a JSON map
@@ -33,11 +33,11 @@ class FullSignUpModel {
       address: json['Address'] as String,
       phoneNumber: json['MobileNumber'] as String,
       password: json['Password'] as String,
-      // profileImage: json['ProfileImage'] as String,
+      imagePath: json['ImagePath'] as String, // Add the image path field
     );
   }
 
-  //to print the model class
+  // To print the model class
   @override
   String toString() {
     return 'FullSignModel(\n'
@@ -46,9 +46,10 @@ class FullSignUpModel {
         '  childDOB: $childDOB,\n'
         '  mailId: $email,\n'
         '  location: $location,\n'
-        '  address: $address\n'
-        '  phoneNumber: $phoneNumber\n'
-        '  password: $password\n'
+        '  address: $address,\n'
+        '  phoneNumber: $phoneNumber,\n'
+        '  password: $password,\n'
+        '  imagePath: $imagePath\n' // Include the image path in the toString output
         ')';
   }
 
@@ -56,14 +57,13 @@ class FullSignUpModel {
     return {
       'ParentName': parentName,
       'ChildName': childName,
-      // 'DOB': childDOB.toIso8601String(),
       'DOB': childDOB.toString().split(' ')[0],
       'Email': email,
       'Location': location,
       'Address': address,
       'Password': password,
-      //'ProfileImage': profileImage,
       'MobileNumber': phoneNumber,
+      'ImagePath': imagePath, // Include the image path in the JSON
     };
   }
 }
