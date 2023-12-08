@@ -76,15 +76,16 @@ class ClientSignUp extends StatelessWidget {
                       )
                     ],
                   ),
-                  // GestureDetector(
-                  //   onTap: () async {},
-                  //   child: const CustomTextFormField(
-                  //     hintText: 'Upload Picture ',
-                  //     // controller: signUpDataProvider.childDOBController,
-                  //     enabled: false,
-                  //     iconData: Icon(Icons.camera_alt),
-                  //   ),
-                  // ),
+                  GestureDetector(
+                    onTap: () async {
+                      await signUpDataProvider.pickImage();
+                    },
+                    child: const CustomTextFormField(
+                      hintText: 'Upload Picture ',
+                      enabled: false,
+                      iconData: Icon(Icons.camera_alt),
+                    ),
+                  ),
                   CustomTextFormField(
                     hintText: 'Enter your Mail id',
                     iconData: const Icon(Icons.email),

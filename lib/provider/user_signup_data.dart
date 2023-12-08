@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpDataProvider extends ChangeNotifier {
   DateTime childDOB = DateTime.now();
@@ -10,19 +11,27 @@ class SignUpDataProvider extends ChangeNotifier {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  late ImagePicker _imagePicker;
+  XFile? _imageFile;
 
-//Method to submit the form and create a FullSignUpModel instance.
-  // FullSignUpModel submitForm() {
-  //   return FullSignUpModel(
-  //       parentName: parentNameController.text,
-  //       childName: childNameController.text,
-  //       childDOB: childDOB,
-  //       email: mailIdController.text,
-  //       location: locationController.text,
-  //       address: addressController.text,
-  //       password: passwordController.text,
-  //       phoneNumber: phoneNumberController.text);
-  // }
+  // Constructor to initialize the _imagePicker
+  SignUpDataProvider() {
+    _imagePicker = ImagePicker();
+  }
+
+  Future<void> pickImage() async {
+    try {
+      final pickedFile =
+          await _imagePicker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        _imageFile = pickedFile;
+
+        notifyListeners();
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    }
+  }
 
   @override
   void dispose() {

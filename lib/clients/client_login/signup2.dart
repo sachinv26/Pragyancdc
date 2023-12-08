@@ -80,19 +80,21 @@ class SignupSecond extends StatelessWidget {
 
                         Map<String, dynamic> jsonData =
                             fullSignUpModel.toJson();
-                        print(jsonData);
-                        try {
-                          final response = await UserAPI.registerUser(jsonData);
-                          if (response.statusCode == 200) {
-                            print('User registered successfully!');
-                          } else {
-                            print(
-                                'Error registering user ${response.statusCode}');
-                            print(response.body);
-                          }
-                        } catch (e) {
-                          print('Exception during API call: $e');
-                        }
+
+                        await UserAPI.registerUser(jsonData);
+
+                        // if (response.statusCode >= 200 &&
+                        //     response.statusCode < 300) {
+                        //   print('User registered successufully');
+                        //   print(response.body);
+                        // } else {
+                        //   print(
+                        //       'Error registering user ${response.statusCode}');
+                        //   print(response.body);
+                        // }
+                        // } catch (e) {
+                        //   print('Exception during API call: $e');
+                        // }
 
                         // Set the combined model to the provider
                         // Provider.of<SignUpDataProvider>(context, listen: false)

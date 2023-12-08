@@ -27,7 +27,7 @@ class FullSignUpModel {
       parentName: json['ParentName'] as String,
       childName: json['ChildName'] as String,
       // Parse the string into a DateTime
-      childDOB: json['DOB'],
+      childDOB: DateTime.parse(json['DOB']),
       email: json['Email'] as String,
       location: json['Location'] as String,
       address: json['Address'] as String,
@@ -56,7 +56,8 @@ class FullSignUpModel {
     return {
       'ParentName': parentName,
       'ChildName': childName,
-      'DOB': childDOB.toIso8601String(),
+      // 'DOB': childDOB.toIso8601String(),
+      'DOB': childDOB.toString().split(' ')[0],
       'Email': email,
       'Location': location,
       'Address': address,
