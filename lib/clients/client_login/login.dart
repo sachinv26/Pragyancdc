@@ -125,7 +125,10 @@ class _ClientLoginState extends State<ClientLogin> {
                           },
                           child: const Text(
                             'Sign Up',
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 17,
+                                decoration: TextDecoration.underline),
                           ),
                         )
                       ],
