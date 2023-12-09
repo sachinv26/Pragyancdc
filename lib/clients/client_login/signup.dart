@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pragyan_cdc/clients/client_login/signup2.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
@@ -78,7 +81,7 @@ class ClientSignUp extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      await signUpDataProvider.pickImage();
+                      await signUpDataProvider.getImage();
                     },
                     child: CustomTextFormField(
                       hintText: 'Upload Picture ',
@@ -86,7 +89,7 @@ class ClientSignUp extends StatelessWidget {
                       iconData: signUpDataProvider.imagePath != null
                           ? Text(
                               signUpDataProvider.imagePath!,
-                              style: TextStyle(color: Colors.blue),
+                              style: const TextStyle(color: Colors.blue),
                             )
                           : null,
                     ),

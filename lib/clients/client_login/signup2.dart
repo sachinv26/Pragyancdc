@@ -87,7 +87,10 @@ class SignupSecond extends StatelessWidget {
                         print(jsonData);
                         await checkAndRequestPermissions();
 
-                        await UserAPI.registerUser(jsonData);
+                        await UserAPI.registerUser(
+                            jsonData,
+                            signUpDataProvider.file,
+                            signUpDataProvider.imagePath);
 
                         // if (response.statusCode >= 200 &&
                         //     response.statusCode < 300) {

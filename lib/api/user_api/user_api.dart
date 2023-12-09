@@ -4,20 +4,21 @@ import 'dart:io';
 class UserAPI {
   static const String baseUrl = 'http://192.168.1.212:8080/user-api/';
 
-  static Future<Response> registerUser(Map<String, dynamic> jsonData) async {
+  static Future<Response> registerUser(
+      Map<String, dynamic> jsonData, File? empFace, String? empCode) async {
     print('entered function');
     final url = Uri.parse('${baseUrl}create-user');
 
     try {
       print('inside try');
-      File imageFile = File([], jsonData['imagePath']);
-      if (imageFile.existsSync) {
-        FormData formData = FormData.fromMap({
-          ...jsonData,
-          // Add image field to the form data
-          'profileImage': await MultipartFile.fromFile(jsonData['imagePath']),
-        });
-      }
+
+      FormData formData = FormData.fromMap({
+        ...jsonData,
+        // Add image field to the form data
+        'profileImage':
+            await MultipartFile.fromFile(empFace!.path, filename: empCode),
+      });
+
       print('formdata created');
       final response = await Dio().post(
         url.toString(),
