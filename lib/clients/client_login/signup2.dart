@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
@@ -67,32 +66,31 @@ class SignupSecond extends StatelessWidget {
                       onPressed: () async {
                         // Combine data into FullSignUpModel
                         FullSignUpModel fullSignUpModel = FullSignUpModel(
-                            parentName:
-                                signUpDataProvider.parentNameController.text,
-                            childName:
-                                signUpDataProvider.childNameController.text,
-                            childDOB: signUpDataProvider.childDOB,
-                            email: signUpDataProvider.mailIdController.text,
-                            location:
-                                signUpDataProvider.locationController.text,
-                            address: signUpDataProvider.addressController.text,
-                            password:
-                                signUpDataProvider.passwordController.text,
-                            phoneNumber:
-                                signUpDataProvider.phoneNumberController.text,
-                            imagePath: signUpDataProvider.imagePath);
+                          parentName:
+                              signUpDataProvider.parentNameController.text,
+                          childName:
+                              signUpDataProvider.childNameController.text,
+                          childDOB: signUpDataProvider.childDOB,
+                          email: signUpDataProvider.mailIdController.text,
+                          location: signUpDataProvider.locationController.text,
+                          address: signUpDataProvider.addressController.text,
+                          password: signUpDataProvider.passwordController.text,
+                          phoneNumber:
+                              signUpDataProvider.phoneNumberController.text,
+                          //imagePath: signUpDataProvider.imagePath
+                        );
 
                         Map<String, dynamic> jsonData =
                             fullSignUpModel.toJson();
                         print('Before calling api:');
                         print(jsonData);
-                        await checkAndRequestPermissions();
+                        //    await checkAndRequestPermissions();
 
-                        Response response = await UserAPI.registerUser(
-                            jsonData,
-                            signUpDataProvider.file,
-                            signUpDataProvider.imagePath);
-                        var map = response.data as Map;
+                        final response = await UserAPI.registerUser(jsonData
+                            // signUpDataProvider.file,
+                            //signUpDataProvider.imagePath
+                            );
+                        var map = response.body as Map;
                         debugPrint('returned response');
                         print(map);
                         if (map['status'] == 200) {

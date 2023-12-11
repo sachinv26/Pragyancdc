@@ -76,17 +76,17 @@ class ClientSignUp extends StatelessWidget {
                       )
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      await signUpDataProvider.getImage();
-                    },
-                    child: CustomTextFormField(
-                        hintText: signUpDataProvider.imagePath != null
-                            ? 'Image Selected'
-                            : 'Upload Picture',
-                        enabled: false,
-                        iconData: const Icon(Icons.camera_alt)),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () async {
+                  //     await signUpDataProvider.getImage();
+                  //   },
+                  //   child: CustomTextFormField(
+                  //       hintText: signUpDataProvider.imagePath != null
+                  //           ? 'Image Selected'
+                  //           : 'Upload Picture',
+                  //       enabled: false,
+                  //       iconData: const Icon(Icons.camera_alt)),
+                  // ),
                   CustomTextFormField(
                     hintText: 'Enter your Mail id',
                     iconData: const Icon(Icons.email),
@@ -115,7 +115,7 @@ class ClientSignUp extends StatelessWidget {
                           mailId: signUpDataProvider.mailIdController.text,
                           location: signUpDataProvider.locationController.text,
                           address: signUpDataProvider.addressController.text,
-                          imagePath: signUpDataProvider.imagePath,
+                          //imagePath: signUpDataProvider.imagePath,
                         );
                         print(tempModeltoPass);
 

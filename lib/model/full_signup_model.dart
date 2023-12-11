@@ -7,7 +7,7 @@ class FullSignUpModel {
   final String address;
   final String password;
   final String phoneNumber;
-  final String? imagePath; // New field for the image path
+//  final String? imagePath; // New field for the image path
 
   FullSignUpModel({
     required this.parentName,
@@ -18,7 +18,7 @@ class FullSignUpModel {
     required this.address,
     required this.password,
     required this.phoneNumber,
-    this.imagePath, // Pass the image path in the constructor
+    //this.imagePath, // Pass the image path in the constructor
   });
 
   // Factory method to create a FullSignUpModel from a JSON map
@@ -33,7 +33,7 @@ class FullSignUpModel {
       address: json['Address'] as String,
       phoneNumber: json['MobileNumber'] as String,
       password: json['Password'] as String,
-      imagePath: json['ImagePath'] as String, // Add the image path field
+      // imagePath: json['ImagePath'] as String, // Add the image path field
     );
   }
 
@@ -49,7 +49,7 @@ class FullSignUpModel {
         '  address: $address,\n'
         '  phoneNumber: $phoneNumber,\n'
         '  password: $password,\n'
-        '  imagePath: $imagePath\n' // Include the image path in the toString output
+        //    '  imagePath: $imagePath\n' // Include the image path in the toString output
         ')';
   }
 
@@ -63,7 +63,7 @@ class FullSignUpModel {
       'Address': address,
       'Password': password,
       'MobileNumber': phoneNumber,
-      'ImagePath': imagePath, // Include the image path in the JSON
+      //    'ImagePath': imagePath, // Include the image path in the JSON
     };
   }
 }

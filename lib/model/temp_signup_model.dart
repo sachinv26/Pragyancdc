@@ -6,7 +6,7 @@ class TempModel {
   final String mailId;
   final String location;
   final String address;
-  final String? imagePath;
+  //final String? imagePath;
   TempModel({
     required this.parentName,
     required this.childName,
@@ -14,7 +14,7 @@ class TempModel {
     required this.mailId,
     required this.location,
     required this.address,
-    this.imagePath,
+    //this.imagePath,
   });
   @override
   String toString() {
@@ -25,7 +25,7 @@ class TempModel {
         '  mailId: $mailId,\n'
         '  location: $location,\n'
         '  address: $address\n'
-        '  imagePath: $imagePath\n'
+        //     '  imagePath: $imagePath\n'
         ')';
   }
 }
