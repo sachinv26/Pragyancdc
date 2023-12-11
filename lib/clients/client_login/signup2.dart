@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
@@ -87,10 +88,16 @@ class SignupSecond extends StatelessWidget {
                         print(jsonData);
                         await checkAndRequestPermissions();
 
-                        await UserAPI.registerUser(
+                        Response response = await UserAPI.registerUser(
                             jsonData,
                             signUpDataProvider.file,
                             signUpDataProvider.imagePath);
+                        var map = response.data as Map;
+                        debugPrint('returned response');
+                        print(map);
+                        if (map['status'] == 200) {
+                          Navigator.of(context).pop();
+                        }
 
                         // if (response.statusCode >= 200 &&
                         //     response.statusCode < 300) {

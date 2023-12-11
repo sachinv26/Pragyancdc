@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 
 class UserAPI {
-  static const String baseUrl = 'http://192.168.1.212:8080/user-api/';
+  static const String baseUrl = 'http://192.168.1.213:8080/user-api/';
 
   static Future<Response> registerUser(
       Map<String, dynamic> jsonData, File? empFace, String? empCode) async {
@@ -11,6 +11,8 @@ class UserAPI {
 
     try {
       print('inside try');
+      print('json data :');
+      print(jsonData);
 
       FormData formData = FormData.fromMap({
         ...jsonData,
@@ -20,19 +22,21 @@ class UserAPI {
       });
 
       print('formdata created');
+      print(formData);
       final response = await Dio().post(
         url.toString(),
         data: formData,
         options: Options(
           contentType: 'multipart/form-data',
-          sendTimeout: const Duration(milliseconds: 5000),
-          receiveTimeout: const Duration(milliseconds: 5000),
+          sendTimeout: const Duration(minutes: 1),
+          receiveTimeout: const Duration(minutes: 1),
         ),
       );
+      print('done sending request');
 
-      print('Status Code: ${response.statusCode}');
-      print('Headers: ${response.headers}');
-      print('Body: ${response.data}');
+      // print('Status Code: ${response.statusCode}');
+      // print('Headers: ${response.headers}');
+      // print('Body: ${response.data}');
 
       return response;
     } catch (error) {

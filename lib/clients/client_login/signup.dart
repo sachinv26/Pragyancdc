@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pragyan_cdc/clients/client_login/signup2.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
@@ -84,15 +81,11 @@ class ClientSignUp extends StatelessWidget {
                       await signUpDataProvider.getImage();
                     },
                     child: CustomTextFormField(
-                      hintText: 'Upload Picture ',
-                      enabled: false,
-                      iconData: signUpDataProvider.imagePath != null
-                          ? Text(
-                              signUpDataProvider.imagePath!,
-                              style: const TextStyle(color: Colors.blue),
-                            )
-                          : null,
-                    ),
+                        hintText: signUpDataProvider.imagePath != null
+                            ? 'Image Selected'
+                            : 'Upload Picture',
+                        enabled: false,
+                        iconData: const Icon(Icons.camera_alt)),
                   ),
                   CustomTextFormField(
                     hintText: 'Enter your Mail id',
