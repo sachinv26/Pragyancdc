@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/api/user_api/user_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -37,20 +38,13 @@ class _ClientLoginState extends State<ClientLogin> {
     }
   }
 
-  void _login() {
+  void _login() async {
     // Implement your authentication logic here.
     // Once authenticated, you can save the credentials.
     String mobile = _mobileController.text;
     String password = _passwordController.text;
 
-    if ((mobile == '9876543210') && (password == 'user123')) {
-      _saveCredentials(mobile, password);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) {
-          return const DashBoard();
-        },
-      ));
-    }
+    await UserAPI().authenticateUser(mobile, password);
 
     // Add the navigation logic here.
   }
@@ -112,8 +106,14 @@ class _ClientLoginState extends State<ClientLogin> {
                     ),
                     CustomButton(
                         text: 'Login',
-                        onPressed: () {
+                        onPressed: () async {
                           _login();
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) {
+                              return const DashBoard();
+                            },
+                          ));
                         }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

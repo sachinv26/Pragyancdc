@@ -12,9 +12,10 @@ class CustomTextFormField extends StatelessWidget {
   final double height;
   final Widget? prefixIcon;
   final bool enabled;
-
+  final String? Function(String?)? validator;
   const CustomTextFormField(
       {Key? key,
+      this.validator,
       this.controller,
       this.hintText = '',
       this.keyboardType = TextInputType.text,
@@ -34,6 +35,7 @@ class CustomTextFormField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextFormField(
+        validator: validator,
         enabled: enabled,
         controller: controller,
         keyboardType: keyboardType,

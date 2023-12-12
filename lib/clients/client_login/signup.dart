@@ -10,7 +10,9 @@ import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
 class ClientSignUp extends StatelessWidget {
-  const ClientSignUp({Key? key}) : super(key: key);
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  ClientSignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,135 +29,172 @@ class ClientSignUp extends StatelessWidget {
                 minHeight: MediaQuery.of(context).size.height -
                     AppBar().preferredSize.height),
             child: IntrinsicHeight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Center(
-                    child: Text(
-                      'Welcome Back!',
-                      style: kTextStyle2,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Center(
+                      child: Text(
+                        'Welcome Back!',
+                        style: kTextStyle2,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'Enroll to Pragyan',
-                    style: kTextStyle1,
-                  ),
-                  CustomTextFormField(
-                    hintText: 'Enter Parent Name',
-                    iconData: const Icon(Icons.person),
-                    controller: signUpDataProvider.parentNameController,
-                  ),
-                  CustomTextFormField(
-                    hintText: 'Enter Your Child Name',
-                    iconData: const Icon(Icons.person),
-                    controller: signUpDataProvider.childNameController,
-                  ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Child DOB',
-                        style: khintTextStyle,
-                      ),
-                      const SizedBox(
-                        width: 25,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async {
-                            // Open date picker when tapping on Child DOB field
-                            await _selectDate(context, signUpDataProvider);
-                            // After date is selected, update the text field
-                          },
-                          child: CustomTextFormField(
-                            hintText: 'DD/MM/YYYY',
-                            controller: signUpDataProvider.childDOBController,
-                            enabled: false,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  // GestureDetector(
-                  //   onTap: () async {
-                  //     await signUpDataProvider.getImage();
-                  //   },
-                  //   child: CustomTextFormField(
-                  //       hintText: signUpDataProvider.imagePath != null
-                  //           ? 'Image Selected'
-                  //           : 'Upload Picture',
-                  //       enabled: false,
-                  //       iconData: const Icon(Icons.camera_alt)),
-                  // ),
-                  CustomTextFormField(
-                    hintText: 'Enter your Mail id',
-                    iconData: const Icon(Icons.email),
-                    controller: signUpDataProvider.mailIdController,
-                  ),
-                  CustomTextFormField(
-                    hintText: 'Preferred Location',
-                    iconData: const Icon(Icons.location_on),
-                    controller: signUpDataProvider.locationController,
-                  ),
-                  CustomTextFormField(
-                    hintText: 'Address (Optional)',
-                    controller: signUpDataProvider.addressController,
-                  ),
-                  Center(
-                    child: CustomButton(
-                      text: 'Next',
-                      onPressed: () {
-                        // Save data to temp model class
-                        TempModel tempModeltoPass = TempModel(
-                          parentName:
-                              signUpDataProvider.parentNameController.text,
-                          childName:
-                              signUpDataProvider.childNameController.text,
-                          childDOB: signUpDataProvider.childDOBController.text,
-                          mailId: signUpDataProvider.mailIdController.text,
-                          location: signUpDataProvider.locationController.text,
-                          address: signUpDataProvider.addressController.text,
-                          //imagePath: signUpDataProvider.imagePath,
-                        );
-                        print(tempModeltoPass);
-
-                        //print(tempModel);
-                        // Set TempModel using TempModelProvider
-                        // Provider.of<TempModelProvider>(context, listen: false)
-                        //     .setTempModel(tempModel);
-
-                        // // Navigate to the next screen with the data
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) {
-                            return SignupSecond(
-                              tempModel: tempModeltoPass,
-                            );
-                          },
-                        ));
-                        // Navigator.pushNamed(context, '/clientSignupSecond',
-                        //     arguments: tempModel);
+                    const Text(
+                      'Enroll to Pragyan',
+                      style: kTextStyle1,
+                    ),
+                    CustomTextFormField(
+                      hintText: 'Enter Parent Name',
+                      iconData: const Icon(Icons.person),
+                      controller: signUpDataProvider.parentNameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter Parent Name';
+                        }
+                        return null;
                       },
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Already have an account? ',
-                        // Add kTextStyle1 here if needed
-                      ),
-                      InkWell(
-                        onTap: () {
-                          // Handle login tap
-                        },
-                        child: const Text(
-                          ' Login',
-                          style: TextStyle(color: Colors.red),
+                    CustomTextFormField(
+                      hintText: 'Enter Your Child Name',
+                      iconData: const Icon(Icons.person),
+                      controller: signUpDataProvider.childNameController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter Child Name';
+                        }
+                        return null;
+                      },
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Child DOB',
+                          style: khintTextStyle,
                         ),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () async {
+                              // Open date picker when tapping on Child DOB field
+                              await _selectDate(context, signUpDataProvider);
+                              // After date is selected, update the text field
+                            },
+                            child: CustomTextFormField(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select Child DOB';
+                                }
+                                return null;
+                              },
+                              hintText: 'DD/MM/YYYY',
+                              controller: signUpDataProvider.childDOBController,
+                              enabled: false,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     await signUpDataProvider.getImage();
+                    //   },
+                    //   child: CustomTextFormField(
+                    //       hintText: signUpDataProvider.imagePath != null
+                    //           ? 'Image Selected'
+                    //           : 'Upload Picture',
+                    //       enabled: false,
+                    //       iconData: const Icon(Icons.camera_alt)),
+                    // ),
+                    CustomTextFormField(
+                      hintText: 'Enter your Mail id',
+                      iconData: const Icon(Icons.email),
+                      controller: signUpDataProvider.mailIdController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a valid email Id';
+                        } else if (!RegExp(
+                                r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+                            .hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
+                    ),
+                    CustomTextFormField(
+                      hintText: 'Preferred Location',
+                      iconData: const Icon(Icons.location_on),
+                      controller: signUpDataProvider.locationController,
+                    ),
+                    CustomTextFormField(
+                      hintText: 'Address (Optional)',
+                      controller: signUpDataProvider.addressController,
+                    ),
+                    Center(
+                      child: CustomButton(
+                        text: 'Next',
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            TempModel tempModeltoPass = TempModel(
+                              parentName:
+                                  signUpDataProvider.parentNameController.text,
+                              childName:
+                                  signUpDataProvider.childNameController.text,
+                              childDOB:
+                                  signUpDataProvider.childDOBController.text,
+                              mailId: signUpDataProvider.mailIdController.text,
+                              location:
+                                  signUpDataProvider.locationController.text,
+                              address:
+                                  signUpDataProvider.addressController.text,
+                              //imagePath: signUpDataProvider.imagePath,
+                            );
+                            print(tempModeltoPass);
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                                return SignupSecond(
+                                  tempModel: tempModeltoPass,
+                                );
+                              },
+                            ));
+                          }
+                          // Save data to temp model class
+
+                          //print(tempModel);
+                          // Set TempModel using TempModelProvider
+                          // Provider.of<TempModelProvider>(context, listen: false)
+                          //     .setTempModel(tempModel);
+
+                          // // Navigate to the next screen with the data
+
+                          // Navigator.pushNamed(context, '/clientSignupSecond',
+                          //     arguments: tempModel);
+                        },
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Already have an account? ',
+                          // Add kTextStyle1 here if needed
+                        ),
+                        InkWell(
+                          onTap: () {
+                            // Handle login tap
+                          },
+                          child: const Text(
+                            ' Login',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),

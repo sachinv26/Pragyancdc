@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserAPI {
   static const String baseUrl = 'http://192.168.1.213:8080/user-api/';
@@ -11,6 +14,59 @@ class UserAPI {
       body: jsonData,
     );
     return response;
+  }
+
+  Future<void> authenticateUser(String mobile, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/authenticate'),
+        body: {'MobileNumber': mobile, 'Password': password},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+
+        // Store the token
+        // Save the token
+        String token = data['data']['token'];
+        _saveCredentialsAndToken(mobile, password, token);
+        print('Authentication successful');
+        return;
+      } else {
+        print('Authentication failed');
+      }
+    } catch (e) {
+      print('Error during authentication: $e');
+    }
+  }
+
+  void _saveCredentialsAndToken(
+      String mobile, String password, String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('mobile', mobile);
+    await prefs.setString('password', password);
+    await prefs.setString('token', token);
+  }
+
+  // Future<void> storeToken(String token) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('token', token);
+  // }
+
+  Future<String?> retrieveToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  Future<void> clearToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
+  }
+
+  Future<void> logout() async {
+    // Clear the stored token on logout
+    await clearToken();
+    print('Logged out successfully');
   }
 }
 

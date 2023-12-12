@@ -42,7 +42,7 @@ class Pragyan extends StatelessWidget {
         '/introduction': (context) => const OnBoardingScreen(),
         '/signupSelection': (context) => const SignupSelection(),
         '/clientLogin': (context) => const ClientLogin(),
-        '/clientSignup': (context) => const ClientSignUp(),
+        '/clientSignup': (context) => ClientSignUp(),
         '/getOtp': (context) => const GetOtp(),
       },
     );
