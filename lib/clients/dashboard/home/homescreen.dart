@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pragyan_cdc/api/user_api/user_api.dart';
+import 'package:pragyan_cdc/clients/user_preferences.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           title: FutureBuilder<String?>(
-            future: UserAPI().getUserId(),
+            future: UserPreferences.getUserId(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 print('snapshot waiting: ');
@@ -453,8 +453,11 @@ class ClientAppDrawer extends StatelessWidget {
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
-            onTap: () {
+            onTap: () async {
               // Handle Logout
+              await UserPreferences.clearUserId();
+              await AuthProvider().logout();
+              Navigator.pushReplacementNamed(context, '/clientLogin');
             },
           ),
         ],

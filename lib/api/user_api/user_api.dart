@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pragyan_cdc/clients/user_preferences.dart';
 
 class UserAPI {
   static const String baseUrl = 'http://192.168.1.213:8080/user-api/';
@@ -26,15 +26,15 @@ class UserAPI {
     }
   }
 
-  Future<void> saveUserId(String userId) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('user_id', userId);
-  }
+  // Future<void> saveUserId(String userId) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('user_id', userId);
+  // }
 
-  Future<String?> getUserId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('user_id');
-  }
+  // Future<String?> getUserId() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   return prefs.getString('user_id');
+  // }
 
   Future<Map<String, dynamic>> loginUser(String mobile, String password) async {
     final response = await http.post(
@@ -46,7 +46,7 @@ class UserAPI {
       final Map<String, dynamic> data = json.decode(response.body);
       final String userId = data['data']['user_id'];
       // Store user ID in shared preferences
-      await saveUserId(userId);
+      await UserPreferences.setUserId(userId);
       return data;
     } else {
       throw Exception('Failed to Login');
