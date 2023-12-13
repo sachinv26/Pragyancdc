@@ -32,7 +32,7 @@ class SignupSelection extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
-                    return AuthWrapper();
+                    return const AuthWrapper();
                   },
                 ));
 
