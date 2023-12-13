@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
-
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
@@ -45,13 +44,17 @@ class HomeScreen extends StatelessWidget {
                     builder: (context, userSnapshot) {
                       if (userSnapshot.connectionState ==
                           ConnectionState.waiting) {
+                        print('second builder waiting');
                         return const CircularProgressIndicator(); // Loading indicator while fetching user data
                       } else if (userSnapshot.hasError) {
+                        print('usersnapshot has error: ${userSnapshot.error}');
                         return Text('Error: ${userSnapshot.error}');
                       } else if (!userSnapshot.hasData) {
+                        print('user id not found');
                         return const Text('No user data found');
                       } else {
                         // User data is available, update the UI
+                        print('got the user details ${userSnapshot.data}');
                         final userDetails = userSnapshot.data!;
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -63,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   userDetails.parentName,
                                   style: const TextStyle(
-                                      fontSize: 16, color: Colors.black),
+                                      fontSize: 17, color: Colors.black),
                                 ),
                                 const SizedBox(
                                   height: 4,
@@ -71,7 +74,9 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   userDetails.childName,
                                   style: const TextStyle(
-                                      fontSize: 12, color: Colors.black),
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),

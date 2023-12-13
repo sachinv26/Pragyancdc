@@ -4,11 +4,11 @@ class UserDetailsModel {
   final String childName;
   final String password;
   final DateTime dob;
-  final String profileImage;
+  final String? profileImage;
   final String mobileNumber;
   final String email;
-  final String location;
-  final String address;
+  final String? location;
+  final String? address;
   final DateTime createdAt;
 
   UserDetailsModel({
@@ -17,11 +17,11 @@ class UserDetailsModel {
     required this.childName,
     required this.password,
     required this.dob,
-    required this.profileImage,
+    this.profileImage,
     required this.mobileNumber,
     required this.email,
-    required this.location,
-    required this.address,
+    this.location,
+    this.address,
     required this.createdAt,
   });
 
