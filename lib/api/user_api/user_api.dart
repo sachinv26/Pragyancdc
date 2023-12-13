@@ -16,58 +16,86 @@ class UserAPI {
     return response;
   }
 
-  Future<void> authenticateUser(String mobile, String password) async {
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/authenticate'),
-        body: {'MobileNumber': mobile, 'Password': password},
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-
-        // Store the token
-        // Save the token
-        String token = data['data']['token'];
-        _saveCredentialsAndToken(mobile, password, token);
-        print('Authentication successful');
-        return;
-      } else {
-        print('Authentication failed');
-      }
-    } catch (e) {
-      print('Error during authentication: $e');
+  Future<http.Response> fetchUser(String userId) async {
+    final url = Uri.parse('${baseUrl}fetch-user');
+    final response = await http.post(url, body: {'user_id': userId});
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to fetch user');
     }
   }
 
-  void _saveCredentialsAndToken(
-      String mobile, String password, String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mobile', mobile);
-    await prefs.setString('password', password);
-    await prefs.setString('token', token);
+  Future<void> saveUserId(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('user_id', userId);
   }
+
+  Future<String?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_id');
+  }
+
+  Future<Map<String, dynamic>> loginUser(String mobile, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login-user'),
+      body: {'MobileNumber': mobile, 'Password': password},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final String userId = data['data']['user_id'];
+      // Store user ID in shared preferences
+      await saveUserId(userId);
+      return data;
+    } else {
+      throw Exception('Failed to Login');
+    }
+  }
+
+  // Store the token
+  // Save the token
+  // String token = data['data']['token'];
+  // _saveCredentialsAndToken(mobile, password, token);
+  //       print('Authentication successful');
+  //       return;
+  //     } else {
+  //       print('Authentication failed');
+  //     }
+  //   } catch (e) {
+  //     print('Error during authentication: $e');
+  //   }
+  // }
+
+  // void _saveCredentialsAndToken(
+  //     String mobile, String password, String token) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('mobile', mobile);
+  //   await prefs.setString('password', password);
+  //   await prefs.setString('token', token);
+  // }
 
   // Future<void> storeToken(String token) async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   prefs.setString('token', token);
   // }
 
-  Future<String?> retrieveToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
+  // Future<String?> retrieveToken() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   return prefs.getString('token');
+  // }
 
-  Future<void> clearToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('token');
-  }
+  // Future<void> clearToken() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.remove('token');
+  // }
 
-  Future<void> logout() async {
-    // Clear the stored token on logout
-    await clearToken();
-    print('Logged out successfully');
-  }
+  //  Future<void> logout() async {
+  //   print('before log out');
+  //   //Clear the stored token on logout
+  //   await clearToken();
+  //   print('Logged out successfully');
+  // }
 }
 
 // import 'package:dio/dio.dart';

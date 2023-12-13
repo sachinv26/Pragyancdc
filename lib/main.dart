@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/client_login/get_otp.dart';
 import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
+import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
+import 'package:pragyan_cdc/provider/auth_provider.dart';
 
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ import 'package:provider/provider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => AuthProvider()),
     ChangeNotifierProvider(create: (context) => SignUpDataProvider()),
   ], child: const Pragyan()));
 }
@@ -44,6 +47,7 @@ class Pragyan extends StatelessWidget {
         '/clientLogin': (context) => const ClientLogin(),
         '/clientSignup': (context) => ClientSignUp(),
         '/getOtp': (context) => const GetOtp(),
+        '/dashBoard': (context) => const DashBoard(),
       },
     );
   }

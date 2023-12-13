@@ -4,8 +4,6 @@ import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ClientLogin extends StatefulWidget {
   const ClientLogin({super.key});
@@ -15,45 +13,46 @@ class ClientLogin extends StatefulWidget {
 }
 
 class _ClientLoginState extends State<ClientLogin> {
+  final UserAPI userAPI = UserAPI();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    _checkIfLoggedIn();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _checkIfLoggedIn();
+  // }
 
-  void _checkIfLoggedIn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedMobile = prefs.getString('mobile');
-    String? savedPassword = prefs.getString('password');
+  // void _checkIfLoggedIn() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? savedMobile = prefs.getString('mobile');
+  //   String? savedPassword = prefs.getString('password');
 
-    if (savedMobile != null && savedPassword != null) {
-      _mobileController.text = savedMobile;
-      _passwordController.text = savedPassword;
+  //   if (savedMobile != null && savedPassword != null) {
+  //     _mobileController.text = savedMobile;
+  //     _passwordController.text = savedPassword;
 
-      // You can now proceed with authentication if needed.
-      _login();
-    }
-  }
+  //     // You can now proceed with authentication if needed.
+  //     _login();
+  //   }
+  // }
 
-  void _login() async {
-    // Implement your authentication logic here.
-    // Once authenticated, you can save the credentials.
-    String mobile = _mobileController.text;
-    String password = _passwordController.text;
+  // void _login() async {
+  //   // Implement your authentication logic here.
+  //   // Once authenticated, you can save the credentials.
+  //   String mobile = _mobileController.text;
+  //   String password = _passwordController.text;
 
-    await UserAPI().authenticateUser(mobile, password);
+  //   await UserAPI().authenticateUser(mobile, password);
 
-    // Add the navigation logic here.
-  }
+  //   // Add the navigation logic here.
+  // }
 
-  void _saveCredentials(String mobile, String password) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mobile', mobile);
-    await prefs.setString('password', password);
-  }
+  // void _saveCredentials(String mobile, String password) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setString('mobile', mobile);
+  //   await prefs.setString('password', password);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +106,30 @@ class _ClientLoginState extends State<ClientLogin> {
                     CustomButton(
                         text: 'Login',
                         onPressed: () async {
-                          _login();
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                            builder: (context) {
-                              return const DashBoard();
-                            },
-                          ));
+                          final String mobile = _mobileController.text;
+                          final String password = _passwordController.text;
+
+                          final Map<String, dynamic> result =
+                              await userAPI.loginUser(mobile, password);
+
+                          // Check if the login was successful
+                          if (!result['error']) {
+                            // Navigate to the profile page or any other page
+                            Navigator.pushReplacementNamed(
+                                context, '/dashBoard');
+                          } else {
+                            // Show an error message or handle the error
+                            debugPrint('Login Failed');
+                          }
+
+                          // _login();
+
+                          // Navigator.of(context)
+                          //     .pushReplacement(MaterialPageRoute(
+                          //   builder: (context) {
+                          //     return const DashBoard();
+                          //   },
+                          // ));
                         }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

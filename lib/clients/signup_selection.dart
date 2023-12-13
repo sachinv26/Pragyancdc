@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/admin/admin_login.dart';
+import 'package:pragyan_cdc/clients/auth_wrapper.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/login.dart';
 
@@ -29,7 +30,13 @@ class SignupSelection extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/clientLogin');
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return AuthWrapper();
+                  },
+                ));
+
+                //   Navigator.pushNamed(context, '/clientLogin');
               },
               child: Container(
                 decoration: const BoxDecoration(

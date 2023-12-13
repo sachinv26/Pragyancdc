@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pragyan_cdc/api/user_api/user_api.dart';
+
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
+import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/provider/auth_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,51 +18,84 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       drawer: const ClientAppDrawer(),
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/cute_little_girl.png'),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/cute_little_girl.png'),
+            ),
           ),
-        ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(width: 10),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Arun',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  'Gowtham',
-                  style: TextStyle(fontSize: 12, color: Colors.black),
-                ),
-              ],
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return const NotificationScreen();
-                  },
-                ));
-              },
-            ),
-          ],
-        ),
-      ),
+          title: FutureBuilder<String?>(
+            future: UserAPI().getUserId(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print('snapshot waiting: ');
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                print('snapshot error: ${snapshot.error}');
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData) {
+                print('user id not found');
+                return const Text('No user ID found');
+              } else {
+                print('got user id: ${snapshot.data}');
+                return FutureBuilder<UserDetailsModel>(
+                    future: AuthProvider().fetchUserDetails(snapshot.data!),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Loading indicator while fetching user data
+                      } else if (userSnapshot.hasError) {
+                        return Text('Error: ${userSnapshot.error}');
+                      } else if (!userSnapshot.hasData) {
+                        return const Text('No user data found');
+                      } else {
+                        // User data is available, update the UI
+                        final userDetails = userSnapshot.data!;
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  userDetails.parentName,
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Colors.black),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  userDetails.childName,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.notifications,
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return const NotificationScreen();
+                                  },
+                                ));
+                              },
+                            ),
+                          ],
+                        );
+                      }
+                    });
+              }
+            },
+          )),
       body: Padding(
         padding: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 30),
         child: ListView(
