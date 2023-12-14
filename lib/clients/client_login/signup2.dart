@@ -65,7 +65,7 @@ class _SignupSecondState extends State<SignupSecond> {
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 48, 103, 50)),
                   ),
-                  const Text('Create your account to get started.'),
+                  const Text('Create a password.'),
                   CustomTextFormField(
                     hintText: 'Create Password',
                     controller: signUpDataProvider.passwordController,
@@ -109,12 +109,12 @@ class _SignupSecondState extends State<SignupSecond> {
                   //   confirmPasswordError,
                   //   style: const TextStyle(color: Colors.red),
                   // ),
-                  CustomTextFormField(
-                    keyboardType: TextInputType.phone,
-                    hintText: 'Mobile Number',
-                    controller: signUpDataProvider.phoneNumberController,
-                    iconData: const Icon(Icons.phone),
-                  ),
+                  // CustomTextFormField(
+                  //   keyboardType: TextInputType.phone,
+                  //   hintText: 'Mobile Number',
+                  //   controller: signUpDataProvider.phoneNumberController,
+                  //   iconData: const Icon(Icons.phone),
+                  // ),
                   kheight60,
                   Center(
                     child: CustomButton(
@@ -123,22 +123,22 @@ class _SignupSecondState extends State<SignupSecond> {
                           if (_form.currentState!.validate()) {
                             // Combine data into FullSignUpModel
                             FullSignUpModel fullSignUpModel = FullSignUpModel(
-                              parentName:
-                                  signUpDataProvider.parentNameController.text,
-                              childName:
-                                  signUpDataProvider.childNameController.text,
-                              childDOB: signUpDataProvider.childDOB,
-                              email: signUpDataProvider.mailIdController.text,
-                              location:
-                                  signUpDataProvider.locationController.text,
-                              address:
-                                  signUpDataProvider.addressController.text,
-                              password:
-                                  signUpDataProvider.passwordController.text,
-                              phoneNumber:
-                                  signUpDataProvider.phoneNumberController.text,
-                              //imagePath: signUpDataProvider.imagePath
-                            );
+                                parentName: signUpDataProvider
+                                    .parentNameController.text,
+                                childName:
+                                    signUpDataProvider.childNameController.text,
+                                childDOB: signUpDataProvider.childDOB,
+                                email: signUpDataProvider.mailIdController.text,
+                                location:
+                                    signUpDataProvider.locationController.text,
+                                address:
+                                    signUpDataProvider.addressController.text,
+                                password:
+                                    signUpDataProvider.passwordController.text,
+                                phoneNumber: widget.tempModel.mobileNumber
+
+                                //imagePath: signUpDataProvider.imagePath
+                                );
 
                             Map<String, dynamic> jsonData =
                                 fullSignUpModel.toJson();

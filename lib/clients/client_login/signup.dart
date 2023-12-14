@@ -10,9 +10,10 @@ import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
 class ClientSignUp extends StatelessWidget {
+  final String phoneNumber;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  ClientSignUp({super.key});
+  ClientSignUp({required this.phoneNumber, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +151,7 @@ class ClientSignUp extends StatelessWidget {
                                   signUpDataProvider.locationController.text,
                               address:
                                   signUpDataProvider.addressController.text,
+                              mobileNumber: phoneNumber,
                               //imagePath: signUpDataProvider.imagePath,
                             );
                             print(tempModeltoPass);

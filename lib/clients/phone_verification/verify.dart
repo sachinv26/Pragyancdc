@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
 
 class VerifyNumber extends StatefulWidget {
-  const VerifyNumber({Key? key}) : super(key: key);
+  final String phoneNumber;
+  const VerifyNumber({required this.phoneNumber, Key? key}) : super(key: key);
 
   @override
   State<VerifyNumber> createState() => _VerifyNumberState();
@@ -109,8 +111,14 @@ class _VerifyNumberState extends State<VerifyNumber> {
 
                         // Sign the user in (or link) with the credential
                         await auth.signInWithCredential(credential);
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, "/clientSignup", (route) => false);
+
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                          builder: (context) {
+                            return ClientSignUp(
+                                phoneNumber: widget.phoneNumber);
+                          },
+                        ), (route) => false);
                       } catch (e) {
                         debugPrint('Exception wrong otp $e');
                       }

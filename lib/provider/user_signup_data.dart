@@ -11,8 +11,9 @@ class SignUpDataProvider extends ChangeNotifier {
   final TextEditingController mailIdController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  //final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
   late ImagePicker _imagePicker;
   XFile? imageFile;
   File? file;
@@ -55,7 +56,7 @@ class SignUpDataProvider extends ChangeNotifier {
     mailIdController.dispose();
     locationController.dispose();
     addressController.dispose();
-    phoneNumberController.dispose();
+    // phoneNumberController.dispose();
     passwordController.dispose();
 
     super.dispose();

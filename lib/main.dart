@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/client_login/get_otp.dart';
 import 'package:pragyan_cdc/clients/client_login/login.dart';
-import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
@@ -48,7 +47,6 @@ class Pragyan extends StatelessWidget {
         '/introduction': (context) => const OnBoardingScreen(),
         '/signupSelection': (context) => const SignupSelection(),
         '/clientLogin': (context) => const ClientLogin(),
-        '/clientSignup': (context) => ClientSignUp(),
         '/getOtp': (context) => const GetOtp(),
         '/dashBoard': (context) => const DashBoard(),
       },
