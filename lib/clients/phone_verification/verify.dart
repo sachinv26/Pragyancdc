@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
 
 class VerifyNumber extends StatefulWidget {
   const VerifyNumber({Key? key}) : super(key: key);
@@ -9,6 +11,7 @@ class VerifyNumber extends StatefulWidget {
 }
 
 class _VerifyNumberState extends State<VerifyNumber> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -34,6 +37,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
         color: const Color.fromRGBO(234, 239, 243, 1),
       ),
     );
+    var code = "";
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -76,12 +80,15 @@ class _VerifyNumberState extends State<VerifyNumber> {
               ),
               Pinput(
                 length: 6,
+                onChanged: (value) {
+                  code = value;
+                },
                 // defaultPinTheme: defaultPinTheme,
                 // focusedPinTheme: focusedPinTheme,
                 // submittedPinTheme: submittedPinTheme,
 
                 showCursor: true,
-                onCompleted: (pin) => print(pin),
+                //  onCompleted: (pin) => print(pin),
               ),
               const SizedBox(
                 height: 20,
@@ -93,7 +100,21 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         backgroundColor: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {},
+                    onPressed: () async {
+                      // Create a PhoneAuthCredential with the code
+                      try {
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: MyPhone.verify, smsCode: code);
+
+                        // Sign the user in (or link) with the credential
+                        await auth.signInWithCredential(credential);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/clientSignup", (route) => false);
+                      } catch (e) {
+                        debugPrint('Exception wrong otp $e');
+                      }
+                    },
                     child: const Text("Verify Phone Number")),
               ),
             ],

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/phone_verification/verify.dart';
 
 class MyPhone extends StatefulWidget {
   const MyPhone({Key? key}) : super(key: key);
+  static String verify = "";
 
   @override
   State<MyPhone> createState() => _MyPhoneState();
@@ -10,6 +12,7 @@ class MyPhone extends StatefulWidget {
 
 class _MyPhoneState extends State<MyPhone> {
   TextEditingController countryController = TextEditingController();
+  var phone = '';
 
   @override
   void initState() {
@@ -81,10 +84,13 @@ class _MyPhoneState extends State<MyPhone> {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Expanded(
+                    Expanded(
                         child: TextField(
+                      onChanged: (value) {
+                        phone = value;
+                      },
                       keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone",
                       ),
@@ -103,12 +109,27 @@ class _MyPhoneState extends State<MyPhone> {
                         backgroundColor: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) {
-                          return const VerifyNumber();
+                    onPressed: () async {
+                      await FirebaseAuth.instance.verifyPhoneNumber(
+                        phoneNumber: countryController.text + phone,
+                        verificationCompleted:
+                            (PhoneAuthCredential credential) {},
+                        verificationFailed: (FirebaseAuthException e) {},
+                        codeSent: (String verificationId, int? resendToken) {
+                          MyPhone.verify = verificationId;
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return const VerifyNumber();
+                            },
+                          ));
                         },
-                      ));
+                        codeAutoRetrievalTimeout: (String verificationId) {},
+                      );
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //   builder: (context) {
+                      //     return const VerifyNumber();
+                      //   },
+                      // ));
                     },
                     child: const Text("Send the code")),
               )
