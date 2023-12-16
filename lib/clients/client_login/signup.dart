@@ -9,11 +9,24 @@ import 'package:pragyan_cdc/model/temp_signup_model.dart';
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
-class ClientSignUp extends StatelessWidget {
+class ClientSignUp extends StatefulWidget {
   final String phoneNumber;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  ClientSignUp({required this.phoneNumber, super.key});
+  const ClientSignUp({required this.phoneNumber, super.key});
+
+  @override
+  State<ClientSignUp> createState() => _ClientSignUpState();
+}
+
+class _ClientSignUpState extends State<ClientSignUp> {
+  String parentErr = '';
+
+  String childErr = '';
+
+  String mailErr = '';
+  String dobErr = '';
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +47,7 @@ class ClientSignUp extends StatelessWidget {
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Center(
                       child: Text(
@@ -42,32 +55,48 @@ class ClientSignUp extends StatelessWidget {
                         style: kTextStyle2,
                       ),
                     ),
+                    kheight10,
                     const Text(
                       'Enroll to Pragyan',
                       style: kTextStyle1,
                     ),
+                    kheight10,
                     CustomTextFormField(
-                      hintText: 'Enter Parent Name',
+                      hintText: 'Parent Name',
                       iconData: const Icon(Icons.person),
                       controller: signUpDataProvider.parentNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter Parent Name';
+                          // return 'Please enter parent name';
+                          setState(() {
+                            parentErr = 'Please enter parent name';
+                          });
                         }
                         return null;
                       },
                     ),
+
+                    Text(
+                      parentErr,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    kheight10,
                     CustomTextFormField(
-                      hintText: 'Enter Your Child Name',
+                      hintText: ' Child Name',
                       iconData: const Icon(Icons.person),
                       controller: signUpDataProvider.childNameController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter Child Name';
+                          childErr = 'Please enter child name';
                         }
                         return null;
                       },
                     ),
+                    Text(
+                      childErr,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    kheight10,
                     Row(
                       children: [
                         const Text(
@@ -87,7 +116,9 @@ class ClientSignUp extends StatelessWidget {
                             child: CustomTextFormField(
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Please select Child DOB';
+                                  setState(() {
+                                    dobErr = 'Please select date of birth';
+                                  });
                                 }
                                 return null;
                               },
@@ -98,6 +129,10 @@ class ClientSignUp extends StatelessWidget {
                           ),
                         )
                       ],
+                    ),
+                    Text(
+                      dobErr,
+                      style: const TextStyle(color: Colors.red),
                     ),
                     // GestureDetector(
                     //   onTap: () async {
@@ -110,30 +145,41 @@ class ClientSignUp extends StatelessWidget {
                     //       enabled: false,
                     //       iconData: const Icon(Icons.camera_alt)),
                     // ),
+                    kheight10,
                     CustomTextFormField(
                       hintText: 'Enter your Mail id',
                       iconData: const Icon(Icons.email),
                       controller: signUpDataProvider.mailIdController,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid email Id';
-                        } else if (!RegExp(
-                                r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
-                            .hasMatch(value)) {
-                          return 'Please enter a valid email address';
+                        if (value == null ||
+                            value.isEmpty ||
+                            !RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
+                                .hasMatch(value)) {
+                          setState(() {
+                            mailErr = 'Please enter a valid email address';
+                          });
                         }
                         return null;
                       },
                     ),
+
+                    Text(
+                      mailErr,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    kheight10,
                     CustomTextFormField(
                       hintText: 'Preferred Location',
                       iconData: const Icon(Icons.location_on),
                       controller: signUpDataProvider.locationController,
                     ),
+                    kheight10,
+
                     CustomTextFormField(
                       hintText: 'Address (Optional)',
                       controller: signUpDataProvider.addressController,
                     ),
+                    kheight30,
                     Center(
                       child: CustomButton(
                         text: 'Next',
@@ -151,7 +197,7 @@ class ClientSignUp extends StatelessWidget {
                                   signUpDataProvider.locationController.text,
                               address:
                                   signUpDataProvider.addressController.text,
-                              mobileNumber: phoneNumber,
+                              mobileNumber: widget.phoneNumber,
                               //imagePath: signUpDataProvider.imagePath,
                             );
                             print(tempModeltoPass);
