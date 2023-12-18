@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
@@ -13,10 +14,11 @@ class AuthWrapper extends StatelessWidget {
 
     if (authProvider.userId == null) {
       // User is not logged in, navigate to the login page
+      return const ClientLogin();
       // return const ClientLogin();
-      return ClientSignUp(
-        phoneNumber: '98765',
-      );
+      // return ClientSignUp(
+      //   phoneNumber: '98765',
+      // );
     } else {
       // User is logged in, navigate to the home page
       return const DashBoard();

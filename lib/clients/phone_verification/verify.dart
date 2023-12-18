@@ -1,19 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pragyan_cdc/api/login_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
+import 'dart:convert';
 
 class VerifyNumber extends StatefulWidget {
-  final String phoneNumber;
-  const VerifyNumber({required this.phoneNumber, Key? key}) : super(key: key);
-
+  String originalCode;
+  String phone;
+  VerifyNumber({required this.phone, required this.originalCode, Key? key})
+      : super(
+          key: key,
+        );
   @override
   State<VerifyNumber> createState() => _VerifyNumberState();
 }
 
 class _VerifyNumberState extends State<VerifyNumber> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  late String decoded;
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  @override
+  void initState() {
+    // TODO: implement initState
+    decoded = decode64(widget.originalCode);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -77,6 +90,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                 ),
                 textAlign: TextAlign.center,
               ),
+              Text(decoded),
               const SizedBox(
                 height: 30,
               ),
@@ -103,25 +117,30 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
+                      final response = await ApiServices().validateOtp(
+                          mobile: widget.phone,
+                          userId: '0',
+                          otpFor: '1',
+                          otpCode: code);
+                      print('response : $response');
                       // Create a PhoneAuthCredential with the code
-                      try {
-                        PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: MyPhone.verify, smsCode: code);
+                      // try {
+                      // PhoneAuthCredential credential =
+                      //     PhoneAuthProvider.credential(
+                      //         verificationId: MyPhone.verify, smsCode: code);
 
-                        // Sign the user in (or link) with the credential
-                        await auth.signInWithCredential(credential);
+                      // // Sign the user in (or link) with the credential
+                      // await auth.signInWithCredential(credential);
 
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                          builder: (context) {
-                            return ClientSignUp(
-                                phoneNumber: widget.phoneNumber);
-                          },
-                        ), (route) => false);
-                      } catch (e) {
-                        debugPrint('Exception wrong otp $e');
-                      }
+                      //   Navigator.of(context).pushAndRemoveUntil(
+                      //       MaterialPageRoute(
+                      //     builder: (context) {
+                      //       return ClientSignUp(phoneNumber: widget.phone);
+                      //     },
+                      //   ), (route) => false);
+                      // } catch (e) {
+                      //   debugPrint('Exception wrong otp $e');
+                      // }
                     },
                     child: const Text("Verify Phone Number")),
               ),
@@ -130,5 +149,10 @@ class _VerifyNumberState extends State<VerifyNumber> {
         ),
       ),
     );
+  }
+
+  String decode64(String code) {
+    String decodedCode = utf8.decode(base64Url.decode(code));
+    return decodedCode;
   }
 }
