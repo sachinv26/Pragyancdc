@@ -129,20 +129,6 @@ class _ClientSignUpState extends State<ClientSignUp> {
                         const SizedBox(
                           width: 25,
                         ),
-
-                        // CupertinoPicker(
-                        //   itemExtent: 32.0,
-                        //   onSelectedItemChanged: (value) {
-                        //     setState(() {
-                        //       selectedGenderIndex = value;
-                        //       selectedGender = genders[selectedGenderIndex];
-                        //       print('selected gender: $selectedGender');
-                        //     });
-                        //   },
-                        //   children: genders.map((String value) {
-                        //     return Text(value);
-                        //   }).toList(),
-                        // ),
                         Expanded(
                           child: GestureDetector(
                             onTap: () async {

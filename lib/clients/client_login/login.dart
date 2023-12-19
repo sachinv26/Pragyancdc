@@ -146,9 +146,7 @@ class _ClientLoginState extends State<ClientLogin> {
                             // ));
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return const ClientSignUp(
-                                  phoneNumber: '9887267',
-                                );
+                                return const PhoneNumberVerification();
                               },
                             ));
                           },

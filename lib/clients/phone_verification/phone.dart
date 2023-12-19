@@ -4,15 +4,16 @@ import 'package:pragyan_cdc/clients/phone_verification/verify.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'dart:convert';
 
-class MyPhone extends StatefulWidget {
-  const MyPhone({Key? key}) : super(key: key);
+class PhoneNumberVerification extends StatefulWidget {
+  const PhoneNumberVerification({Key? key}) : super(key: key);
   static String verify = "";
 
   @override
-  State<MyPhone> createState() => _MyPhoneState();
+  State<PhoneNumberVerification> createState() =>
+      _PhoneNumberVerificationState();
 }
 
-class _MyPhoneState extends State<MyPhone> {
+class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
   TextEditingController countryController = TextEditingController();
   var phone = '';
 

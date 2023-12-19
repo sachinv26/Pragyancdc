@@ -4,7 +4,7 @@ class TempModel {
   final String childName;
   final String childDOB;
   final String mailId;
-  final int location;
+  final String location;
   final String address;
   final String mobileNumber;
   final String gender;

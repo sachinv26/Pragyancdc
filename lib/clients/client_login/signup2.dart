@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
+import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -26,16 +28,6 @@ class _SignupSecondState extends State<SignupSecond> {
   final GlobalKey<FormState> _form = GlobalKey<FormState>();
 
   final TextEditingController _confirmPass = TextEditingController();
-
-  // late FToast fToast;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fToast = FToast();
-  //   // if you want to use context from globally instead of content we need to pass navigatorKey.currentContext!
-  //   fToast.init(context);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,14 +75,12 @@ class _SignupSecondState extends State<SignupSecond> {
                     ),
                     child: TextFormField(
                       controller: _confirmPass,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter password again";
+                      onSaved: (newValue) {
+                        if (signUpDataProvider.passwordController != newValue) {
+                          setState(() {
+                            confirmPasswordError = 'Password do not match';
+                          });
                         }
-                        if (value != signUpDataProvider.passwordController) {
-                          return 'Password do not match';
-                        }
-                        return null;
                       },
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -104,10 +94,10 @@ class _SignupSecondState extends State<SignupSecond> {
                               maxHeight: 55, maxWidth: double.infinity)),
                     ),
                   ),
-                  // Text(
-                  //   confirmPasswordError,
-                  //   style: const TextStyle(color: Colors.red),
-                  // ),
+                  Text(
+                    confirmPasswordError,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                   // CustomTextFormField(
                   //   keyboardType: TextInputType.phone,
                   //   hintText: 'Mobile Number',
@@ -144,6 +134,35 @@ class _SignupSecondState extends State<SignupSecond> {
                                 fullSignUpModel.toJson();
                             print('Before calling api:');
                             print(jsonData);
+                            final response =
+                                await ApiServices().parentSignup(jsonData);
+                            if (response['status'] == 1) {
+                              //successfully created account
+                              //navigate to login page
+
+                              Fluttertoast.showToast(
+                                msg: 'Account created succesfully!',
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                              );
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) {
+                                  return const ClientLogin();
+                                },
+                              ));
+                            } else {
+                              //error
+                              Fluttertoast.showToast(
+                                msg: response['message'],
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                              );
+                            }
                           }
                           // Make API call using fullSignUpModel
                         }),
@@ -152,38 +171,32 @@ class _SignupSecondState extends State<SignupSecond> {
               ),
             ),
           ),
-
-          // Center(
-          //     child: CustomButton(
-          //         text: 'Verify',
-          //         onPressed: () {
-          //           Navigator.pushNamed(context, '/getOtp');
-          //         })),
         ),
       ),
     );
   }
+}
 
-  Future<void> checkAndRequestPermissions() async {
-    // Check if the permission is already granted
-    PermissionStatus status = await Permission.storage.status;
+  // Future<void> checkAndRequestPermissions() async {
+  //   // Check if the permission is already granted
+  //   PermissionStatus status = await Permission.storage.status;
 
-    if (status.isGranted) {
-      // Permission is already granted, proceed with file access
-      print('Permission already granted');
-      return;
-    } else {
-      // Request permission
-      PermissionStatus result = await Permission.storage.request();
+  //   if (status.isGranted) {
+  //     // Permission is already granted, proceed with file access
+  //     print('Permission already granted');
+  //     return;
+  //   } else {
+  //     // Request permission
+  //     PermissionStatus result = await Permission.storage.request();
 
-      if (result.isGranted) {
-        // Permission granted, proceed with file access
-        print('Permission granted');
-      } else {
-        // Permission denied, handle accordingly
-        print('Permission denied');
-      }
-    }
+  //     if (result.isGranted) {
+  //       // Permission granted, proceed with file access
+  //       print('Permission granted');
+  //     } else {
+  //       // Permission denied, handle accordingly
+  //       print('Permission denied');
+  //     }
+  //   }
     //   void showToast() => Fluttertoast.showToast(
     //       msg: 'User Created Successfully',
     //       fontSize: 18,
@@ -196,5 +209,4 @@ class _SignupSecondState extends State<SignupSecond> {
     //       decoration: BoxDecoration(
     //           color: Colors.green, borderRadius: BorderRadius.circular(25)),
     //       child: const Text('User Created successfully'));
-  }
-}
+  

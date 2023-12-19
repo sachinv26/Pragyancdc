@@ -3,11 +3,12 @@ class FullSignUpModel {
   final String childName;
   final DateTime childDOB;
   final String email;
-  final int location;
+  final String location;
   final String address;
   final String password;
   final String phoneNumber;
   final String gender;
+
 //  final String? imagePath; // New field for the image path
 
   FullSignUpModel({
@@ -68,6 +69,8 @@ class FullSignUpModel {
       'prag_parent_password': password,
       'prag_parent_mobile': phoneNumber,
       'prag_child_gender': gender,
+      "prag_parent_device_imei": "sdf45sdf5",
+      "prag_parent_device_info": "samsung",
       //    'ImagePath': imagePath, // Include the image path in the JSON
     };
   }
