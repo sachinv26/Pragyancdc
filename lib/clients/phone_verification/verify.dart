@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/login_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
-import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
-import 'dart:convert';
+import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class VerifyNumber extends StatefulWidget {
   String originalCode;
@@ -19,6 +19,8 @@ class VerifyNumber extends StatefulWidget {
 
 class _VerifyNumberState extends State<VerifyNumber> {
   late String decoded;
+  var code = "";
+  String errMessage = '';
   // final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   void initState() {
@@ -42,17 +44,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
       ),
     );
 
-    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
-      borderRadius: BorderRadius.circular(8),
-    );
+    // final focusedPinTheme = defaultPinTheme.copyDecorationWith(
+    //   border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
+    //   borderRadius: BorderRadius.circular(8),
+    // );
 
-    final submittedPinTheme = defaultPinTheme.copyWith(
-      decoration: defaultPinTheme.decoration?.copyWith(
-        color: const Color.fromRGBO(234, 239, 243, 1),
-      ),
-    );
-    var code = "";
+    // final submittedPinTheme = defaultPinTheme.copyWith(
+    //   decoration: defaultPinTheme.decoration?.copyWith(
+    //     color: const Color.fromRGBO(234, 239, 243, 1),
+    //   ),
+    // );
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -97,6 +98,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
               Pinput(
                 length: 6,
                 onChanged: (value) {
+                  //  print(value);
                   code = value;
                 },
                 // defaultPinTheme: defaultPinTheme,
@@ -106,9 +108,33 @@ class _VerifyNumberState extends State<VerifyNumber> {
                 showCursor: true,
                 //  onCompleted: (pin) => print(pin),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: TextButton(
+                      onPressed: () async {
+                        final response = await ApiServices().generateOtp(
+                            mobile: widget.phone, userId: '0', otpFor: '1');
+                        // final status = response['status'];
+                        // print('status is $status');
+                        if (response['status'] == 1) {
+                          setState(() {
+                            widget.originalCode = response['gen'];
+                            decoded = decode64(widget.originalCode);
+                          });
+                          print('successfully generated');
+                        } else {
+                          setState(() {
+                            errMessage = response['message'];
+                          });
+                        }
+                      },
+                      child: const Text(
+                        'Resend OTP',
+                        style: TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline),
+                      ))),
+              kheight30,
               SizedBox(
                 height: 45,
                 child: ElevatedButton(
@@ -123,27 +149,36 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           otpFor: '1',
                           otpCode: code);
                       print('response : $response');
-                      // Create a PhoneAuthCredential with the code
-                      // try {
-                      // PhoneAuthCredential credential =
-                      //     PhoneAuthProvider.credential(
-                      //         verificationId: MyPhone.verify, smsCode: code);
-
-                      // // Sign the user in (or link) with the credential
-                      // await auth.signInWithCredential(credential);
-
-                      //   Navigator.of(context).pushAndRemoveUntil(
-                      //       MaterialPageRoute(
-                      //     builder: (context) {
-                      //       return ClientSignUp(phoneNumber: widget.phone);
-                      //     },
-                      //   ), (route) => false);
-                      // } catch (e) {
-                      //   debugPrint('Exception wrong otp $e');
-                      // }
+                      if (response['status'] == 1) {
+                        Fluttertoast.showToast(
+                          msg: 'OTP Verified Successfully!',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                        );
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) {
+                            return ClientSignUp(phoneNumber: widget.phone);
+                          },
+                        ));
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: 'Failed to verify OTP. Please try again.',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
+                      }
                     },
                     child: const Text("Verify Phone Number")),
               ),
+              kheight10,
+              Text(
+                errMessage,
+                style: const TextStyle(color: Colors.red),
+              )
             ],
           ),
         ),

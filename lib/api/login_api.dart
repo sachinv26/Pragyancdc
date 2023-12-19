@@ -11,29 +11,6 @@ class ApiServices {
     print(response);
   }
 
-  // Future generateOtp() async {
-  //   print('got inside method');
-  //   final response = await http
-  //       .post(Uri.parse('https://askmyg.com/auth/user_generate_otp'), body: {
-  //     'prag_mobile': '9087654321',
-  //     'prag_userid': '0',
-  //     'prag_otp_for': '1',
-  //   });
-  //   if (response.statusCode == 200) {
-  //     print(response.body);
-  //   } else {
-  //     print('error');
-  //   }
-
-  // final response = await http
-  //     .post(Uri.parse('https://askmyg.com/auth/user_generate_otp'), body: {
-  //   'prag_mobile': 7034436645,
-  //   'prag_userid': 0,
-  //   'prag_otp_for': 1,
-  // });
-//     // print('hdfhsdfhd');
-//   }
-// }
   Future<Map<String, dynamic>> generateOtp({
     required String mobile,
     required String userId,
@@ -105,7 +82,7 @@ class ApiServices {
       required String otpCode}) async {
     try {
       const String apiUrl =
-          'https://askmyg.com/auth/get_pragyanbrancht'; // Replace with your actual OTP validation API endpoint
+          'https://askmyg.com/auth//user_validate_otp'; // Replace with your actual OTP validation API endpoint
 
       final response = await http.post(
         Uri.parse(apiUrl),
