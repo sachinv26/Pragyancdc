@@ -4,9 +4,10 @@ class TempModel {
   final String childName;
   final String childDOB;
   final String mailId;
-  final String location;
+  final int location;
   final String address;
   final String mobileNumber;
+  final String gender;
   //final String? imagePath;
   TempModel({
     required this.parentName,
@@ -16,6 +17,7 @@ class TempModel {
     required this.location,
     required this.address,
     required this.mobileNumber,
+    required this.gender,
     //this.imagePath,
   });
   @override
@@ -28,6 +30,7 @@ class TempModel {
         '  location: $location,\n'
         '  address: $address\n'
         '  mobile number: $mobileNumber\n'
+        ' gender: $gender\n'
         //     '  imagePath: $imagePath\n'
         ')';
   }

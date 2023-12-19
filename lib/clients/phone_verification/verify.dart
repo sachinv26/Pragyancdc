@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pragyan_cdc/api/client_api.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 

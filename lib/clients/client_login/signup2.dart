@@ -1,8 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pragyan_cdc/api/user_api/user_api.dart';
-import 'package:pragyan_cdc/clients/client_login/get_otp.dart';
-import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -121,6 +120,8 @@ class _SignupSecondState extends State<SignupSecond> {
                         text: 'Create Account',
                         onPressed: () async {
                           if (_form.currentState!.validate()) {
+                            String encodedPass = base64.encode(utf8.encode(
+                                signUpDataProvider.passwordController.text));
                             // Combine data into FullSignUpModel
                             FullSignUpModel fullSignUpModel = FullSignUpModel(
                                 parentName: signUpDataProvider
@@ -129,12 +130,11 @@ class _SignupSecondState extends State<SignupSecond> {
                                     signUpDataProvider.childNameController.text,
                                 childDOB: signUpDataProvider.childDOB,
                                 email: signUpDataProvider.mailIdController.text,
-                                location:
-                                    signUpDataProvider.locationController.text,
+                                location: widget.tempModel.location,
+                                gender: widget.tempModel.gender,
                                 address:
                                     signUpDataProvider.addressController.text,
-                                password:
-                                    signUpDataProvider.passwordController.text,
+                                password: encodedPass,
                                 phoneNumber: widget.tempModel.mobileNumber
 
                                 //imagePath: signUpDataProvider.imagePath
@@ -144,47 +144,6 @@ class _SignupSecondState extends State<SignupSecond> {
                                 fullSignUpModel.toJson();
                             print('Before calling api:');
                             print(jsonData);
-                            //    await checkAndRequestPermissions();
-
-                            final response = await UserAPI.registerUser(jsonData
-                                // signUpDataProvider.file,
-                                //signUpDataProvider.imagePath
-                                );
-                            // var map = response.body as Map;
-                            // debugPrint('returned response');
-                            // print(map);
-                            // if (map['status'] == 200) {
-                            //   Navigator.of(context).pop();
-                            // }
-                            try {
-                              if (response.statusCode == 200 ||
-                                  response.statusCode == 201) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text("User created"),
-                                ));
-                                print('User registered successufully');
-                                // fToast.showToast(child: buildToast());
-                                print(response.body);
-                                Navigator.of(context)
-                                    .pushReplacement(MaterialPageRoute(
-                                  builder: (context) {
-                                    return const ClientLogin();
-                                  },
-                                ));
-                              } else {
-                                print(
-                                    'Error registering user ${response.statusCode}');
-                                print(response.body);
-                              }
-                            } catch (e) {
-                              print('Exception during API call: $e');
-                            }
-
-                            // Set the combined model to the provider
-                            // Provider.of<SignUpDataProvider>(context, listen: false)
-                            //     .submitForm();
-                            //create account api
                           }
                           // Make API call using fullSignUpModel
                         }),

@@ -3,10 +3,11 @@ class FullSignUpModel {
   final String childName;
   final DateTime childDOB;
   final String email;
-  final String location;
+  final int location;
   final String address;
   final String password;
   final String phoneNumber;
+  final String gender;
 //  final String? imagePath; // New field for the image path
 
   FullSignUpModel({
@@ -18,21 +19,24 @@ class FullSignUpModel {
     required this.address,
     required this.password,
     required this.phoneNumber,
+    required this.gender,
+
     //this.imagePath, // Pass the image path in the constructor
   });
 
   // Factory method to create a FullSignUpModel from a JSON map
   factory FullSignUpModel.fromJson(Map<String, dynamic> json) {
     return FullSignUpModel(
-      parentName: json['ParentName'] as String,
-      childName: json['ChildName'] as String,
+      parentName: json['prag_parent_name'] as String,
+      childName: json['prag_child_name'] as String,
       // Parse the string into a DateTime
-      childDOB: DateTime.parse(json['DOB']),
-      email: json['Email'] as String,
-      location: json['Location'] as String,
-      address: json['Address'] as String,
-      phoneNumber: json['MobileNumber'] as String,
-      password: json['Password'] as String,
+      childDOB: DateTime.parse(json['prag_child_dob']),
+      email: json['prag_parent_email'] as String,
+      location: json['prag_preferred_location'],
+      address: json['prag_parent_address'] as String,
+      phoneNumber: json['prag_parent_mobile'] as String,
+      password: json['prag_parent_password'] as String,
+      gender: json['prag_child_gender'] as String,
       // imagePath: json['ImagePath'] as String, // Add the image path field
     );
   }
@@ -55,14 +59,15 @@ class FullSignUpModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'ParentName': parentName,
-      'ChildName': childName,
-      'DOB': childDOB.toString().split(' ')[0],
-      'Email': email,
-      'Location': location,
-      'Address': address,
-      'Password': password,
-      'MobileNumber': phoneNumber,
+      'prag_parent_name': parentName,
+      'prag_child_name': childName,
+      'prag_child_dob': childDOB.toString().split(' ')[0],
+      'prag_parent_email': email,
+      'prag_preferred_location': location,
+      'prag_parent_address': address,
+      'prag_parent_password': password,
+      'prag_parent_mobile': phoneNumber,
+      'prag_child_gender': gender,
       //    'ImagePath': imagePath, // Include the image path in the JSON
     };
   }

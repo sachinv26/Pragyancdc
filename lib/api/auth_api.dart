@@ -178,4 +178,38 @@ class ApiServices {
       };
     }
   }
+
+  Future<Map<String, dynamic>> parentSignup(
+      Map<String, dynamic> inputData) async {
+    const String apiUrl = 'https://askmyg.com/auth/parent_signup';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(inputData),
+      );
+
+      if (response.statusCode == 200) {
+        // If the server returns a 200 OK response, parse the JSON
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+      } else {
+        // If the server did not return a 200 OK response, throw an exception.
+        print('Error: ${response.statusCode}');
+        return {
+          'status': 0,
+          'message': 'Unknown error occurred',
+        };
+      }
+    } catch (e) {
+      print('Catch error: $e');
+      return {
+        'status': 0,
+        'message': 'Unknown error occurred',
+      };
+    }
+  }
 }
