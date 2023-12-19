@@ -179,6 +179,7 @@ class ApiServices {
     }
   }
 
+//API Method for client sign up
   Future<Map<String, dynamic>> parentSignup(
       Map<String, dynamic> inputData) async {
     const String apiUrl = 'https://askmyg.com/auth/parent_signup';
@@ -211,5 +212,50 @@ class ApiServices {
         'message': 'Unknown error occurred',
       };
     }
+  }
+
+  //API Method for Client Login
+  Future<Map<String, dynamic>> parentLogin(
+      String phoneNo, String passwordEncoded) async {
+    const String apiUrl = 'https://askmyg.com/auth/parent_login';
+    try {
+      final response = await http.post(Uri.parse(apiUrl),
+          body: jsonEncode({
+            "prag_parent_mobile": phoneNo,
+            "prag_parent_password": passwordEncoded
+          }));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        int status = jsonResponse['status'] ?? 0;
+        String message = jsonResponse['message'] ?? 'Unknown error';
+        if (status == 1) {
+          return jsonResponse;
+        } else if (status == -2) {
+          return {
+            'status': 0,
+            'message':
+                'Mobile number is available and inactive, Please contact admin',
+          };
+        } else if (message.contains('Mobile number is not available')) {
+          return {'status': 0, 'message': 'Mobile number is not available'};
+        } else if (message.contains('Invalid password')) {
+          return {'status': 0, 'message': 'Invalid password'};
+        } else {
+          return {'status': 0, 'message': 'Unknown error'};
+        }
+      } else {
+        print('Error ${response.statusCode}');
+        return {
+          'status': 0,
+          'message': 'Unknown error occured.Try again later.'
+        };
+      }
+    } catch (e) {
+      print('Catch error: $e');
+    }
+    return {
+      'status': 0,
+      'message': 'Unhandled error occurred',
+    };
   }
 }
