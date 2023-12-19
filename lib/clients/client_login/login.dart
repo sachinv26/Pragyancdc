@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
+import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
@@ -138,9 +139,16 @@ class _ClientLoginState extends State<ClientLogin> {
                         const Text('New User? ', style: kTextStyle1),
                         GestureDetector(
                           onTap: () {
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) {
+                            //     return const MyPhone();
+                            //   },
+                            // ));
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return const MyPhone();
+                                return const ClientSignUp(
+                                  phoneNumber: '9887267',
+                                );
                               },
                             ));
                           },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pragyan_cdc/api/login_api.dart';
+import 'package:pragyan_cdc/api/client_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
@@ -153,11 +153,11 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         Fluttertoast.showToast(
                           msg: 'OTP Verified Successfully!',
                           toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
+                          gravity: ToastGravity.CENTER,
                           backgroundColor: Colors.green,
                           textColor: Colors.white,
                         );
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) {
                             return ClientSignUp(phoneNumber: widget.phone);
                           },
