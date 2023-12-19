@@ -1,34 +1,30 @@
-import 'dart:convert';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/api/user_api/user_api.dart';
-import 'package:pragyan_cdc/model/user_details_model.dart';
+class AuthProvider with ChangeNotifier {
+  final FlutterSecureStorage _storage = FlutterSecureStorage();
+  bool _isLoggedIn = false;
 
-class AuthProvider extends ChangeNotifier {
-  String? _userId;
+  bool get isLoggedIn => _isLoggedIn;
 
-  String? get userId => _userId;
-
-  void login(String userId) {
-    _userId = userId;
+  // Check if the user is logged in based on the presence of the authentication token
+  Future<void> checkLoginStatus() async {
+    String? authToken = await _storage.read(key: 'authToken');
+    _isLoggedIn = authToken != null;
     notifyListeners();
   }
 
+  // Log in the user and update the authentication status
+  Future<void> login(String authToken) async {
+    await _storage.write(key: 'authToken', value: authToken);
+    _isLoggedIn = true;
+    notifyListeners();
+  }
+
+  // Log out the user and update the authentication status
   Future<void> logout() async {
-    _userId = null;
+    await _storage.delete(key: 'authToken');
+    _isLoggedIn = false;
     notifyListeners();
-  }
-
-  Future<UserDetailsModel> fetchUserDetails(String userId) async {
-    // Fetch user details from the API and return a UserDetailsModel
-    final response = await UserAPI().fetchUser(
-        userId); // You need to implement this method in your UserAPI class
-    final Map<String, dynamic> responseData = json.decode(response.body);
-
-    if (responseData['error']) {
-      throw Exception('Failed to fetch user details');
-    }
-
-    return UserDetailsModel.fromJson(responseData['data']);
   }
 }

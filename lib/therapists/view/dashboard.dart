@@ -3,6 +3,7 @@ import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/therapists/view/group_therapy.dart';
 import 'package:pragyan_cdc/therapists/view/home.dart';
 import 'package:pragyan_cdc/therapists/view/my_appointments.dart';
+import 'package:pragyan_cdc/therapists/view/widgets/drawer_therapist.dart';
 
 class TherapistDashBoard extends StatefulWidget {
   const TherapistDashBoard({super.key});

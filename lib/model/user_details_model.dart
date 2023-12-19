@@ -1,43 +1,37 @@
-class UserDetailsModel {
-  final String userId;
+class UserProfile {
   final String parentName;
-  final String childName;
-  final String password;
-  final DateTime dob;
-  final String? profileImage;
-  final String mobileNumber;
-  final String email;
-  final String? location;
-  final String? address;
-  final DateTime createdAt;
+  final String parentMobile;
+  final String parentEmail;
+  final String preferredLocation;
+  final String parentAddress;
+  final String parentUserId;
+  final String profileName;
+  final String profileImage;
+  //final String parentAuthToken;
 
-  UserDetailsModel({
-    required this.userId,
+  UserProfile({
     required this.parentName,
-    required this.childName,
-    required this.password,
-    required this.dob,
-    this.profileImage,
-    required this.mobileNumber,
-    required this.email,
-    this.location,
-    this.address,
-    required this.createdAt,
+    required this.parentMobile,
+    required this.parentEmail,
+    required this.preferredLocation,
+    required this.parentAddress,
+    required this.parentUserId,
+    required this.profileName,
+    required this.profileImage,
+    // required this.parentAuthToken,
   });
 
-  factory UserDetailsModel.fromJson(Map<String, dynamic> json) {
-    return UserDetailsModel(
-      userId: json['UserID'],
-      parentName: json['ParentName'],
-      childName: json['ChildName'],
-      password: json['Password'],
-      dob: DateTime.parse(json['DOB']),
-      profileImage: json['ProfileImage'],
-      mobileNumber: json['MobileNumber'],
-      email: json['Email'],
-      location: json['Location'],
-      address: json['Address'],
-      createdAt: DateTime.parse(json['CreatedAt']),
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      parentName: json['prag_parent_name'] ?? '',
+      parentMobile: json['prag_parent_mobile'] ?? '',
+      parentEmail: json['prag_parent_email'] ?? '',
+      preferredLocation: json['prag_preferred_location'] ?? '',
+      parentAddress: json['prag_parent_address'] ?? '',
+      parentUserId: json['parent_user_id'] ?? '',
+      profileName: json['profile_name'] ?? '',
+      profileImage: json['profile_image'] ?? '',
+      // parentAuthToken: json['prag_parent_auth_token'] ?? '',
     );
   }
 }

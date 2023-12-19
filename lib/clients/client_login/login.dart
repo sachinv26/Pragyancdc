@@ -1,11 +1,19 @@
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
-import 'package:pragyan_cdc/clients/client_login/signup.dart';
+import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ClientLogin extends StatefulWidget {
   const ClientLogin({super.key});
@@ -110,28 +118,39 @@ class _ClientLoginState extends State<ClientLogin> {
                         onPressed: () async {
                           final String mobile = _mobileController.text;
                           final String password = _passwordController.text;
+                          final String encodedPassword =
+                              base64.encode(utf8.encode(password));
+                          final response = await ApiServices()
+                              .parentLogin(mobile, encodedPassword);
+                          if (response['status'] == 1) {
+                            //success
+                            final storage = new FlutterSecureStorage();
+                            await storage.write(
+                                key: 'authToken',
+                                value: response['prag_parent_auth_token']);
+// Parse the user profile data
+                            final userProfile =
+                                UserProfile.fromJson(response['profile']);
+                            // Set the user profile in the provider
+                            Provider.of<UserProvider>(context, listen: false)
+                                .setUserProfile(userProfile);
 
-                          final Map<String, dynamic> result =
-                              await userAPI.loginUser(mobile, password);
-
-                          // Check if the login was successful
-                          if (!result['error']) {
-                            // Navigate to the profile page or any other page
-                            Navigator.pushReplacementNamed(
-                                context, '/dashBoard');
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (context) {
+                                return const DashBoard();
+                              },
+                            ));
                           } else {
-                            // Show an error message or handle the error
-                            debugPrint('Login Failed');
+                            //error
+                            Fluttertoast.showToast(
+                              msg: response['message'],
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                            );
                           }
-
-                          // _login();
-
-                          // Navigator.of(context)
-                          //     .pushReplacement(MaterialPageRoute(
-                          //   builder: (context) {
-                          //     return const DashBoard();
-                          //   },
-                          // ));
                         }),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

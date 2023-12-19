@@ -6,14 +6,17 @@ import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
-import 'package:pragyan_cdc/model/user_details_model.dart';
+
 import 'package:pragyan_cdc/provider/auth_provider.dart';
+import 'package:pragyan_cdc/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userDetails = Provider.of<UserProvider>(context).userProfile;
     return Scaffold(
       drawer: const ClientAppDrawer(),
       appBar: AppBar(
@@ -25,82 +28,42 @@ class HomeScreen extends StatelessWidget {
               backgroundImage: AssetImage('assets/images/cute_little_girl.png'),
             ),
           ),
-          title: FutureBuilder<String?>(
-            future: UserPreferences.getUserId(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                print('snapshot waiting: ');
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                print('snapshot error: ${snapshot.error}');
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData) {
-                print('user id not found');
-                return const Text('No user ID found');
-              } else {
-                print('got user id: ${snapshot.data}');
-                return FutureBuilder<UserDetailsModel>(
-                    future: AuthProvider().fetchUserDetails(snapshot.data!),
-                    builder: (context, userSnapshot) {
-                      if (userSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        print('second builder waiting');
-                        return const CircularProgressIndicator(); // Loading indicator while fetching user data
-                      } else if (userSnapshot.hasError) {
-                        print('usersnapshot has error: ${userSnapshot.error}');
-                        return Text('Error: ${userSnapshot.error}');
-                      } else if (!userSnapshot.hasData) {
-                        print('user id not found');
-                        return const Text('No user data found');
-                      } else {
-                        // User data is available, update the UI
-                        print('got the user details ${userSnapshot.data}');
-                        final userDetails = userSnapshot.data!;
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  userDetails.parentName,
-                                  style: const TextStyle(
-                                      fontSize: 17, color: Colors.black),
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  userDetails.childName,
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.notifications,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) {
-                                    return const NotificationScreen();
-                                  },
-                                ));
-                              },
-                            ),
-                          ],
-                        );
-                      }
-                    });
-              }
-            },
-          )),
+          title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userDetails!.parentName,
+                  style: const TextStyle(fontSize: 17, color: Colors.black),
+                ),
+                const SizedBox(
+                  height: 4,
+                ),
+                // Text(
+                //   userDetails.,
+                //   style: const TextStyle(
+                //       fontSize: 13,
+                //       color: Colors.black,
+                //       fontWeight: FontWeight.bold),
+                // ),
+              ],
+            ),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(
+                Icons.notifications,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return const NotificationScreen();
+                  },
+                ));
+              },
+            ),
+          ])),
       body: Padding(
         padding: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 30),
         child: ListView(
@@ -328,6 +291,8 @@ class ClientAppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userDetails = Provider.of<UserProvider>(context).userProfile;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -350,14 +315,15 @@ class ClientAppDrawer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Arun Gawtham',
-                        style: TextStyle(
+                    Text(userDetails!.parentName,
+                        style: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     kheight10,
-                    const Text('arungawtham@gmail.com',
-                        style: TextStyle(fontSize: 16)),
+                    Text(userDetails.parentEmail,
+                        style: const TextStyle(fontSize: 16)),
                     kheight10,
-                    const Text('9876543210', style: TextStyle(fontSize: 16)),
+                    Text(userDetails.parentMobile,
+                        style: const TextStyle(fontSize: 16)),
                   ],
                 ),
               ],
@@ -458,131 +424,6 @@ class ClientAppDrawer extends StatelessWidget {
               await UserPreferences.clearUserId();
               await AuthProvider().logout();
               Navigator.pushReplacementNamed(context, '/clientLogin');
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TherapistAppDrawer extends StatelessWidget {
-  const TherapistAppDrawer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: [
-          // Drawer Header
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 25,
-                  backgroundImage: AssetImage(
-                      'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png'),
-                ),
-                const SizedBox(width: 16.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Dr. Amrita Rao', style: kTextStyle1),
-                    kheight10,
-                    const Text('Speech & Language Therapy',
-                        style: TextStyle(color: Colors.black)),
-                    kheight10,
-                    const Text('AmritaraoSpeech05@gmail.com',
-                        style: TextStyle(color: Colors.black)),
-                    kheight10,
-                    const Text('9876543210',
-                        style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Separation Line
-          //   const Divider(),
-          // Edit Profile
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.edit),
-            title: const Text('Edit Profile'),
-            onTap: () {
-              // Handle Edit Profile
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const EditProfile()));
-            },
-          ),
-          // List of items
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.info),
-            title: const Text('About Pragyan'),
-            onTap: () {
-              // Handle About Pragyan
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.help),
-            title: const Text('Get Help & Support'),
-            onTap: () {
-              // Handle Get Help & Support
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.history),
-            title: const Text('History'),
-            onTap: () {
-              // Handle History
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.payment),
-            title: const Text('Payment issue'),
-            onTap: () {
-              // Handle Payment issue
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.settings),
-            title: const Text('Setting'),
-            onTap: () {
-              // Handle Setting
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.feedback),
-            title: const Text('Feedback'),
-            onTap: () {
-              // Handle Feedback
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.assignment),
-            title: const Text('Terms and Conditions'),
-            onTap: () {
-              // Handle Terms and Conditions
-            },
-          ),
-
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              // Handle Logout
             },
           ),
         ],
