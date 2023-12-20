@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pragyan_cdc/clients/user_preferences.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
 
-import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -33,9 +32,17 @@ class HomeScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  userDetails!.parentName,
-                  style: const TextStyle(fontSize: 17, color: Colors.black),
+                TextButton(
+                  child: Text(
+                    userDetails!.parentName,
+                    style: const TextStyle(fontSize: 17, color: Colors.black),
+                  ),
+                  onPressed: () async {
+                    showdetails(context);
+                  },
+
+                  // userDetails!.parentName,
+                  // style: const TextStyle(fontSize: 17, color: Colors.black),
                 ),
                 const SizedBox(
                   height: 4,
@@ -419,15 +426,23 @@ class ClientAppDrawer extends StatelessWidget {
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
-            onTap: () async {
-              // Handle Logout
-              await UserPreferences.clearUserId();
-              await AuthProvider().logout();
-              Navigator.pushReplacementNamed(context, '/clientLogin');
-            },
+            onTap: () async {},
           ),
         ],
       ),
     );
   }
+
+  logout() {}
+}
+
+showdetails(BuildContext context) async {
+  const storage = FlutterSecureStorage();
+  String? authToken = await storage.read(key: 'authToken');
+  final userDetails =
+      Provider.of<UserProvider>(context, listen: false).userProfile;
+  print(authToken);
+  print(userDetails!.parentMobile);
+  print(userDetails.parentName);
+  print(userDetails.parentUserId);
 }
