@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
 
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
@@ -34,10 +35,23 @@ class HomeScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  userDetails.parentName,
-                  style: const TextStyle(fontSize: 17, color: Colors.black),
-                ),
+                TextButton(
+                    onPressed: () async {
+                      print('User details');
+                      print(userDetails.parentName);
+                      print(userDetails.parentUserId);
+                      final token = await ApiServices().getToken(context);
+                      print('token fetched');
+                      print(token);
+                    },
+                    child: Text(
+                      userDetails.parentName,
+                      style: const TextStyle(fontSize: 17, color: Colors.black),
+                    )),
+                // Text(
+                //   userDetails.parentName,
+                //   style: const TextStyle(fontSize: 17, color: Colors.black),
+                // ),
 
                 // userDetails!.parentName,
                 // style: const TextStyle(fontSize: 17, color: Colors.black),

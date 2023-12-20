@@ -306,4 +306,41 @@ class ApiServices {
   Future<void> clearToken() async {
     await _storage.delete(key: 'token');
   }
+
+  //upload image
+  Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
+      dynamic image, String userId, String token) async {
+    const String apiUrl = 'https://askmyg.com/parentboard/upload_profileimage';
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'praguserid': userId,
+          'pragusertoken': token,
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'profileimage': image,
+          'data': data,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Successful API call
+        print('Image uploaded successfully');
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse;
+        // Handle success as needed
+      } else {
+        // API call failed
+        print('Failed to upload image. Status code: ${response.statusCode}');
+        // Handle failure as needed
+        return {"status": 0, "message": "Failed to upload"};
+      }
+    } catch (error) {
+      print('Error making API call: $error');
+      // Handle error as needed
+      return {"status": 0, "message": "Unknown error"};
+    }
+  }
 }

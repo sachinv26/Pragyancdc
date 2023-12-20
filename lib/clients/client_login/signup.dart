@@ -169,6 +169,10 @@ class _ClientSignUpState extends State<ClientSignUp> {
                     //       iconData: const Icon(Icons.camera_alt)),
                     // ),
                     kheight10,
+                    const Text(
+                      'Child Gender:',
+                      style: khintTextStyle,
+                    ),
                     Row(
                       children: [
                         Radio<String>(
@@ -181,7 +185,7 @@ class _ClientSignUpState extends State<ClientSignUp> {
                               });
                             }),
                         const Text('Male'),
-                        const SizedBox(width: 16.0),
+                        const SizedBox(width: 4.0),
                         Radio<String>(
                           value: 'female',
                           groupValue: _selectedGender,
@@ -193,6 +197,18 @@ class _ClientSignUpState extends State<ClientSignUp> {
                           },
                         ),
                         const Text('Female'),
+                        const SizedBox(width: 4.0),
+                        Radio<String>(
+                          value: 'other',
+                          groupValue: _selectedGender,
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedGender = value!;
+                              print('selected gender: $_selectedGender');
+                            });
+                          },
+                        ),
+                        const Text('Other'),
                       ],
                     ),
                     CustomTextFormField(

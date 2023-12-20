@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
@@ -9,9 +11,16 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ClientAppDrawer extends StatelessWidget {
+class ClientAppDrawer extends StatefulWidget {
   final BuildContext ctx;
-  ClientAppDrawer({required this.ctx, super.key});
+  const ClientAppDrawer({required this.ctx, super.key});
+
+  @override
+  State<ClientAppDrawer> createState() => _ClientAppDrawerState();
+}
+
+class _ClientAppDrawerState extends State<ClientAppDrawer> {
+  File? _selectedImage;
   final api = ApiServices();
 
   @override
@@ -30,17 +39,38 @@ class ClientAppDrawer extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                GestureDetector(
-                  child: const CircleAvatar(
-                    radius: 35,
-                    backgroundImage:
-                        AssetImage('assets/images/empty-user.jpeg'),
-                  ),
-                  onTap: () async {
-                    await _requestPermissions();
-                    await _pickImageFromGallery();
-                  },
-                ),
+                _selectedImage != null
+                    ? CircleAvatar(
+                        radius: 35,
+                        backgroundImage: FileImage(_selectedImage!),
+                      )
+                    : GestureDetector(
+                        child: const CircleAvatar(
+                          radius: 35,
+                          backgroundImage:
+                              AssetImage('assets/images/empty-user.jpeg'),
+                        ),
+                        onTap: () async {
+                          await _requestPermissions();
+                          await _pickImageFromGallery(
+                              userDetails!.parentUserId);
+                        },
+                      ),
+//                 GestureDetector(
+//                   child:
+//  CircleAvatar(
+//               radius: 60,
+//               backgroundImage: _selectedImage != null
+//                   ? FileImage(_selectedImage!)
+//                   : AssetImage('assets/placeholder_image.png'),
+//             ),
+                // AssetImage('assets/images/empty-user.jpeg'),
+
+                //   onTap: () async {
+                //     await _requestPermissions();
+                //     await _pickImageFromGallery();
+                //   },
+                // ),
                 kwidth10,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +197,8 @@ class ClientAppDrawer extends StatelessWidget {
                     fontSize: 16.0,
                   );
                   print('Logout Trigger Context: $context');
-                  await Provider.of<AuthProvider>(ctx, listen: false).logout();
+                  await Provider.of<AuthProvider>(widget.ctx, listen: false)
+                      .logout();
                 } else {
                   //fail to logout
                   Fluttertoast.showToast(
@@ -190,11 +221,34 @@ class ClientAppDrawer extends StatelessWidget {
     );
   }
 
-  Future<void> _pickImageFromGallery() async {
+  Future<void> _pickImageFromGallery(String userId) async {
+    final api = ApiServices();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+
+      final token = await api.getToken(context);
+      if (token != null) {
+        try {
+          // Read the raw image data
+          List<int> imageBytes = await File(image.path).readAsBytes();
+          //call api
+          Map<String, dynamic> response = await api.callImageUploadApi(
+              {"child_id": 0, "call_from": 1}, image, userId, token);
+          if (response['status'] == 1) {
+            print('image uploaded');
+          } else {
+            print('failed');
+          }
+        } catch (e) {
+          print('Error uploading image: $e');
+        }
+      }
+
       // Handle the selected image here
       // You might want to:
       // - Display the image in the CircleAvatar
