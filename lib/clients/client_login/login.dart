@@ -1,22 +1,22 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/user_api/user_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/phone_verification/phone.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class ClientLogin extends StatefulWidget {
-  const ClientLogin({super.key});
+  BuildContext ctx;
+  ClientLogin({required this.ctx, super.key});
 
   @override
   State<ClientLogin> createState() => _ClientLoginState();
@@ -116,6 +116,7 @@ class _ClientLoginState extends State<ClientLogin> {
                     CustomButton(
                         text: 'Login',
                         onPressed: () async {
+                          print('got inside login button');
                           final String mobile = _mobileController.text;
                           final String password = _passwordController.text;
                           final String encodedPassword =
@@ -123,24 +124,28 @@ class _ClientLoginState extends State<ClientLogin> {
                           final response = await ApiServices()
                               .parentLogin(mobile, encodedPassword);
                           if (response['status'] == 1) {
+                            print('api call done and status returned 1');
                             //success
-                            final storage = new FlutterSecureStorage();
-                            await storage.write(
-                                key: 'authToken',
-                                value: response['prag_parent_auth_token']);
+                            // ApiServices()
+                            //     .setToken(response['prag_parent_auth_token']);
+                            // final storage = new FlutterSecureStorage();
+                            // await storage.write(
+                            //     key: 'authToken',
+                            //     value: response['prag_parent_auth_token']);
 // Parse the user profile data
+                            AuthProvider authProvider =
+                                Provider.of<AuthProvider>(widget.ctx,
+                                    listen: false);
+                            await authProvider
+                                .login(response['prag_parent_auth_token']);
+
+                            print(' auth provider login');
                             final userProfile =
                                 UserProfile.fromJson(response['profile']);
                             // Set the user profile in the provider
-                            Provider.of<UserProvider>(context, listen: false)
+                            Provider.of<UserProvider>(widget.ctx, listen: false)
                                 .setUserProfile(userProfile);
-
-                            Navigator.of(context)
-                                .pushReplacement(MaterialPageRoute(
-                              builder: (context) {
-                                return const DashBoard();
-                              },
-                            ));
+                            //  Navigator.pushNamed(context, '/dashboard/$ctx');
                           } else {
                             //error
                             Fluttertoast.showToast(
@@ -158,11 +163,6 @@ class _ClientLoginState extends State<ClientLogin> {
                         const Text('New User? ', style: kTextStyle1),
                         GestureDetector(
                           onTap: () {
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //   builder: (context) {
-                            //     return const MyPhone();
-                            //   },
-                            // ));
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return const PhoneNumberVerification();

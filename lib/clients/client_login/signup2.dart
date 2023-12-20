@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
-import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -148,11 +147,7 @@ class _SignupSecondState extends State<SignupSecond> {
                                 textColor: Colors.white,
                               );
                               Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                builder: (context) {
-                                  return const ClientLogin();
-                                },
-                              ));
+                                  .popUntil((route) => route.isFirst);
                             } else {
                               //error
                               Fluttertoast.showToast(

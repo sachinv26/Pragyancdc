@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class AddProfilePic extends StatelessWidget {
@@ -36,11 +35,11 @@ class AddProfilePic extends StatelessWidget {
                 children: [
                   TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) {
-                            return const DashBoard();
-                          },
-                        ));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return const DashBoard();
+                        //   },
+                        // ));
                       },
                       child: const Text(
                         'Skip',

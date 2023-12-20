@@ -23,10 +23,12 @@ class SuccessfulPayment extends StatelessWidget {
               alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
-                    return const DashBoard();
-                  }));
+                  Navigator.of(context)
+                      .popUntil((route) => route.settings.name == '/dashboard');
+                  // Navigator.pushReplacement(context,
+                  //     MaterialPageRoute(builder: (context) {
+                  //   return  DashBoard();
+                  // }));
                 },
                 style: ButtonStyle(
                     elevation: MaterialStateProperty.all(0),

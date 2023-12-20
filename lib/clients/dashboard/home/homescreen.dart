@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
+import 'package:pragyan_cdc/provider/auth_provider.dart';
 
 import 'package:pragyan_cdc/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  BuildContext ctx;
+  HomeScreen({required this.ctx, super.key});
 
   @override
   Widget build(BuildContext context) {
     final userDetails = Provider.of<UserProvider>(context).userProfile;
+    if (userDetails == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
-      drawer: const ClientAppDrawer(),
+      drawer: ClientAppDrawer(ctx: ctx),
       appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -32,18 +38,14 @@ class HomeScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  child: Text(
-                    userDetails!.parentName,
-                    style: const TextStyle(fontSize: 17, color: Colors.black),
-                  ),
-                  onPressed: () async {
-                    showdetails(context);
-                  },
-
-                  // userDetails!.parentName,
-                  // style: const TextStyle(fontSize: 17, color: Colors.black),
+                Text(
+                  userDetails.parentName,
+                  style: const TextStyle(fontSize: 17, color: Colors.black),
                 ),
+
+                // userDetails!.parentName,
+                // style: const TextStyle(fontSize: 17, color: Colors.black),
+
                 const SizedBox(
                   height: 4,
                 ),
@@ -294,7 +296,9 @@ class ServiceItem extends StatelessWidget {
 }
 
 class ClientAppDrawer extends StatelessWidget {
-  const ClientAppDrawer({super.key});
+  BuildContext ctx;
+  ClientAppDrawer({required this.ctx, super.key});
+  final api = ApiServices();
 
   @override
   Widget build(BuildContext context) {
@@ -426,23 +430,52 @@ class ClientAppDrawer extends StatelessWidget {
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
-            onTap: () async {},
+            onTap: () async {
+              final authtoken = await api.getToken(context);
+              if (authtoken != null) {
+                final response =
+                    await api.parentLogout(userDetails.parentUserId, authtoken);
+                if (response['status'] == 1) {
+                  //logout success
+                  Fluttertoast.showToast(
+                    msg: "Logging out...",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Colors.black87,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
+                  print('Logout Trigger Context: $context');
+                  await Provider.of<AuthProvider>(ctx, listen: false).logout();
+                } else {
+                  //fail to logout
+                  Fluttertoast.showToast(
+                    msg: "Logout Failed",
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 2,
+                    backgroundColor: Colors.white,
+                    textColor: Colors.red,
+                    fontSize: 16.0,
+                  );
+                }
+              } else {
+                debugPrint('Auth Token is null');
+              }
+            },
           ),
         ],
       ),
     );
   }
-
-  logout() {}
 }
 
-showdetails(BuildContext context) async {
-  const storage = FlutterSecureStorage();
-  String? authToken = await storage.read(key: 'authToken');
-  final userDetails =
-      Provider.of<UserProvider>(context, listen: false).userProfile;
-  print(authToken);
-  print(userDetails!.parentMobile);
-  print(userDetails.parentName);
-  print(userDetails.parentUserId);
-}
+
+  // final userDetails =
+  //     Provider.of<UserProvider>(context, listen: false).userProfile;
+  // print(authToken);
+  // print(userDetails!.parentMobile);
+  // print(userDetails.parentName);
+  // print(userDetails.parentUserId);
+

@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
   static String baseUrl = 'https://askmyg.com/auth';
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
 //for testing network issues
   Future testApi() async {
@@ -257,5 +260,50 @@ class ApiServices {
       'status': 0,
       'message': 'Unhandled error occurred',
     };
+  }
+
+  //API method to logout
+  Future<Map<String, dynamic>> parentLogout(
+      String userId, String authtoken) async {
+    const String apiUrl = "https://askmyg.com/auth/parent_logout";
+    try {
+      final response = await http.post(Uri.parse(apiUrl),
+          headers: {'praguserid': userId, 'pragusertoken': authtoken});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        int status = jsonResponse['status'] ?? 0;
+        String message = jsonResponse['message'] ?? 'Unknown error';
+        if (status == 1) {
+          return jsonResponse;
+        } else {
+          return {'status': 0, 'message': 'User login is invalid'};
+        }
+      } else {
+        print('Error ${response.statusCode}');
+        return {
+          'status': 0,
+          'message': 'Unknown error occured.Try again later.'
+        };
+      }
+    } catch (e) {
+      print('catch error: $e');
+      return {
+        'status': 0,
+        'message': 'Unknown error occurred',
+      };
+    }
+  }
+
+  Future<void> setToken(String tokenValue) async {
+    await _storage.write(key: 'authToken', value: tokenValue);
+  }
+
+  Future<String?> getToken(BuildContext context) async {
+    String? authToken = await _storage.read(key: 'authToken');
+    return authToken;
+  }
+
+  Future<void> clearToken() async {
+    await _storage.delete(key: 'token');
   }
 }

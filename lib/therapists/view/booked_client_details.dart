@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
-import 'package:pragyan_cdc/clients/feedback/feedback_form.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
@@ -161,11 +159,8 @@ class ClientDetails extends StatelessWidget {
                     child: const Text('Pending')),
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) {
-                          return const HomeScreen();
-                        },
-                      ));
+                      Navigator.of(context).popUntil(
+                          (route) => route.settings.name == '/dashboard');
                     },
                     child: const Text('Completed'))
               ],

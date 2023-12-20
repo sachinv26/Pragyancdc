@@ -5,7 +5,8 @@ import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({super.key});
+  BuildContext ctx;
+  DashBoard({required this.ctx, super.key});
 
   @override
   _DashBoardState createState() => _DashBoardState();
@@ -14,11 +15,17 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   int _currentIndex = 0;
 
-  final List<Widget> pages = [
-    const HomeScreen(),
-    const AppointmentScreen(),
-    const WalletScreen(),
-  ];
+  late List<Widget> pages; // Declare but don't initialize here
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      HomeScreen(ctx: widget.ctx), // Access widget.ctx after initialization
+      const AppointmentScreen(),
+      const WalletScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {

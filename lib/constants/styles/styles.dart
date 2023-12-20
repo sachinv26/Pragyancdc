@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
 
-Color kPrimaryColor = const Color(0xffFC9D45);
+Color kPrimaryColor = Colors.green;
 Color kSecondaryColor = const Color(0xff573353);
 
 const kTextStyle1 = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
