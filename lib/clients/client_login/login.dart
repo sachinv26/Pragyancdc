@@ -27,43 +27,6 @@ class _ClientLoginState extends State<ClientLogin> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _checkIfLoggedIn();
-  // }
-
-  // void _checkIfLoggedIn() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? savedMobile = prefs.getString('mobile');
-  //   String? savedPassword = prefs.getString('password');
-
-  //   if (savedMobile != null && savedPassword != null) {
-  //     _mobileController.text = savedMobile;
-  //     _passwordController.text = savedPassword;
-
-  //     // You can now proceed with authentication if needed.
-  //     _login();
-  //   }
-  // }
-
-  // void _login() async {
-  //   // Implement your authentication logic here.
-  //   // Once authenticated, you can save the credentials.
-  //   String mobile = _mobileController.text;
-  //   String password = _passwordController.text;
-
-  //   await UserAPI().authenticateUser(mobile, password);
-
-  //   // Add the navigation logic here.
-  // }
-
-  // void _saveCredentials(String mobile, String password) async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('mobile', mobile);
-  //   await prefs.setString('password', password);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +102,7 @@ class _ClientLoginState extends State<ClientLogin> {
                             await authProvider
                                 .login(response['prag_parent_auth_token']);
 
-                            print(' auth provider login');
+                            debugPrint(' auth provider login');
                             final userProfile =
                                 UserProfile.fromJson(response['profile']);
                             // Set the user profile in the provider

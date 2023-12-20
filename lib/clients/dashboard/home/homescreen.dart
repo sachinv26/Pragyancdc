@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pragyan_cdc/api/auth_api.dart';
-import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
+import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
+
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
-import 'package:pragyan_cdc/provider/auth_provider.dart';
 
 import 'package:pragyan_cdc/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  BuildContext ctx;
-  HomeScreen({required this.ctx, super.key});
+  final BuildContext ctx;
+  const HomeScreen({required this.ctx, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +26,7 @@ class HomeScreen extends StatelessWidget {
           leading: const Padding(
             padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
-              backgroundImage: AssetImage('assets/images/cute_little_girl.png'),
+              backgroundImage: AssetImage('assets/images/empty-user.jpeg'),
             ),
           ),
           title: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -290,182 +286,6 @@ class ServiceItem extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ClientAppDrawer extends StatelessWidget {
-  BuildContext ctx;
-  ClientAppDrawer({required this.ctx, super.key});
-  final api = ApiServices();
-
-  @override
-  Widget build(BuildContext context) {
-    final userDetails = Provider.of<UserProvider>(context).userProfile;
-
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          // Drawer Header
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 25,
-                  backgroundImage:
-                      AssetImage('assets/images/cute_little_girl.png'),
-                ),
-                kwidth10,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(userDetails!.parentName,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    kheight10,
-                    Text(userDetails.parentEmail,
-                        style: const TextStyle(fontSize: 16)),
-                    kheight10,
-                    Text(userDetails.parentMobile,
-                        style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Separation Line
-          //   const Divider(),
-          // Edit Profile
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.edit),
-            title: const Text('Edit Profile'),
-            onTap: () {
-              // Handle Edit Profile
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const EditProfile()));
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const FaIcon(FontAwesomeIcons.whatsapp),
-            title: const Text('Chat Support'),
-            onTap: () {
-              // Take to whatsapp
-            },
-          ),
-          // List of items
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.info),
-            title: const Text('About Pragyan'),
-            onTap: () {
-              // Handle About Pragyan
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.help),
-            title: const Text('Get Help & Support'),
-            onTap: () {
-              // Handle Get Help & Support
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.history),
-            title: const Text('History'),
-            onTap: () {
-              // Handle History
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.payment),
-            title: const Text('Payment issue'),
-            onTap: () {
-              // Handle Payment issue
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.settings),
-            title: const Text('Setting'),
-            onTap: () {
-              // Handle Setting
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.feedback),
-            title: const Text('Feedback'),
-            onTap: () {
-              // Handle Feedback
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.assignment),
-            title: const Text('Terms and Conditions'),
-            onTap: () {
-              // Handle Terms and Conditions
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.person_add),
-            title: const Text('Add Child'),
-            onTap: () {
-              // Handle Add Child
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () async {
-              final authtoken = await api.getToken(context);
-              if (authtoken != null) {
-                final response =
-                    await api.parentLogout(userDetails.parentUserId, authtoken);
-                if (response['status'] == 1) {
-                  //logout success
-                  Fluttertoast.showToast(
-                    msg: "Logging out...",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: Colors.black87,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                  print('Logout Trigger Context: $context');
-                  await Provider.of<AuthProvider>(ctx, listen: false).logout();
-                } else {
-                  //fail to logout
-                  Fluttertoast.showToast(
-                    msg: "Logout Failed",
-                    toastLength: Toast.LENGTH_LONG,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 2,
-                    backgroundColor: Colors.white,
-                    textColor: Colors.red,
-                    fontSize: 16.0,
-                  );
-                }
-              } else {
-                debugPrint('Auth Token is null');
-              }
-            },
-          ),
-        ],
       ),
     );
   }

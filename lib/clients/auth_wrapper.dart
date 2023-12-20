@@ -24,7 +24,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
-        print('Authwrapper context: $context');
+        debugPrint('Authwrapper context: $context');
         debugPrint(
             'AuthWrapper rebuild: isLoggedIn=${authProvider.isLoggedIn}');
         if (authProvider.isCheckingLogin) {
