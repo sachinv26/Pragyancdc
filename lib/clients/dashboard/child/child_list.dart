@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/child_model.dart';
@@ -26,8 +25,8 @@ class ChildList extends StatelessWidget {
             } else {
               final List<ChildModel> childList = snapshot.data!;
 
-              return Container(
-                padding: const EdgeInsets.all(10),
+              return Padding(
+                padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
                     kheight30,
@@ -36,29 +35,67 @@ class ChildList extends StatelessWidget {
                         itemCount: childList.length,
                         itemBuilder: (context, index) {
                           final ChildModel childData = childList[index];
-                          return ListTile(
-                            selectedTileColor: Colors.green,
-                            leading: childData.childImage == ""
-                                ? const CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: AssetImage(
-                                        'assets/images/empty-user.jpeg'),
-                                  )
-                                : CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage:
-                                        NetworkImage(childData.childImage),
-                                  ),
-
-                            // leading: CircleAvatar(
-                            //   radius: 20,
-
-                            //   backgroundImage:
-                            //       AssetImage('assets/images/cute_little_girl.png'),
-                            // ),
-                            title: Text(
-                              childData.childName,
-                              style: kTextStyle1,
+                          return Container(
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 192, 228, 193),
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                                borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                childData.childImage == ""
+                                    ? const CircleAvatar(
+                                        radius: 28,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/empty-user.jpeg'),
+                                      )
+                                    : CircleAvatar(
+                                        radius: 28,
+                                        backgroundImage:
+                                            NetworkImage(childData.childImage),
+                                      ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    kheight10,
+                                    Text(
+                                      childData.childName,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19),
+                                    ),
+                                    kheight10,
+                                    Text(
+                                      'Gender : ${childData.childGender}',
+                                      style: khintTextStyle,
+                                    ),
+                                    kheight10,
+                                    Text(
+                                      'DOB : ${childData.childDob}',
+                                      style: khintTextStyle,
+                                    ),
+                                    kheight10,
+                                    Text(
+                                      'Relation: ${childData.relationship}',
+                                      style: khintTextStyle,
+                                    )
+                                  ],
+                                ),
+                                kwidth30,
+                                Column(
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.edit)),
+                                    IconButton(
+                                        onPressed: () {},
+                                        icon: const Icon(Icons.delete))
+                                  ],
+                                )
+                              ],
                             ),
                           );
                         },
