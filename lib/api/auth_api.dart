@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:pragyan_cdc/model/child_model.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
@@ -375,6 +376,43 @@ class ApiServices {
       // Handle other errors
       print('Error: $error');
       return null;
+    }
+  }
+
+  //to fetch child list
+  Future<List<ChildModel>> getChildList(String userId, String userToken) async {
+    final Map<String, String> headers = {
+      'praguserid': userId,
+      'pragusertoken': userToken,
+    };
+
+    const String apiUrl = 'https://askmyg.com/parentboard/get_childlist';
+
+    try {
+      final response = await http.post(Uri.parse(apiUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        if (jsonResponse['status'] == 1) {
+          final List<dynamic> childInfoList = jsonResponse['child_info'];
+          final List<ChildModel> childList = childInfoList
+              .map((childInfo) => ChildModel.fromJson(childInfo))
+              .toList();
+          return childList;
+        } else {
+          // Handle API error
+          print('API Error: ${jsonResponse['message']}');
+          return [];
+        }
+      } else {
+        // Handle HTTP error
+        print('HTTP Error: ${response.statusCode}');
+        return [];
+      }
+    } catch (error) {
+      // Handle other errors
+      print('Error: $error');
+      return [];
     }
   }
 }

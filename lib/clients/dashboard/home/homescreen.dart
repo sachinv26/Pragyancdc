@@ -7,26 +7,11 @@ import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/shared/loading.dart';
 
 class HomeScreen extends StatelessWidget {
   final BuildContext ctx;
   const HomeScreen({required this.ctx, super.key});
-
-  Future<UserProfile?> fetchUserProfile() async {
-    // Use FlutterSecureStorage to get userId and token
-    final userId = await const FlutterSecureStorage().read(key: 'userId');
-    final token = await const FlutterSecureStorage().read(key: 'authToken');
-    print('got userId and token');
-    print(userId);
-    print(token);
-
-    if (userId != null && token != null) {
-      // Use UserApi to fetch the user profile
-      return ApiServices().fetchUserProfile(userId, token);
-    } else {
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +19,7 @@ class HomeScreen extends StatelessWidget {
         future: fetchUserProfile(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: Loading());
           } else if (snapshot.hasError) {
             return const Center(child: Text('Error fetching user profile'));
           } else if (!snapshot.hasData || snapshot.data == null) {
@@ -275,6 +260,22 @@ class HomeScreen extends StatelessWidget {
                     )));
           }
         });
+  }
+}
+
+Future<UserProfile?> fetchUserProfile() async {
+  // Use FlutterSecureStorage to get userId and token
+  final userId = await const FlutterSecureStorage().read(key: 'userId');
+  final token = await const FlutterSecureStorage().read(key: 'authToken');
+  debugPrint('got userId and token');
+  debugPrint(userId);
+  debugPrint(token);
+
+  if (userId != null && token != null) {
+    // Use UserApi to fetch the user profile
+    return ApiServices().fetchUserProfile(userId, token);
+  } else {
+    return null;
   }
 }
 
