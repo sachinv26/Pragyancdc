@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
   static String baseUrl = 'https://askmyg.com/auth';
@@ -341,6 +342,39 @@ class ApiServices {
       print('Error making API call: $error');
       // Handle error as needed
       return {"status": 0, "message": "Unknown error"};
+    }
+  }
+
+  Future<UserProfile?> fetchUserProfile(String userId, String userToken) async {
+    const String apiUrl = "https://askmyg.com/parentboard/get_profiledetail";
+    final Map<String, String> headers = {
+      'praguserid': userId,
+      'pragusertoken': userToken,
+    };
+
+    try {
+      final response = await http.post(Uri.parse(apiUrl), headers: headers);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        if (jsonResponse['status'] == 1) {
+          final Map<String, dynamic> profileData = jsonResponse['profile'];
+          return UserProfile.fromJson(profileData);
+        } else {
+          // Handle API error
+          print('API Error: ${jsonResponse['message']}');
+          return null;
+        }
+      } else {
+        // Handle HTTP error
+        print('HTTP Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (error) {
+      // Handle other errors
+      print('Error: $error');
+      return null;
     }
   }
 }

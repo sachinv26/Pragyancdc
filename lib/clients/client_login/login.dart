@@ -89,18 +89,16 @@ class _ClientLoginState extends State<ClientLogin> {
                           if (response['status'] == 1) {
                             print('api call done and status returned 1');
                             //success
-                            // ApiServices()
-                            //     .setToken(response['prag_parent_auth_token']);
-                            // final storage = new FlutterSecureStorage();
-                            // await storage.write(
-                            //     key: 'authToken',
-                            //     value: response['prag_parent_auth_token']);
-// Parse the user profile data
+                            final String authToken =
+                                response['prag_parent_auth_token'];
+                            final String userId =
+                                response['profile']['parent_user_id'];
+
                             AuthProvider authProvider =
                                 Provider.of<AuthProvider>(widget.ctx,
                                     listen: false);
-                            await authProvider
-                                .login(response['prag_parent_auth_token']);
+                            // Save user credentials to FlutterSecureStorage
+                            await authProvider.login(authToken, userId);
 
                             debugPrint(' auth provider login');
                             final userProfile =
