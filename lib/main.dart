@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pragyan_cdc/clients/client_login/login.dart';
+import 'package:pragyan_cdc/clients/dashboard/child/child_list.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
@@ -52,6 +53,7 @@ class Pragyan extends StatelessWidget {
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
         '/dashboard/:context': (context) => DashBoard(
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
+        '/addChildScreen': (context) => const AddChildScreen()
         // '/dashBoard': (context) =>  DashBoard(ctx: ,),
       },
     );
