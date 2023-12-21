@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:pragyan_cdc/model/child_model.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
@@ -311,40 +311,83 @@ class ApiServices {
 
   //upload image
   Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
-      dynamic image, String userId, String token) async {
+      File image, String userId, String token) async {
     const String apiUrl = 'https://askmyg.com/parentboard/upload_profileimage';
+
+    // Create a multipart request
+    var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+
+    // Add headers
+    request.headers.addAll({
+      'praguserid': userId,
+      'pragusertoken': token,
+    });
+
+    // Add text fields
+    request.fields['data'] = jsonEncode(data);
+
+    // Add the file
+    request.files.add(await http.MultipartFile.fromPath(
+      'profileimage',
+      image.path,
+    ));
+
     try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'praguserid': userId,
-          'pragusertoken': token,
-          'Content-Type': 'application/json'
-        },
-        body: jsonEncode({
-          'profileimage': image,
-          'data': data,
-        }),
-      );
+      // Send the request
+      var streamedResponse = await request.send();
+
+      // Get the response from the stream
+      final response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
         // Successful API call
-        print('Image uploaded successfully');
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
         return jsonResponse;
-        // Handle success as needed
       } else {
         // API call failed
         print('Failed to upload image. Status code: ${response.statusCode}');
-        // Handle failure as needed
         return {"status": 0, "message": "Failed to upload"};
       }
     } catch (error) {
       print('Error making API call: $error');
-      // Handle error as needed
-      return {"status": 0, "message": "Unknown error"};
+      return {"status": 0, "message": error.toString()};
     }
   }
+  // Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
+  //     dynamic image, String userId, String token) async {
+  //   const String apiUrl = 'https://askmyg.com/parentboard/upload_profileimage';
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(apiUrl),
+  //       headers: {
+  //         'praguserid': userId,
+  //         'pragusertoken': token,
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: jsonEncode({
+  //         'profileimage': image,
+  //         'data': data,
+  //       }),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       // Successful API call
+
+  //       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+  //       return jsonResponse;
+  //       // Handle success as needed
+  //     } else {
+  //       // API call failed
+  //       print('Failed to upload image. Status code: ${response.statusCode}');
+  //       // Handle failure as needed
+  //       return {"status": 0, "message": "Failed to upload"};
+  //     }
+  //   } catch (error) {
+  //     print('Error making API call: $error');
+  //     // Handle error as needed
+  //     return {"status": 0, "message": error};
+  //   }
+  // }
 
   Future<UserProfile?> fetchUserProfile(String userId, String userToken) async {
     const String apiUrl = "https://askmyg.com/parentboard/get_profiledetail";

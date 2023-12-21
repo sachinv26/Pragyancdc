@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
@@ -244,21 +245,24 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
         _selectedImage = File(image.path);
       });
 
-      final token = await api.getToken(context);
+      final token = await const FlutterSecureStorage().read(key: 'authToken');
       if (token != null) {
         try {
           // Read the raw image data
           List<int> imageBytes = await File(image.path).readAsBytes();
+          // Convert the XFile to a File
+          File imageFile = File(image.path);
           //call api
           Map<String, dynamic> response = await api.callImageUploadApi(
-              {"child_id": 0, "call_from": 1}, image, userId, token);
+              {"child_id": 0, "call_from": 1}, imageFile, userId, token);
           if (response['status'] == 1) {
-            print('image uploaded');
+            debugPrint('image uploaded');
+            debugPrint('image saved in ${response["path"]}');
           } else {
-            print('failed');
+            print('failed ${response['message']}');
           }
         } catch (e) {
-          print('Error uploading image: $e');
+          debugPrint('Error uploading image: $e');
         }
       }
 
