@@ -116,4 +116,40 @@ class ChildApi {
       return {'status': 0, 'message': 'An error occurred'};
     }
   }
+
+  //delete the exisiting child
+  Future<Map<String, dynamic>> deleteChild({
+    required String userId,
+    required String userToken,
+    required String childId,
+  }) async {
+    const String apiUrl =
+        'https://askmyg.com/parentboard/set_deleteexitingchild';
+
+    try {
+      final Map<String, String> headers = {
+        'praguserid': userId,
+        'pragusertoken': userToken,
+        'Content-Type': 'application/json',
+      };
+
+      final Map<String, dynamic> requestBody = {
+        'prag_child_id': childId,
+      };
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      return responseData;
+    } catch (e) {
+      // Handle exceptions, e.g., network errors
+      print('Error making API call: $e');
+      return {'status': 0, 'message': 'An error occurred'};
+    }
+  }
 }

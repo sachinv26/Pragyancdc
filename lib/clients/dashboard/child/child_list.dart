@@ -206,7 +206,10 @@ class _ChildListState extends State<ChildList> {
                                         },
                                         icon: const Icon(Icons.edit)),
                                     IconButton(
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          confirmAndDeleteChild(
+                                              context, childData.childId);
+                                        },
                                         icon: const Icon(Icons.delete))
                                   ],
                                 )
@@ -280,6 +283,72 @@ class _ChildListState extends State<ChildList> {
       return ChildApi().getChildList(userId, token);
     } else {
       return null;
+    }
+  }
+
+  // delete child
+  Future<void> confirmAndDeleteChild(
+      BuildContext context, String childId) async {
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmation'),
+          content: const Text('Are you sure you want to delete this child?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // No, do not delete
+              },
+              child: const Text(
+                'No',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Yes, delete
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmDelete == true) {
+      // User confirmed, call the deleteChild API
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      final token = await const FlutterSecureStorage().read(key: 'authToken');
+
+      if (userId != null && token != null) {
+        Map<String, dynamic> result = await ChildApi().deleteChild(
+          userId: userId,
+          userToken: token,
+          childId: childId,
+        );
+
+        if (result['status'] == 1) {
+          Fluttertoast.showToast(
+            msg: result['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+          print('Child deleted successfully');
+          // Add any additional logic after successful deletion
+        } else {
+          Fluttertoast.showToast(
+            msg: result['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+          print('Failed to delete child: ${result['message']}');
+        }
+      }
     }
   }
 }
