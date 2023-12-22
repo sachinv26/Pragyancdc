@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
+import 'package:pragyan_cdc/clients/dashboard/child/edit_child.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
@@ -193,7 +194,16 @@ class _ChildListState extends State<ChildList> {
                                 Column(
                                   children: [
                                     IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) {
+                                              return EditChildScreen(
+                                                childData: childData,
+                                              );
+                                            },
+                                          ));
+                                        },
                                         icon: const Icon(Icons.edit)),
                                     IconButton(
                                         onPressed: () {},
@@ -442,8 +452,8 @@ class _AddChildScreenState extends State<AddChildScreen> {
       BuildContext context, String dobController) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime(2012),
-      firstDate: DateTime(2006),
+      initialDate: DateTime(2015),
+      firstDate: DateTime(1997),
       lastDate: DateTime.now(),
     );
 

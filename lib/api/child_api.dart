@@ -76,4 +76,44 @@ class ChildApi {
       return {'status': 0, 'message': 'Failed to add child'};
     }
   }
+
+  //to edit existing child
+  Future<Map<String, dynamic>> editChild({
+    required String userId,
+    required String userToken,
+    required String childId,
+    required Map<String, String> childDetails,
+  }) async {
+    const String apiUrl = 'https://askmyg.com/parentboard/set_editexitingchild';
+
+    try {
+      final Map<String, String> headers = {
+        'praguserid': userId,
+        'pragusertoken': userToken,
+        'Content-Type': 'application/json',
+      };
+
+      final Map<String, dynamic> requestBody = {
+        'prag_child_name': childDetails['prag_child_name'] ?? '',
+        'prag_child_dob': childDetails['prag_child_dob'] ?? '',
+        'prag_child_gender': childDetails['prag_child_gender'] ?? '',
+        'prag_child_relation': childDetails['prag_child_relation'] ?? '',
+        'prag_child_id': childId,
+      };
+
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(requestBody),
+      );
+
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      return responseData;
+    } catch (e) {
+      // Handle exceptions, e.g., network errors
+      print('Error making API call: $e');
+      return {'status': 0, 'message': 'An error occurred'};
+    }
+  }
 }
