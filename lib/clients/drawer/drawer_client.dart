@@ -43,6 +43,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
+
             return Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -55,22 +56,64 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        _selectedImage != null
-                            ? CircleAvatar(
-                                radius: 35,
-                                backgroundImage: FileImage(_selectedImage!),
-                              )
+                        userProfile.profileImage == ""
+                            ? _selectedImage != null
+                                ? CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage: FileImage(_selectedImage!),
+                                  )
+                                : GestureDetector(
+                                    child: const CircleAvatar(
+                                      radius: 35,
+                                      backgroundImage: AssetImage(
+                                          'assets/images/empty-user.jpeg'),
+                                    ),
+                                    onTap: () async {
+                                      await _requestPermissions();
+                                      await _pickImageFromGallery();
+                                    },
+                                  )
                             : GestureDetector(
-                                child: const CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: AssetImage(
-                                      'assets/images/empty-user.jpeg'),
-                                ),
                                 onTap: () async {
                                   await _requestPermissions();
-                                  await _pickImageFromGallery(
-                                      userProfile.parentUserId);
+                                  await _pickImageFromGallery();
                                 },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  child: ClipOval(
+                                    child: Image.network(
+                                      "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
+                                      width: 70,
+                                      height: 70,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder: (BuildContext context,
+                                          Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      errorBuilder: (BuildContext context,
+                                          Object error,
+                                          StackTrace? stackTrace) {
+                                        return const Icon(Icons.error);
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ),
                         kwidth10,
                         Column(
@@ -235,7 +278,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
         });
   }
 
-  Future<void> _pickImageFromGallery(String userId) async {
+  Future<void> _pickImageFromGallery() async {
     final api = ApiServices();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -246,10 +289,11 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
       });
 
       final token = await const FlutterSecureStorage().read(key: 'authToken');
-      if (token != null) {
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      if (userId != null && token != null) {
         try {
           // Read the raw image data
-          List<int> imageBytes = await File(image.path).readAsBytes();
+          // List<int> imageBytes = await File(image.path).readAsBytes();
           // Convert the XFile to a File
           File imageFile = File(image.path);
           //call api
@@ -265,12 +309,6 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
           debugPrint('Error uploading image: $e');
         }
       }
-
-      // Handle the selected image here
-      // You might want to:
-      // - Display the image in the CircleAvatar
-      // - Upload the image to a server
-      // - Store the image locally
     }
   }
 

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 class ChildModel {
   final String childId;
   final String childName;
@@ -5,6 +7,7 @@ class ChildModel {
   final String childGender;
   final String childImage;
   final String relationship;
+  File? selectedImage;
 
   ChildModel({
     required this.childId,
@@ -13,6 +16,7 @@ class ChildModel {
     required this.childGender,
     required this.childImage,
     required this.relationship,
+    this.selectedImage,
   });
 
   factory ChildModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,7 @@ class ChildModel {
       childGender: json['child_gender'] ?? '',
       childImage: json['child_image'] ?? '',
       relationship: json['relationship'] ?? '',
+      selectedImage: null,
     );
   }
 }

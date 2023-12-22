@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -16,6 +21,8 @@ class ChildList extends StatefulWidget {
 }
 
 class _ChildListState extends State<ChildList> {
+//  File? _selectedImage;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,16 +83,85 @@ class _ChildListState extends State<ChildList> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 childData.childImage == ""
-                                    ? const CircleAvatar(
-                                        radius: 28,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/empty-user.jpeg'),
-                                      )
-                                    : CircleAvatar(
-                                        radius: 28,
-                                        backgroundImage:
-                                            NetworkImage(childData.childImage),
+                                    ? childData.selectedImage != null
+                                        ? CircleAvatar(
+                                            radius: 35,
+                                            backgroundImage: FileImage(
+                                                childData.selectedImage!),
+                                          )
+                                        : GestureDetector(
+                                            child: const CircleAvatar(
+                                              radius: 35,
+                                              backgroundImage: AssetImage(
+                                                  'assets/images/empty-user.jpeg'),
+                                            ),
+                                            onTap: () async {
+                                              debugPrint('child id');
+                                              debugPrint(childData.childId);
+                                              await _requestPermissions();
+                                              await _pickImageFromGallery(
+                                                  childData);
+                                            },
+                                          )
+                                    : GestureDetector(
+                                        onTap: () async {
+                                          debugPrint('child id');
+                                          debugPrint(childData.childId);
+                                          await _requestPermissions();
+                                          await _pickImageFromGallery(
+                                              childData);
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 30,
+                                          child: ClipOval(
+                                            child: Image.network(
+                                              "https://askmyg.com${childData.childImage}",
+                                              width: 70,
+                                              height: 70,
+                                              fit: BoxFit.cover,
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                } else {
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes!
+                                                          : null,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              errorBuilder:
+                                                  (BuildContext context,
+                                                      Object error,
+                                                      StackTrace? stackTrace) {
+                                                return const Icon(Icons.error);
+                                              },
+                                            ),
+                                          ),
+                                        ),
                                       ),
+                                // ? const CircleAvatar(
+                                //     radius: 28,
+                                //     backgroundImage: AssetImage(
+                                //         'assets/images/empty-user.jpeg'),
+                                //   )
+                                // : CircleAvatar(
+                                //     radius: 28,
+                                //     backgroundImage:
+                                //         NetworkImage(childData.childImage),
+                                //   ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -141,6 +217,46 @@ class _ChildListState extends State<ChildList> {
     );
   }
 
+  Future<void> _pickImageFromGallery(ChildModel childModel) async {
+    final api = ApiServices();
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      debugPrint(
+          'before setstate: value of childmodel.selectedimage ${childModel.selectedImage}');
+      setState(() {
+        childModel.selectedImage = File(image.path);
+      });
+      debugPrint('after setstate: ${childModel.selectedImage}');
+
+      final token = await const FlutterSecureStorage().read(key: 'authToken');
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      if (userId != null && token != null) {
+        try {
+          // Read the raw image data
+          // List<int> imageBytes = await File(image.path).readAsBytes();
+          // Convert the XFile to a File
+          File imageFile = File(image.path);
+          //call api
+          Map<String, dynamic> response = await api.callImageUploadApi(
+              {"child_id": childModel.childId, "call_from": 2},
+              imageFile,
+              userId,
+              token);
+          if (response['status'] == 1) {
+            debugPrint('image uploaded');
+            debugPrint('image saved in ${response["path"]}');
+          } else {
+            print('failed ${response['message']}');
+          }
+        } catch (e) {
+          debugPrint('Error uploading image: $e');
+        }
+      }
+    }
+  }
+
   Future<List<ChildModel>?> getChildListfromApi() async {
     // Use FlutterSecureStorage to get userId and token
     final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -167,6 +283,7 @@ class AddChildScreen extends StatefulWidget {
 
 class _AddChildScreenState extends State<AddChildScreen> {
   String _selectedGender = 'male';
+  String selectedRelationValue = 'parent';
 
   final TextEditingController nameController = TextEditingController();
 
@@ -174,13 +291,15 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
   final TextEditingController relationController = TextEditingController();
 
+  XFile? uploadedImage;
+
   //final TextEditingController genderController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-        title: 'Edit Child',
+        title: 'Add Child',
       ),
       body: Container(
         margin: const EdgeInsets.all(10),
@@ -297,8 +416,16 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   onPressed: () async {
                     // Handle form submission
                     submitForm(context);
-                    Future.delayed(const Duration(seconds: 3));
-                    Navigator.pop(context, true);
+                    // final childId = await submitForm(context);
+                    // debugPrint('form submtted for child adding');
+
+                    // if (uploadedImage != null) {
+                    //   uploadImageToApi(uploadedImage!, childId);
+                    // }
+
+                    // Future.delayed(const Duration(seconds: 3));
+                    // if (context.mounted) Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                   child: const Text('Submit'),
                 ),
@@ -329,7 +456,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
     return null;
   }
 
-  void submitForm(BuildContext context) async {
+  submitForm(BuildContext context) async {
     // Add your logic to handle the form submission, e.g., calling an API
     // You can use the values from controllers: nameController.text, dobController.text, etc.
     // print(nameController.text);
@@ -355,6 +482,8 @@ class _AddChildScreenState extends State<AddChildScreen> {
 // Check the result for success or error
       if (result['status'] == 1) {
         // Updated successfully
+
+        //final childId = result['child_id'];
         Fluttertoast.showToast(
           msg: result['message'],
           toastLength: Toast.LENGTH_SHORT,
@@ -363,6 +492,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
           textColor: Colors.white,
         );
         print('Child added successfully');
+        // return result['child_id'];
       } else {
         // Handle error
         Fluttertoast.showToast(
@@ -376,6 +506,38 @@ class _AddChildScreenState extends State<AddChildScreen> {
       }
 
       // After submitting, close the popup form
+    }
+  }
+
+  Future uploadImageToApi(XFile image, String childId) async {
+    final token = await const FlutterSecureStorage().read(key: 'authToken');
+    final userId = await const FlutterSecureStorage().read(key: 'userId');
+    if (userId != null && token != null) {
+      try {
+        File imageFile = File(image.path);
+        Map<String, dynamic> response = await ApiServices().callImageUploadApi(
+            {"child_id": childId, "call_from": 2}, imageFile, userId, token);
+        if (response['status'] == 1) {
+          debugPrint('image uploaded');
+          debugPrint('image saved in ${response["path"]}');
+        } else {
+          print('failed ${response['message']}');
+        }
+      } catch (e) {
+        debugPrint('Error uploading image: $e');
+      }
+    }
+  }
+}
+
+Future<void> _requestPermissions() async {
+  var status = await Permission.storage.status;
+  if (status != PermissionStatus.granted) {
+    status = await Permission.storage.request();
+    if (status != PermissionStatus.granted) {
+      // Handle the case where the user denied permissions
+      print('Storage permissions denied');
+      return; // Or show a custom message to the user
     }
   }
 }

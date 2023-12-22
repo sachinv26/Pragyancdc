@@ -30,13 +30,56 @@ class HomeScreen extends StatelessWidget {
                 drawer: ClientAppDrawer(ctx: ctx),
                 appBar: AppBar(
                     elevation: 0,
-                    backgroundColor: Colors.white,
-                    leading: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        backgroundImage:
-                            AssetImage('assets/images/empty-user.jpeg'),
-                      ),
+                    backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: userProfile.profileImage == ""
+                          ? const CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/images/empty-user.jpeg'),
+                            )
+                          : ClipOval(
+                              child: Image.network(
+                                "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (BuildContext context,
+                                    Object error, StackTrace? stackTrace) {
+                                  return const Icon(Icons.error);
+                                },
+                              ),
+                            ),
+                      // SizedBox(
+                      //     width: 100,
+                      //     height: 100,
+                      //     child: CachedNetworkImage(
+                      //       imageUrl:
+                      //           "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
+                      //       placeholder: (context, url) =>
+                      //           const CircularProgressIndicator(),
+                      //       errorWidget: (context, url, error) =>
+                      //           const Icon(Icons.error),
+                      //     ),
+                      //   )
                     ),
                     title: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
