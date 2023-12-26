@@ -23,31 +23,23 @@ class ChildList extends StatefulWidget {
 }
 
 class _ChildListState extends State<ChildList> {
-  final _childListController = StreamController<List<ChildModel>>();
-
-  @override
-  void dispose() {
-    _childListController.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/addChildScreen').then((result) {
-            if (result == true) {
-              // Refresh the child list when returning from addChildScreen
-              _refreshChildList();
-            }
+            // if (result == true) {
+            //   // Refresh the child list when returning from addChildScreen
+            //   _refreshChildList();
+            // }
           });
         },
         child: const Icon(Icons.add),
       ),
       appBar: customAppBar(title: 'My Children'),
-      body: StreamBuilder<List<ChildModel>>(
-        stream: _childListController.stream,
+      body: FutureBuilder<List<ChildModel>?>(
+        future: getChildListfromApi(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: Loading());
@@ -232,232 +224,6 @@ class _ChildListState extends State<ChildList> {
       ),
     );
   }
-
-  Future<void> _refreshChildList() async {
-    // Implement your logic to fetch the child list
-    final List<ChildModel>? updatedChildList = await getChildListfromApi();
-
-    if (updatedChildList != null) {
-      // Use _childListController.add to update the stream
-      _childListController.add(updatedChildList);
-    }
-  }
-
-// class ChildList extends StatefulWidget {
-//   const ChildList({super.key});
-
-//   @override
-//   State<ChildList> createState() => _ChildListState();
-// }
-
-// class _ChildListState extends State<ChildList> {
-// //  File? _selectedImage;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           // Navigate to the screen where the user can add a new child
-//           Navigator.pushNamed(context, '/addChildScreen').then((result) {
-//             if (result == true) {
-//               // Refresh the child list when returning from addChildScreen
-//               setState(() {});
-//             }
-//           });
-//           // Navigator.of(context).push(MaterialPageRoute(
-//           //   builder: (context) => const AddChildScreen(),
-//           // ));
-//         },
-//         child: const Icon(Icons.add),
-//       ),
-//       appBar: customAppBar(title: 'My Children'),
-//       body: FutureBuilder<List<ChildModel>?>(
-//           future: getChildListfromApi(),
-//           builder: (context, snapshot) {
-//             if (snapshot.connectionState == ConnectionState.waiting) {
-//               return Center(child: Loading());
-//             } else if (snapshot.hasError) {
-//               return Center(child: Text('Error : ${snapshot.error}'));
-//             } else if (!snapshot.hasData || snapshot.data == null) {
-//               return const Center(child: Text('No Children Found'));
-//             } else {
-//               final List<ChildModel> childList = snapshot.data!;
-
-//               return Padding(
-//                 padding: const EdgeInsets.all(15),
-//                 child: Column(
-//                   children: [
-//                     // Align(
-//                     //   alignment: Alignment.topRight,
-//                     //   child: ElevatedButton(
-//                     //     onPressed: () {},
-//                     //     child: const Text('Add Child'),
-//                     //   ),
-//                     // ),
-//                     kheight30,
-//                     Expanded(
-//                       child: ListView.separated(
-//                         itemCount: childList.length,
-//                         itemBuilder: (context, index) {
-//                           final ChildModel childData = childList[index];
-//                           return Container(
-//                             decoration: BoxDecoration(
-//                                 color: const Color.fromARGB(255, 192, 228, 193),
-//                                 border:
-//                                     Border.all(color: Colors.grey, width: 1),
-//                                 borderRadius: BorderRadius.circular(10)),
-//                             padding: const EdgeInsets.all(10),
-//                             child: Row(
-//                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 childData.childImage == ""
-//                                     ? childData.selectedImage != null
-//                                         ? CircleAvatar(
-//                                             radius: 35,
-//                                             backgroundImage: FileImage(
-//                                                 childData.selectedImage!),
-//                                           )
-//                                         : GestureDetector(
-//                                             child: const CircleAvatar(
-//                                               radius: 35,
-//                                               backgroundImage: AssetImage(
-//                                                   'assets/images/empty-user.jpeg'),
-//                                             ),
-//                                             onTap: () async {
-//                                               debugPrint('child id');
-//                                               debugPrint(childData.childId);
-//                                               await _requestPermissions();
-//                                               await _pickImageFromGallery(
-//                                                   childData);
-//                                             },
-//                                           )
-//                                     : GestureDetector(
-//                                         onTap: () async {
-//                                           debugPrint('child id');
-//                                           debugPrint(childData.childId);
-//                                           await _requestPermissions();
-//                                           await _pickImageFromGallery(
-//                                               childData);
-//                                         },
-//                                         child: CircleAvatar(
-//                                           radius: 30,
-//                                           child: ClipOval(
-//                                             child: Image.network(
-//                                               "https://askmyg.com${childData.childImage}",
-//                                               width: 70,
-//                                               height: 70,
-//                                               fit: BoxFit.cover,
-//                                               loadingBuilder:
-//                                                   (BuildContext context,
-//                                                       Widget child,
-//                                                       ImageChunkEvent?
-//                                                           loadingProgress) {
-//                                                 if (loadingProgress == null) {
-//                                                   return child;
-//                                                 } else {
-//                                                   return Center(
-//                                                     child:
-//                                                         CircularProgressIndicator(
-//                                                       value: loadingProgress
-//                                                                   .expectedTotalBytes !=
-//                                                               null
-//                                                           ? loadingProgress
-//                                                                   .cumulativeBytesLoaded /
-//                                                               loadingProgress
-//                                                                   .expectedTotalBytes!
-//                                                           : null,
-//                                                     ),
-//                                                   );
-//                                                 }
-//                                               },
-//                                               errorBuilder:
-//                                                   (BuildContext context,
-//                                                       Object error,
-//                                                       StackTrace? stackTrace) {
-//                                                 return const Icon(Icons.error);
-//                                               },
-//                                             ),
-//                                           ),
-//                                         ),
-//                                       ),
-//                                 // ? const CircleAvatar(
-//                                 //     radius: 28,
-//                                 //     backgroundImage: AssetImage(
-//                                 //         'assets/images/empty-user.jpeg'),
-//                                 //   )
-//                                 // : CircleAvatar(
-//                                 //     radius: 28,
-//                                 //     backgroundImage:
-//                                 //         NetworkImage(childData.childImage),
-//                                 //   ),
-//                                 Column(
-//                                   crossAxisAlignment: CrossAxisAlignment.start,
-//                                   children: [
-//                                     kheight10,
-//                                     Text(
-//                                       childData.childName,
-//                                       style: const TextStyle(
-//                                           fontWeight: FontWeight.bold,
-//                                           fontSize: 19),
-//                                     ),
-//                                     kheight10,
-//                                     Text(
-//                                       'Gender : ${childData.childGender}',
-//                                       style: khintTextStyle,
-//                                     ),
-//                                     kheight10,
-//                                     Text(
-//                                       'DOB : ${childData.childDob}',
-//                                       style: khintTextStyle,
-//                                     ),
-//                                     kheight10,
-//                                     Text(
-//                                       'Relation: ${childData.relationship}',
-//                                       style: khintTextStyle,
-//                                     )
-//                                   ],
-//                                 ),
-//                                 kwidth30,
-//                                 Column(
-//                                   children: [
-//                                     IconButton(
-//                                         onPressed: () {
-//                                           Navigator.of(context)
-//                                               .push(MaterialPageRoute(
-//                                             builder: (context) {
-//                                               return EditChildScreen(
-//                                                 childData: childData,
-//                                               );
-//                                             },
-//                                           ));
-//                                         },
-//                                         icon: const Icon(Icons.edit)),
-//                                     IconButton(
-//                                         onPressed: () async {
-//                                           confirmAndDeleteChild(
-//                                               context, childData.childId);
-//                                         },
-//                                         icon: const Icon(Icons.delete))
-//                                   ],
-//                                 )
-//                               ],
-//                             ),
-//                           );
-//                         },
-//                         separatorBuilder: (context, index) {
-//                           return const Divider();
-//                         },
-//                       ),
-//                     )
-//                   ],
-//                 ),
-//               );
-//             }
-//           }),
-//     );
-//   }
 
   Future<void> _pickImageFromGallery(ChildModel childModel) async {
     final api = ApiServices();
