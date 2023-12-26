@@ -431,7 +431,7 @@ class ServiceItem extends StatelessWidget {
 // print(userDetails.parentName);
 // print(userDetails.parentUserId);
 String trimString(String input, String substring) {
-  List<String> parts = input.split("/public/assets/profile_img/");
+  List<String> parts = input.split(substring);
   String desiredPath = parts[1];
   return desiredPath;
 }

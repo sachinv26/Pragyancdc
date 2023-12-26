@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/edit_child.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
@@ -60,6 +61,8 @@ class _ChildListState extends State<ChildList> {
                       itemCount: childList.length,
                       itemBuilder: (context, index) {
                         final ChildModel childData = childList[index];
+                        String trimmedImagePath = trimString(
+                            childData.childImage, "/public/assets/child_img/");
 
                         // ... rest of your UI code
 
@@ -76,13 +79,13 @@ class _ChildListState extends State<ChildList> {
                               childData.childImage == ""
                                   ? childData.selectedImage != null
                                       ? CircleAvatar(
-                                          radius: 35,
+                                          radius: 30,
                                           backgroundImage: FileImage(
                                               childData.selectedImage!),
                                         )
                                       : GestureDetector(
                                           child: const CircleAvatar(
-                                            radius: 35,
+                                            radius: 30,
                                             backgroundImage: AssetImage(
                                                 'assets/images/empty-user.jpeg'),
                                           ),
@@ -97,7 +100,11 @@ class _ChildListState extends State<ChildList> {
                                   : GestureDetector(
                                       onTap: () async {
                                         debugPrint('child id');
+
                                         debugPrint(childData.childId);
+                                        debugPrint(childData.childImage);
+                                        debugPrint('afrer trimmig');
+                                        debugPrint(trimmedImagePath);
                                         await _requestPermissions();
                                         await _pickImageFromGallery(childData);
                                       },
@@ -105,7 +112,7 @@ class _ChildListState extends State<ChildList> {
                                         radius: 30,
                                         child: ClipOval(
                                           child: Image.network(
-                                            "https://askmyg.com${childData.childImage}",
+                                            "https://askmyg.com/$trimmedImagePath",
                                             width: 70,
                                             height: 70,
                                             fit: BoxFit.cover,
