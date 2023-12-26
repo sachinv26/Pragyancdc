@@ -9,6 +9,7 @@ import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
+import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
@@ -21,7 +22,8 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider()),
     ChangeNotifierProvider(create: (context) => SignUpDataProvider()),
-    ChangeNotifierProvider(create: (context) => UserProvider())
+    ChangeNotifierProvider(create: (context) => UserProvider()),
+    ChangeNotifierProvider(create: (context) => PhoneVerificationProvider()),
   ], child: const Pragyan()));
 }
 

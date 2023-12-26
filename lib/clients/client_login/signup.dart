@@ -362,7 +362,7 @@ class _ClientSignUpState extends State<ClientSignUp> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(2012),
-      firstDate: DateTime(2006),
+      firstDate: DateTime(1997),
       lastDate: DateTime.now(),
     );
 
