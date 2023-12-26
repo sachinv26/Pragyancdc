@@ -27,6 +27,8 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
+            String trimmedPath = trimString(
+                userProfile.profileImage, "/public/assets/profile_img/");
             return Scaffold(
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
@@ -53,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                               },
                               child: ClipOval(
                                 child: Image.network(
-                                  "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
+                                  "https://askmyg.com/$trimmedPath",
                                   fit: BoxFit.cover,
                                   loadingBuilder: (BuildContext context,
                                       Widget child,
@@ -428,3 +430,8 @@ class ServiceItem extends StatelessWidget {
 // print(userDetails!.parentMobile);
 // print(userDetails.parentName);
 // print(userDetails.parentUserId);
+String trimString(String input, String substring) {
+  List<String> parts = input.split("/public/assets/profile_img/");
+  String desiredPath = parts[1];
+  return desiredPath;
+}
