@@ -10,8 +10,9 @@ import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 
 class HomeScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final BuildContext ctx;
-  const HomeScreen({required this.ctx, super.key});
+  HomeScreen({required this.ctx, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,8 @@ class HomeScreen extends StatelessWidget {
           } else {
             final userProfile = snapshot.data!;
             return Scaffold(
+                key: _scaffoldKey,
+                endDrawerEnableOpenDragGesture: false,
                 drawer: ClientAppDrawer(ctx: ctx),
                 appBar: AppBar(
                     elevation: 0,
@@ -34,38 +37,49 @@ class HomeScreen extends StatelessWidget {
                     leading: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: userProfile.profileImage == ""
-                          ? const CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/images/empty-user.jpeg'),
+                          ? GestureDetector(
+                              onTap: () {
+                                _scaffoldKey.currentState?.openDrawer();
+                              },
+                              child: const CircleAvatar(
+                                radius: 28,
+                                backgroundImage:
+                                    AssetImage('assets/images/empty-user.jpeg'),
+                              ),
                             )
-                          : ClipOval(
-                              child: Image.network(
-                                "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
-                                fit: BoxFit.cover,
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  }
-                                },
-                                errorBuilder: (BuildContext context,
-                                    Object error, StackTrace? stackTrace) {
-                                  return const Icon(Icons.error);
-                                },
+                          : GestureDetector(
+                              onTap: () {
+                                _scaffoldKey.currentState?.openDrawer();
+                              },
+                              child: ClipOval(
+                                child: Image.network(
+                                  "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return const Icon(Icons.error);
+                                  },
+                                ),
                               ),
                             ),
                       // SizedBox(
