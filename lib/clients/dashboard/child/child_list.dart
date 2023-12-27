@@ -376,7 +376,7 @@ class AddChildScreen extends StatefulWidget {
 class _AddChildScreenState extends State<AddChildScreen> {
   String dropdownValue = relation.first;
   String _selectedGender = 'male';
-  String selectedRelationValue = 'parent';
+  // String selectedRelationValue = 'parent';
 
   final TextEditingController nameController = TextEditingController();
 
@@ -583,7 +583,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
     final name = nameController.text;
     final gender = _selectedGender;
     final dob = dobController.text;
-    final relation = relationController.text;
+    final relation = dropdownValue;
     Map<String, String> childDetails = {
       'prag_child_name': name,
       'prag_child_dob': dob,

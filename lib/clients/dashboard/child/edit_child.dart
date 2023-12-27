@@ -16,10 +16,12 @@ class EditChildScreen extends StatefulWidget {
 }
 
 class _EditChildScreenState extends State<EditChildScreen> {
+  static const List<String> relation = ['Parent', 'Guardian'];
+  String dropdownValue = relation.first;
   String _selectedGender = ''; // Initialize with an empty string
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  TextEditingController relationController = TextEditingController();
+  // TextEditingController relationController = TextEditingController();
 
   @override
   void initState() {
@@ -27,7 +29,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
     // Initialize controllers with existing values when the screen is created
     nameController.text = widget.childData.childName;
     dobController.text = widget.childData.childDob;
-    relationController.text = widget.childData.relationship;
+    dropdownValue = widget.childData.relationship;
     _selectedGender = widget.childData.childGender;
   }
 
@@ -83,13 +85,37 @@ class _EditChildScreenState extends State<EditChildScreen> {
                   ],
                 ),
                 kheight30,
-                const Text(
-                  'Relation with the child',
-                  style: khintTextStyle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text(
+                      'Relation with the child',
+                      style: khintTextStyle,
+                    ),
+                    DropdownButton(
+                      value: dropdownValue,
+                      // icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      items: relation
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownValue = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                CustomTextFormField(
-                  controller: relationController,
-                ),
+
+                // CustomTextFormField(
+                //   controller: relationController,
+                // ),
                 kheight30,
                 const Text(
                   'Child Gender:',
@@ -173,7 +199,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
     final name = nameController.text;
     final gender = _selectedGender;
     final dob = dobController.text;
-    final relation = relationController.text;
+    final relation = dropdownValue;
 
     Map<String, String> childDetails = {
       'prag_child_name': name,
