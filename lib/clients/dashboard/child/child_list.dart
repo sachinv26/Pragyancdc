@@ -216,8 +216,12 @@ class _ChildListState extends State<ChildList> {
                                   IconButton(
                                     onPressed: () async {
                                       // Handle delete button click
-                                      confirmAndDeleteChild(
-                                          context, childData.childId);
+                                      final result =
+                                          await confirmAndDeleteChild(
+                                              context, childData.childId);
+                                      if (result != null) {
+                                        setState(() {});
+                                      }
                                     },
                                     icon: const Icon(Icons.delete),
                                   ),
@@ -306,8 +310,7 @@ class _ChildListState extends State<ChildList> {
   }
 
   // delete child
-  Future<void> confirmAndDeleteChild(
-      BuildContext context, String childId) async {
+  Future confirmAndDeleteChild(BuildContext context, String childId) async {
     bool confirmDelete = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -356,6 +359,7 @@ class _ChildListState extends State<ChildList> {
             textColor: Colors.white,
           );
           print('Child deleted successfully');
+          return result;
           // Add any additional logic after successful deletion
         } else {
           Fluttertoast.showToast(
