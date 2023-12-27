@@ -438,11 +438,11 @@ class ApiServices {
         return jsonResponse;
       } else {
         debugPrint('HTTP error ${response.statusCode}');
-        return null;
+        return {'status': 0, 'message': 'Network Error. Try again later.'};
       }
     } catch (error) {
       debugPrint('Catch error : $error');
-      return null;
+      return {'status': 0, 'message': 'Network Error. Try again later.'};
     }
   }
 }

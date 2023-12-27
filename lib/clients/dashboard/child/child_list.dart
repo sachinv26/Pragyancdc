@@ -99,8 +99,8 @@ class _ChildListState extends State<ChildList> {
                                         debugPrint('child id');
                                         debugPrint(childData.childId);
 
-                                        // await _requestPermissions();
-                                        // await _pickImageFromGallery(childData);
+                                        await _requestPermissions();
+                                        await _pickImageFromGallery(childData);
                                       },
                                     )
                                   : GestureDetector(
@@ -115,8 +115,8 @@ class _ChildListState extends State<ChildList> {
                                         // print(path);
 
                                         //  debugPrint(trimmedImagePath);
-                                        // await _requestPermissions();
-                                        // await _pickImageFromGallery(childData);
+                                        await _requestPermissions();
+                                        await _pickImageFromGallery(childData);
                                       },
                                       child: CircleAvatar(
                                         radius: 30,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
@@ -29,121 +31,159 @@ class _EditProfileState extends State<EditProfile> {
       appBar: customAppBar(title: 'Edit Profile'),
       body: Padding(
         padding: const EdgeInsets.all(25),
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    child: ClipOval(
-                      child: Image.network(
-                        "https://askmyg.com/$trimmedPath",
-                        width: 75,
-                        height: 75,
-                        fit: BoxFit.fill,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          }
-                        },
-                        errorBuilder: (BuildContext context, Object error,
-                            StackTrace? stackTrace) {
-                          return const Icon(Icons.error);
-                        },
+        child: SingleChildScrollView(
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      child: ClipOval(
+                        child: Image.network(
+                          "https://askmyg.com/$trimmedPath",
+                          width: 75,
+                          height: 75,
+                          fit: BoxFit.fill,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            }
+                          },
+                          errorBuilder: (BuildContext context, Object error,
+                              StackTrace? stackTrace) {
+                            return const Icon(Icons.error);
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  const Text('Profile Picture')
-                ],
+                    const Text('Profile Picture')
+                  ],
+                ),
               ),
-            ),
-            Form(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildTextField(
-                      'Name', widget.userProfile.parentName, nameController),
+              Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTextField(
+                        'Name', widget.userProfile.parentName, nameController),
 
-                  // buildTextField('DOB', 'DD/MM/YYYY', hasEditIcon: false),
-                  // buildTextField('Mobile Number', '9876543210'),
-                  buildTextField(
-                      'Email', widget.userProfile.parentEmail, emailController),
-                  buildTextField('Address', widget.userProfile.parentAddress,
-                      adressController),
-                  kheight10,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Preferred Location',
-                      ),
-                      FutureBuilder(
-                        future: fetchLocations(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            // print('has data');
-                            var data = snapshot.data;
-                            // print('snapshot.data : $data');
-                            //return Text(data![0]['bran_name ']);
-                            return DropdownButton(
-                              // hint: const Text('Preferred Location'),
-                              //  isExpanded: true,
-                              value: selectedBranchId ?? data![0]['bran_id'],
-                              items: data!.map((location) {
-                                return DropdownMenuItem(
-                                  value: location['bran_id'],
-                                  child: Text(
-                                    location['bran_name'],
-                                    style: khintTextStyle,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedBranchId = value;
-                                  // print(SelectedBranchId);
-                                });
-                              },
-                            );
-                          } else if (snapshot.hasError) {
-                            return const Text('Error ');
-                          } else {
-                            return const CircularProgressIndicator();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16.0),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Handle form submission
-                      },
-                      child: const Text('Edit'),
+                    // buildTextField('DOB', 'DD/MM/YYYY', hasEditIcon: false),
+                    // buildTextField('Mobile Number', '9876543210'),
+                    buildTextField('Email', widget.userProfile.parentEmail,
+                        emailController),
+                    buildTextField('Address', widget.userProfile.parentAddress,
+                        adressController),
+                    kheight10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Preferred Location',
+                        ),
+                        FutureBuilder(
+                          future: fetchLocations(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              // print('has data');
+                              var data = snapshot.data;
+                              // print('snapshot.data : $data');
+                              //return Text(data![0]['bran_name ']);
+                              return DropdownButton(
+                                // hint: const Text('Preferred Location'),
+                                //  isExpanded: true,
+                                value: selectedBranchId ?? data![0]['bran_id'],
+                                items: data!.map((location) {
+                                  return DropdownMenuItem(
+                                    value: location['bran_id'],
+                                    child: Text(
+                                      location['bran_name'],
+                                      style: khintTextStyle,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedBranchId = value;
+                                    // print(SelectedBranchId);
+                                  });
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text('Error ');
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          },
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+
+                    const SizedBox(height: 16.0),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          // Handle form submission
+                          Map<String, dynamic> data = {
+                            'prag_parent_name': nameController.text,
+                            'prag_parent_email': emailController.text,
+                            'prag_preferred_location': selectedBranchId,
+                            'prag_parent_address': selectedBranchId
+                          };
+                          await editUserProfile(data);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Edit'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> editUserProfile(Map<String, dynamic> inputData) async {
+    final userId = await const FlutterSecureStorage().read(key: 'userId');
+    final token = await const FlutterSecureStorage().read(key: 'authToken');
+    if (userId != null && token != null) {
+      final result =
+          await ApiServices().editUserProfile(userId, token, inputData);
+      if (result!['status'] == 1) {
+        //success
+        Fluttertoast.showToast(
+          msg: result['message'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
+      } else {
+        //failed
+        Fluttertoast.showToast(
+          msg: result['message'],
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    }
   }
 
   Future<List<dynamic>> fetchLocations() async {
@@ -160,9 +200,7 @@ class _EditProfileState extends State<EditProfile> {
       //readOnly: true,
 
       controller: controller,
-      onChanged: (value) {
-        controller.text = value;
-      },
+
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.grey),
