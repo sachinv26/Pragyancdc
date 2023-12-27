@@ -421,4 +421,28 @@ class ApiServices {
       return null;
     }
   }
+
+  Future<Map<String, dynamic>?> editUserProfile(
+      String userId, String userToken, Map<String, dynamic> inputData) async {
+    const String apiUrl =
+        "https://askmyg.com/parentboard/set_editparent_profile";
+    final Map<String, String> headers = {
+      'praguserid': userId,
+      'pragusertoken': userToken,
+    };
+    try {
+      final response = await http.post(Uri.parse(apiUrl),
+          headers: headers, body: jsonEncode(inputData));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse;
+      } else {
+        debugPrint('HTTP error ${response.statusCode}');
+        return null;
+      }
+    } catch (error) {
+      debugPrint('Catch error : $error');
+      return null;
+    }
+  }
 }
