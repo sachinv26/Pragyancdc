@@ -44,8 +44,6 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
           } else {
             final userProfile = snapshot.data!;
 
-            String trimmedPath = trimString(
-                userProfile.profileImage, "/public/assets/profile_img/");
             return Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -84,7 +82,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                                   radius: 30,
                                   child: ClipOval(
                                     child: Image.network(
-                                      "https://askmyg.com/$trimmedPath",
+                                      "https://askmyg.com/${userProfile.profileImage}",
                                       width: 70,
                                       height: 70,
                                       fit: BoxFit.cover,

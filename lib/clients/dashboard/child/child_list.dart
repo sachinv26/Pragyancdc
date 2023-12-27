@@ -30,12 +30,13 @@ class _ChildListState extends State<ChildList> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/addChildScreen').then((result) {
-            // if (result == true) {
-            //   // Refresh the child list when returning from addChildScreen
-            //   _refreshChildList();
-            // }
-          });
+          Navigator.pushNamed(context, '/addChildScreen');
+          // .then((result) {
+          //   // if (result == true) {
+          //   //   // Refresh the child list when returning from addChildScreen
+          //   //   _refreshChildList();
+          //   // }
+          // });
         },
         child: const Icon(Icons.add),
       ),
@@ -107,14 +108,6 @@ class _ChildListState extends State<ChildList> {
                                       onTap: () async {
                                         print('child id');
 
-                                        debugPrint(childData.childId);
-                                        print(childData.childImage);
-                                        debugPrint('afrer trimmig');
-                                        // print(childData.childImage.split(
-                                        //     '/public/assets/child_img/')[1]);
-                                        // print(path);
-
-                                        //  debugPrint(trimmedImagePath);
                                         await _requestPermissions();
                                         await _pickImageFromGallery(childData);
                                       },
@@ -122,10 +115,7 @@ class _ChildListState extends State<ChildList> {
                                         radius: 30,
                                         child: ClipOval(
                                           child: Image.network(
-                                            "https://askmyg.com/public/assets/profile_img/parent_9_1703578084.jpg"
-
-                                            ///   "https://askmyg.com/$trimmedImagePath",
-                                            ,
+                                            "https://askmyg.com/${childData.childImage}",
                                             width: 70,
                                             height: 70,
                                             fit: BoxFit.cover,
@@ -384,6 +374,7 @@ class AddChildScreen extends StatefulWidget {
 }
 
 class _AddChildScreenState extends State<AddChildScreen> {
+  String dropdownValue = relation.first;
   String _selectedGender = 'male';
   String selectedRelationValue = 'parent';
 
@@ -394,7 +385,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
   final TextEditingController relationController = TextEditingController();
 
   XFile? uploadedImage;
-
+  static const List<String> relation = ['Parent', 'Guardian'];
   //final TextEditingController genderController = TextEditingController();
 
   @override
@@ -463,13 +454,37 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   ],
                 ),
                 kheight30,
-                const Text(
-                  'Relation with the child',
-                  style: khintTextStyle,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text(
+                      'Relation with the child',
+                      style: khintTextStyle,
+                    ),
+                    DropdownButton(
+                      value: dropdownValue,
+                      // icon: const Icon(Icons.arrow_downward),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      items: relation
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownValue = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                CustomTextFormField(
-                  controller: relationController,
-                ),
+
+                // CustomTextFormField(
+                //   controller: relationController,
+                // ),
                 kheight30,
                 const Text(
                   'Child Gender:',

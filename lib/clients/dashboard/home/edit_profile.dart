@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
@@ -24,9 +23,6 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    String trimmedPath = trimString(
-        widget.userProfile.profileImage, "/public/assets/profile_img/");
-
     return Scaffold(
       appBar: customAppBar(title: 'Edit Profile'),
       body: Padding(
@@ -42,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
                       radius: 40,
                       child: ClipOval(
                         child: Image.network(
-                          "https://askmyg.com/$trimmedPath",
+                          "https://askmyg.com/${widget.userProfile.profileImage}",
                           width: 75,
                           height: 75,
                           fit: BoxFit.fill,
