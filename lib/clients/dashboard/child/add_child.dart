@@ -173,9 +173,10 @@ class _AddChildScreenState extends State<AddChildScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     // Handle form submission
-                    final result = submitForm(context);
-
-                    Navigator.of(context).pop(result);
+                    final result = await submitForm(context);
+                    if (context.mounted) {
+                      Navigator.of(context).pop(result);
+                    }
                   },
                   child: const Text('Submit'),
                 ),

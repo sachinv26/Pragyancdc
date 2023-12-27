@@ -139,7 +139,9 @@ class _EditProfileState extends State<EditProfile> {
                             'prag_parent_address': selectedBranchId
                           };
                           await editUserProfile(data);
-                          Navigator.of(context).pop();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
                         child: const Text('Edit'),
                       ),

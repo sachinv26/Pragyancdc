@@ -161,9 +161,11 @@ class _EditChildScreenState extends State<EditChildScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     // Handle form submission for editing
-                    await submitEditForm(context, widget.childData.childId);
-
-                    Navigator.of(context).pop();
+                    final result =
+                        await submitEditForm(context, widget.childData.childId);
+                    if (context.mounted) {
+                      Navigator.of(context).pop(result);
+                    }
                   },
                   child: const Text('Edit Child'),
                 ),
@@ -195,7 +197,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
     return null;
   }
 
-  Future<void> submitEditForm(BuildContext context, String childId) async {
+  Future submitEditForm(BuildContext context, String childId) async {
     final name = nameController.text;
     final gender = _selectedGender;
     final dob = dobController.text;
@@ -227,8 +229,8 @@ class _EditChildScreenState extends State<EditChildScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
-
-        print('Child edited successfully');
+        debugPrint('Child edited successfully');
+        return result;
       } else {
         Fluttertoast.showToast(
           msg: result['message'],

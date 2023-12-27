@@ -69,12 +69,6 @@ class _ChildListState extends State<ChildList> {
                       itemCount: childList.length,
                       itemBuilder: (context, index) {
                         final ChildModel childData = childList[index];
-                        // String trimmedImagePath = trimString(
-                        //     childData.childImage, "/public/assets/child_img/");
-                        // String path = childData.childImage
-                        //     .split('/public/assets/child_img/')[1];
-                        // String path = childData.childImage
-                        //     .split("/public/assets/child_img/")[1];
 
                         // ... rest of your UI code
 
@@ -200,9 +194,9 @@ class _ChildListState extends State<ChildList> {
                               Column(
                                 children: [
                                   IconButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       // Handle edit button click
-                                      Navigator.of(context)
+                                      final result = await Navigator.of(context)
                                           .push(MaterialPageRoute(
                                         builder: (context) {
                                           return EditChildScreen(
@@ -210,6 +204,12 @@ class _ChildListState extends State<ChildList> {
                                           );
                                         },
                                       ));
+                                      if (result != null) {
+                                        // Do something with the result (e.g., update UI)
+                                        setState(() {});
+                                        print(
+                                            'Received result from ScreenB: $result');
+                                      }
                                     },
                                     icon: const Icon(Icons.edit),
                                   ),
