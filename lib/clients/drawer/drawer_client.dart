@@ -160,7 +160,9 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                     onTap: () {
                       // Handle Edit Profile
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const EditProfile()));
+                          builder: (context) => EditProfile(
+                                userProfile: userProfile,
+                              )));
                     },
                   ),
                   // ListTile(

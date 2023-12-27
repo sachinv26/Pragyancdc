@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/edit_child.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
+
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
@@ -26,6 +26,7 @@ class ChildList extends StatefulWidget {
 class _ChildListState extends State<ChildList> {
   @override
   Widget build(BuildContext context) {
+    //  var selectedChildImageProvider = Provider.of<ChildImageProvider>(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -61,8 +62,12 @@ class _ChildListState extends State<ChildList> {
                       itemCount: childList.length,
                       itemBuilder: (context, index) {
                         final ChildModel childData = childList[index];
-                        String trimmedImagePath = trimString(
-                            childData.childImage, "/public/assets/child_img/");
+                        // String trimmedImagePath = trimString(
+                        //     childData.childImage, "/public/assets/child_img/");
+                        // String path = childData.childImage
+                        //     .split('/public/assets/child_img/')[1];
+                        // String path = childData.childImage
+                        //     .split("/public/assets/child_img/")[1];
 
                         // ... rest of your UI code
 
@@ -77,42 +82,50 @@ class _ChildListState extends State<ChildList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               childData.childImage == ""
-                                  ? childData.selectedImage != null
-                                      ? CircleAvatar(
-                                          radius: 30,
-                                          backgroundImage: FileImage(
-                                              childData.selectedImage!),
-                                        )
-                                      : GestureDetector(
-                                          child: const CircleAvatar(
-                                            radius: 30,
-                                            backgroundImage: AssetImage(
-                                                'assets/images/empty-user.jpeg'),
-                                          ),
-                                          onTap: () async {
-                                            debugPrint('child id');
-                                            debugPrint(childData.childId);
-                                            await _requestPermissions();
-                                            await _pickImageFromGallery(
-                                                childData);
-                                          },
-                                        )
-                                  : GestureDetector(
+                                  // ? selectedChildImageProvider != null
+                                  // ? CircleAvatar(
+                                  //     radius: 30,
+                                  //     backgroundImage: FileImage(
+                                  //         selectedChildImageProvider
+                                  //             .selectedPath!),
+                                  //   )
+                                  ? GestureDetector(
+                                      child: const CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: AssetImage(
+                                            'assets/images/empty-user.jpeg'),
+                                      ),
                                       onTap: () async {
                                         debugPrint('child id');
+                                        debugPrint(childData.childId);
+
+                                        // await _requestPermissions();
+                                        // await _pickImageFromGallery(childData);
+                                      },
+                                    )
+                                  : GestureDetector(
+                                      onTap: () async {
+                                        print('child id');
 
                                         debugPrint(childData.childId);
-                                        debugPrint(childData.childImage);
+                                        print(childData.childImage);
                                         debugPrint('afrer trimmig');
-                                        debugPrint(trimmedImagePath);
-                                        await _requestPermissions();
-                                        await _pickImageFromGallery(childData);
+                                        // print(childData.childImage.split(
+                                        //     '/public/assets/child_img/')[1]);
+                                        // print(path);
+
+                                        //  debugPrint(trimmedImagePath);
+                                        // await _requestPermissions();
+                                        // await _pickImageFromGallery(childData);
                                       },
                                       child: CircleAvatar(
                                         radius: 30,
                                         child: ClipOval(
                                           child: Image.network(
-                                            "https://askmyg.com/$trimmedImagePath",
+                                            "https://askmyg.com/public/assets/profile_img/parent_9_1703578084.jpg"
+
+                                            ///   "https://askmyg.com/$trimmedImagePath",
+                                            ,
                                             width: 70,
                                             height: 70,
                                             fit: BoxFit.cover,
@@ -182,7 +195,7 @@ class _ChildListState extends State<ChildList> {
                                   Text(
                                     'Relation: ${childData.relationship}',
                                     style: khintTextStyle,
-                                  )
+                                  ),
                                 ],
                               ),
                               kwidth30,
@@ -232,18 +245,26 @@ class _ChildListState extends State<ChildList> {
     );
   }
 
-  Future<void> _pickImageFromGallery(ChildModel childModel) async {
+  Future<void> _pickImageFromGallery(
+    ChildModel childModel,
+
+    //ChildImageProvider childImageProvider
+  ) async {
     final api = ApiServices();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      debugPrint(
-          'before setstate: value of childmodel.selectedimage ${childModel.selectedImage}');
-      setState(() {
-        childModel.selectedImage = File(image.path);
-      });
-      debugPrint('after setstate: ${childModel.selectedImage}');
+      // childImageProvider.setSelectedImage(File(image.path));
+      // debugPrint('newly selected image is');
+      // debugPrint(childImageProvider.selectedPath!.path);
+
+      // debugPrint(
+      // 'before setstate: value of childmodel.selectedimage ${childModel.selectedImage}');
+      // setState(() {
+      //   childModel.selectedImage = File(image.path);
+      // });
+      // debugPrint('after setstate: ${childModel.selectedImage}');
 
       final token = await const FlutterSecureStorage().read(key: 'authToken');
       final userId = await const FlutterSecureStorage().read(key: 'userId');

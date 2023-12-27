@@ -136,6 +136,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
                   onPressed: () async {
                     // Handle form submission for editing
                     await submitEditForm(context, widget.childData.childId);
+
                     Navigator.of(context).pop();
                   },
                   child: const Text('Edit Child'),
@@ -200,6 +201,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
+
         print('Child edited successfully');
       } else {
         Fluttertoast.showToast(

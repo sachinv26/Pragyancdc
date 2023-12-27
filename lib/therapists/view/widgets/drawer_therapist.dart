@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class TherapistAppDrawer extends StatelessWidget {
@@ -51,8 +50,8 @@ class TherapistAppDrawer extends StatelessWidget {
             title: const Text('Edit Profile'),
             onTap: () {
               // Handle Edit Profile
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const EditProfile()));
+              //   Navigator.of(context).push(
+              //       MaterialPageRoute(builder: (context) => const EditProfile()));
             },
           ),
           // List of items
