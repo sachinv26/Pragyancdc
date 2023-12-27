@@ -51,9 +51,9 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                   // Drawer Header
                   DrawerHeader(
                     decoration: const BoxDecoration(
-                      color: Colors.white,
+                      color: Color.fromARGB(255, 183, 238, 174),
                     ),
-                    child: Row(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         userProfile.profileImage == ""
@@ -115,22 +115,24 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                                   ),
                                 ),
                               ),
-                        kwidth10,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(userProfile.parentName,
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            kheight10,
-                            Text(userProfile.parentEmail,
-                                style: const TextStyle(fontSize: 16)),
-                            kheight10,
-                            Text(userProfile.parentMobile,
-                                style: const TextStyle(fontSize: 16)),
-                          ],
-                        ),
+                        kheight10,
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        Text(userProfile.parentName,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+
+                        Text(userProfile.parentEmail,
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold)),
+
+                        Text(userProfile.parentMobile,
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold)),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pragyan_cdc/clients/client_login/login.dart';
+import 'package:pragyan_cdc/clients/dashboard/child/add_child.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/child_list.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
