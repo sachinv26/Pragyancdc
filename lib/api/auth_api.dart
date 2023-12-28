@@ -445,4 +445,59 @@ class ApiServices {
       return {'status': 0, 'message': 'Network Error. Try again later.'};
     }
   }
+
+//change password
+  Future<Map<String, dynamic>> changePassword(
+      String encodedOldPassword, String encodedNewPassword) async {
+    const String apiUrl = 'https://askmyg.com/parentboard/set_passwordchange';
+
+    final String userId = await fetchUserId();
+    final String token = await fetchUserToken();
+    final Map<String, String> headers = {
+      'praguserid': userId,
+      'pragusertoken': token,
+    };
+
+    final Map<String, dynamic> requestData = {
+      "prag_parent_oldpassword": encodedOldPassword,
+      "prag_parent_newpassword": encodedNewPassword,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData;
+      } else {
+        throw Exception('Failed to change password');
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      print('Error: $error');
+      throw Exception('Failed to change password');
+    }
+  }
+
+  Future<String> fetchUserId() async {
+    final userId = await const FlutterSecureStorage().read(key: 'userId');
+    if (userId != null) {
+      return userId;
+    } else {
+      return 'No Id fetched';
+    }
+  }
+
+  Future<String> fetchUserToken() async {
+    final token = await const FlutterSecureStorage().read(key: 'authToken');
+    if (token != null) {
+      return token;
+    } else {
+      return 'No token fetched';
+    }
+  }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/provider/password_change.dart';
-import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
@@ -56,10 +55,11 @@ class ChangePasswordScreen extends StatelessWidget {
                       ? null
                       : () async {
                           await provider.changePassword();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
-                  child: provider.isLoading
-                      ? Loading()
-                      : const Text('Change Password'),
+                  child: const Text('Change Password'),
                 ),
               ],
             ),

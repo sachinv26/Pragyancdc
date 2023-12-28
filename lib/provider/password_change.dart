@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 
 class ChangePasswordProvider extends ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
@@ -63,9 +67,36 @@ class ChangePasswordProvider extends ChangeNotifier {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       notifyListeners();
-      debugPrint('over');
+      final String encodedOldPass =
+          base64.encode(utf8.encode(currentPasswordController.text));
+      final String encodedNewPass =
+          base64.encode(utf8.encode(newPasswordController.text));
       //api call
-      await Future.delayed(const Duration(seconds: 10));
+      try {
+        final response =
+            await ApiServices().changePassword(encodedOldPass, encodedNewPass);
+        if (response['status'] == 1) {
+          Fluttertoast.showToast(
+            msg: response['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+          return;
+        } else {
+          Fluttertoast.showToast(
+            msg: response['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        debugPrint('catch error: $e');
+      }
+
       isLoading = false;
       notifyListeners();
 
