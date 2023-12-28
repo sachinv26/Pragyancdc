@@ -69,12 +69,22 @@ class _ClientLoginState extends State<ClientLogin> {
                         },
                       ),
                     ),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        'Forgot Password',
-                        style: kTextStyle1,
-                      ),
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                                return PhoneNumberVerification(
+                                  otpFor: '2',
+                                );
+                              },
+                            ));
+                          },
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.blue),
+                          )),
                     ),
                     CustomButton(
                         text: 'Login',
@@ -126,7 +136,9 @@ class _ClientLoginState extends State<ClientLogin> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return const PhoneNumberVerification();
+                                return const PhoneNumberVerification(
+                                  otpFor: '1',
+                                );
                               },
                             ));
                           },

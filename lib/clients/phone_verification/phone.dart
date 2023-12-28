@@ -8,7 +8,9 @@ import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:provider/provider.dart';
 
 class PhoneNumberVerification extends StatefulWidget {
-  const PhoneNumberVerification({Key? key}) : super(key: key);
+  final String otpFor;
+  const PhoneNumberVerification({required this.otpFor, Key? key})
+      : super(key: key);
   static String verify = "";
 
   @override
@@ -19,6 +21,7 @@ class PhoneNumberVerification extends StatefulWidget {
 class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
   TextEditingController countryController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   var phone = '';
 
   @override
@@ -146,12 +149,15 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                           if (_formKey.currentState!.validate()) {
                             Map<String, dynamic> result = await ApiServices()
                                 .generateOtp(
-                                    mobile: phone, userId: '0', otpFor: '1');
+                                    mobile: phone,
+                                    userId: '0',
+                                    otpFor: widget.otpFor);
                             print('Result is $result');
                             final String rawCode = result['gen'];
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return VerifyNumber(
+                                  otpFor: widget.otpFor,
                                   phone: phone,
                                   originalCode: rawCode,
                                 );

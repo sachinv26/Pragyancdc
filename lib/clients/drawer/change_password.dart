@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
-import 'package:pragyan_cdc/provider/password_change.dart';
+import 'package:pragyan_cdc/provider/change_pass_provider.dart';
+import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatelessWidget {

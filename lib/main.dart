@@ -10,7 +10,8 @@ import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/child_image_provider.dart';
-import 'package:pragyan_cdc/provider/password_change.dart';
+import 'package:pragyan_cdc/provider/forgot_pass_provider.dart';
+import 'package:pragyan_cdc/provider/change_pass_provider.dart';
 import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 
@@ -27,7 +28,8 @@ void main() async {
     ChangeNotifierProvider(create: (context) => UserProvider()),
     ChangeNotifierProvider(create: (context) => ChildImageProvider()),
     ChangeNotifierProvider(create: (context) => PhoneVerificationProvider()),
-    ChangeNotifierProvider(create: (context) => ChangePasswordProvider())
+    ChangeNotifierProvider(create: (context) => ChangePasswordProvider()),
+    ChangeNotifierProvider(create: (context) => ForgotPasswordProvider()),
   ], child: const Pragyan()));
 }
 

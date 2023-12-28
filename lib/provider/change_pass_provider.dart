@@ -99,24 +99,6 @@ class ChangePasswordProvider extends ChangeNotifier {
 
       isLoading = false;
       notifyListeners();
-
-      // try {
-      //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-      //     email: // Get user's email,
-      //     password: _currentPasswordController.text,
-      //   );
-
-      //   await FirebaseAuth.instance.currentUser!.updatePassword(_newPasswordController.text);
-
-      //   // Show success message and navigate back
-      //   // ...
-      // } on FirebaseAuthException catch (e) {
-      //   // Handle authentication errors
-      //   // ...
-      // } finally {
-      //   isLoading = false;
-      //   notifyListeners();
-      // }
     }
   }
 }

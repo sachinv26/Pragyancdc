@@ -4,12 +4,18 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
+import 'package:pragyan_cdc/clients/phone_verification/forgot_password.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class VerifyNumber extends StatefulWidget {
+  final String otpFor;
   String originalCode;
   String phone;
-  VerifyNumber({required this.phone, required this.originalCode, Key? key})
+  VerifyNumber(
+      {required this.otpFor,
+      required this.phone,
+      required this.originalCode,
+      Key? key})
       : super(
           key: key,
         );
@@ -146,7 +152,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                       final response = await ApiServices().validateOtp(
                           mobile: widget.phone,
                           userId: '0',
-                          otpFor: '1',
+                          otpFor: widget.otpFor,
                           otpCode: code);
                       print('response : $response');
                       if (response['status'] == 1) {
@@ -157,11 +163,24 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           backgroundColor: Colors.green,
                           textColor: Colors.white,
                         );
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) {
-                            return ClientSignUp(phoneNumber: widget.phone);
-                          },
-                        ));
+                        if (widget.otpFor == '1') {
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) {
+                              return ClientSignUp(phoneNumber: widget.phone);
+                            },
+                          ));
+                        } else {
+                          //otpfor is 2, for forgot password
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) {
+                              return ForgotPassword(
+                                phone: widget.phone,
+                              );
+                            },
+                          ));
+                        }
                       } else {
                         Fluttertoast.showToast(
                           msg: 'Failed to verify OTP. Please try again.',
