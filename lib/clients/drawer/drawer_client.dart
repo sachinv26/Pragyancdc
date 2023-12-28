@@ -178,7 +178,9 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
-                          return ChangePasswordScreen();
+                          return ChangePasswordScreen(
+                            ctx: widget.ctx,
+                          );
                         },
                       ));
                     },

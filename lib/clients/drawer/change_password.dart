@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/password_change.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
-  const ChangePasswordScreen({super.key});
+  final BuildContext ctx;
+  const ChangePasswordScreen({required this.ctx, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +57,13 @@ class ChangePasswordScreen extends StatelessWidget {
                       ? null
                       : () async {
                           await provider.changePassword();
+                          Future.delayed(const Duration(seconds: 3));
+                          await Provider.of<AuthProvider>(ctx, listen: false)
+                              .logout();
+
                           if (context.mounted) {
-                            Navigator.of(context).pop();
+                            Navigator.popUntil(context,
+                                ModalRoute.withName('/signupSelection'));
                           }
                         },
                   child: const Text('Change Password'),

@@ -77,7 +77,7 @@ class ChangePasswordProvider extends ChangeNotifier {
             await ApiServices().changePassword(encodedOldPass, encodedNewPass);
         if (response['status'] == 1) {
           Fluttertoast.showToast(
-            msg: response['message'],
+            msg: '${response['message']}. Log in again',
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             backgroundColor: Colors.green,
