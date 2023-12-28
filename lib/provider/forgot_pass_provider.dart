@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pragyan_cdc/api/auth_api.dart';
 
 class ForgotPasswordProvider extends ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
@@ -49,7 +51,7 @@ class ForgotPasswordProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> changePassword() async {
+  Future forgotPassword(String phone) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       notifyListeners();
@@ -57,33 +59,33 @@ class ForgotPasswordProvider extends ChangeNotifier {
       final String encodedNewPass =
           base64.encode(utf8.encode(newPasswordController.text));
       //api call
-      //     try {
-      //       final response =
-      //           await ApiServices().changePassword(encodedOldPass, encodedNewPass);
-      //       if (response['status'] == 1) {
-      //         Fluttertoast.showToast(
-      //           msg: '${response['message']}. Log in again',
-      //           toastLength: Toast.LENGTH_SHORT,
-      //           gravity: ToastGravity.CENTER,
-      //           backgroundColor: Colors.green,
-      //           textColor: Colors.white,
-      //         );
-      //         return;
-      //       } else {
-      //         Fluttertoast.showToast(
-      //           msg: response['message'],
-      //           toastLength: Toast.LENGTH_SHORT,
-      //           gravity: ToastGravity.CENTER,
-      //           backgroundColor: Colors.red,
-      //           textColor: Colors.white,
-      //         );
-      //       }
-      //     } catch (e) {
-      //       debugPrint('catch error: $e');
-      //     }
+      try {
+        final response =
+            await ApiServices().forgotPassword(encodedNewPass, phone);
+        if (response['status'] == 1) {
+          Fluttertoast.showToast(
+            msg: '${response['message']}.',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+          return true;
+        } else {
+          Fluttertoast.showToast(
+            msg: response['message'],
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+          );
+        }
+      } catch (e) {
+        debugPrint('catch error: $e');
+      }
 
-      //     isLoading = false;
-      //     notifyListeners();
+      isLoading = false;
+      notifyListeners();
     }
   }
 }

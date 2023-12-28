@@ -76,6 +76,7 @@ class _ClientLoginState extends State<ClientLogin> {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return PhoneNumberVerification(
+                                  ctx: widget.ctx,
                                   otpFor: '2',
                                 );
                               },
@@ -136,7 +137,8 @@ class _ClientLoginState extends State<ClientLogin> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
-                                return const PhoneNumberVerification(
+                                return PhoneNumberVerification(
+                                  ctx: widget.ctx,
                                   otpFor: '1',
                                 );
                               },

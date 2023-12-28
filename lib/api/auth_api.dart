@@ -483,6 +483,39 @@ class ApiServices {
     }
   }
 
+  Future<Map<String, dynamic>> forgotPassword(
+      String encodedNewPassword, String mobileNumber) async {
+    const String apiUrl = 'https://askmyg.com/auth/set_forgotpasswordchange';
+    final String userId = await fetchUserId();
+    final String token = await fetchUserToken();
+    final Map<String, String> headers = {
+      'praguserid': userId,
+      'pragusertoken': token,
+    };
+    final Map<String, dynamic> requestData = {
+      "prag_parent_mobile": mobileNumber,
+      "prag_parent_password": encodedNewPassword
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        return responseData;
+      } else {
+        throw Exception('Failed to update password');
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      print('Error: $error');
+      throw Exception('Failed to update password');
+    }
+  }
+
   Future<String> fetchUserId() async {
     final userId = await const FlutterSecureStorage().read(key: 'userId');
     if (userId != null) {

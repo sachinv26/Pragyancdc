@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class PhoneNumberVerification extends StatefulWidget {
   final String otpFor;
-  const PhoneNumberVerification({required this.otpFor, Key? key})
+  BuildContext ctx;
+  PhoneNumberVerification({required this.ctx, required this.otpFor, Key? key})
       : super(key: key);
   static String verify = "";
 
@@ -157,6 +158,7 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return VerifyNumber(
+                                  ctx: widget.ctx,
                                   otpFor: widget.otpFor,
                                   phone: phone,
                                   originalCode: rawCode,

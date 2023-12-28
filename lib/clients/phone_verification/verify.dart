@@ -11,8 +11,10 @@ class VerifyNumber extends StatefulWidget {
   final String otpFor;
   String originalCode;
   String phone;
+  BuildContext ctx;
   VerifyNumber(
       {required this.otpFor,
+      required this.ctx,
       required this.phone,
       required this.originalCode,
       Key? key})
@@ -176,6 +178,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                               .pushReplacement(MaterialPageRoute(
                             builder: (context) {
                               return ForgotPassword(
+                                ctx: widget.ctx,
                                 phone: widget.phone,
                               );
                             },
