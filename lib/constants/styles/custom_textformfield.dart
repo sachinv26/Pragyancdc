@@ -6,7 +6,7 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final TextInputType keyboardType;
   final bool obscureText;
-
+  final String? errorText;
   final Widget? iconData;
   final double width;
   final double height;
@@ -24,6 +24,7 @@ class CustomTextFormField extends StatelessWidget {
       this.height = 55.0,
       this.prefixIcon,
       this.enabled = true,
+      this.errorText,
       this.width = double.infinity})
       : super(key: key);
 
@@ -41,6 +42,7 @@ class CustomTextFormField extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         decoration: InputDecoration(
+            errorText: errorText,
             contentPadding: const EdgeInsets.all(10),
             hintText: hintText,
             hintStyle: khintTextStyle,

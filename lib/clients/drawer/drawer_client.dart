@@ -6,7 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/child_list.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/edit_profile.dart';
+import 'package:pragyan_cdc/clients/drawer/change_password.dart';
+import 'package:pragyan_cdc/clients/drawer/edit_profile.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
@@ -157,12 +158,29 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                         const VisualDensity(horizontal: 0, vertical: -4),
                     leading: const Icon(Icons.edit),
                     title: const Text('Edit Profile'),
-                    onTap: () {
+                    onTap: () async {
                       // Handle Edit Profile
+                      final result =
+                          await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditProfile(
+                                    userProfile: userProfile,
+                                  )));
+                      if (result != null) {
+                        setState(() {});
+                      }
+                    },
+                  ),
+                  ListTile(
+                    visualDensity:
+                        const VisualDensity(horizontal: 0, vertical: -4),
+                    leading: const Icon(Icons.password),
+                    title: const Text('Change Password'),
+                    onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EditProfile(
-                                userProfile: userProfile,
-                              )));
+                        builder: (context) {
+                          return ChangePasswordScreen();
+                        },
+                      ));
                     },
                   ),
                   // ListTile(

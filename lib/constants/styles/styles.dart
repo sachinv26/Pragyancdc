@@ -18,6 +18,7 @@ final kTextStyle4 =
     TextStyle(color: Colors.black, fontSize: SizeConfig.textMultiplier * 1.5);
 final kTextStyle5 =
     TextStyle(color: Colors.grey, fontSize: SizeConfig.textMultiplier * 1.5);
+final kErrorTextStyle = const TextStyle(color: Colors.red, fontSize: 12);
 SizedBox kheight10 = const SizedBox(
   height: 10,
 );

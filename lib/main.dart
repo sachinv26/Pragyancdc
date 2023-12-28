@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/add_child.dart';
-import 'package:pragyan_cdc/clients/dashboard/child/child_list.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
@@ -11,6 +10,7 @@ import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/child_image_provider.dart';
+import 'package:pragyan_cdc/provider/password_change.dart';
 import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 
@@ -27,6 +27,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => UserProvider()),
     ChangeNotifierProvider(create: (context) => ChildImageProvider()),
     ChangeNotifierProvider(create: (context) => PhoneVerificationProvider()),
+    ChangeNotifierProvider(create: (context) => ChangePasswordProvider())
   ], child: const Pragyan()));
 }
 

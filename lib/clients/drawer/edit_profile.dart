@@ -138,9 +138,9 @@ class _EditProfileState extends State<EditProfile> {
                             'prag_preferred_location': selectedBranchId,
                             'prag_parent_address': selectedBranchId
                           };
-                          await editUserProfile(data);
+                          final result = await editUserProfile(data);
                           if (context.mounted) {
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(result);
                           }
                         },
                         child: const Text('Edit'),
@@ -156,7 +156,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Future<void> editUserProfile(Map<String, dynamic> inputData) async {
+  Future editUserProfile(Map<String, dynamic> inputData) async {
     final userId = await const FlutterSecureStorage().read(key: 'userId');
     final token = await const FlutterSecureStorage().read(key: 'authToken');
     if (userId != null && token != null) {
@@ -171,6 +171,7 @@ class _EditProfileState extends State<EditProfile> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
+        return result;
       } else {
         //failed
         Fluttertoast.showToast(
