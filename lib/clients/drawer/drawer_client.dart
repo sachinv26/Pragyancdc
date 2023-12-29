@@ -58,26 +58,27 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         userProfile.profileImage == ""
-                            ? _selectedImage != null
-                                ? CircleAvatar(
-                                    radius: 35,
-                                    backgroundImage: FileImage(_selectedImage!),
-                                  )
-                                : GestureDetector(
-                                    child: const CircleAvatar(
-                                      radius: 35,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/empty-user.jpeg'),
-                                    ),
-                                    onTap: () async {
-                                      await _requestPermissions();
-                                      await _pickImageFromGallery();
-                                    },
-                                  )
+                            ? GestureDetector(
+                                child: const CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: AssetImage(
+                                      'assets/images/empty-user.jpeg'),
+                                ),
+                                onTap: () async {
+                                  await _requestPermissions();
+                                  final result = await _pickImageFromGallery();
+                                  if (result) {
+                                    setState(() {});
+                                  }
+                                },
+                              )
                             : GestureDetector(
                                 onTap: () async {
                                   await _requestPermissions();
-                                  await _pickImageFromGallery();
+                                  final result = await _pickImageFromGallery();
+                                  if (result) {
+                                    setState(() {});
+                                  }
                                 },
                                 child: CircleAvatar(
                                   radius: 30,
@@ -302,7 +303,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
         });
   }
 
-  Future<void> _pickImageFromGallery() async {
+  Future _pickImageFromGallery() async {
     final api = ApiServices();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -333,6 +334,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
           debugPrint('Error uploading image: $e');
         }
       }
+      return true;
     }
   }
 

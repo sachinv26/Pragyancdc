@@ -101,7 +101,12 @@ class _ChildListState extends State<ChildList> {
                                         debugPrint(childData.childId);
 
                                         await _requestPermissions();
-                                        await _pickImageFromGallery(childData);
+                                        final result =
+                                            await _pickImageFromGallery(
+                                                childData);
+                                        if (result) {
+                                          setState(() {});
+                                        }
                                       },
                                     )
                                   : GestureDetector(
@@ -109,7 +114,13 @@ class _ChildListState extends State<ChildList> {
                                         print('child id');
 
                                         await _requestPermissions();
-                                        await _pickImageFromGallery(childData);
+
+                                        final result =
+                                            await _pickImageFromGallery(
+                                                childData);
+                                        if (result) {
+                                          setState(() {});
+                                        }
                                       },
                                       child: CircleAvatar(
                                         radius: 30,
@@ -245,7 +256,7 @@ class _ChildListState extends State<ChildList> {
     );
   }
 
-  Future<void> _pickImageFromGallery(
+  Future _pickImageFromGallery(
     ChildModel childModel,
 
     //ChildImageProvider childImageProvider
@@ -289,6 +300,7 @@ class _ChildListState extends State<ChildList> {
         } catch (e) {
           debugPrint('Error uploading image: $e');
         }
+        return true;
       }
     }
   }
