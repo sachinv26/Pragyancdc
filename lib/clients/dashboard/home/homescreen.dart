@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
+import 'package:pragyan_cdc/api/therapy_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
+import 'package:pragyan_cdc/model/therapy.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 
@@ -208,52 +210,112 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
-                        const Column(children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-1.png',
-                                  serviceName: 'Speech & Language Therapy',
-                                ),
-                              ),
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-2.png',
-                                  serviceName: 'Occupational Therapy',
-                                ),
-                              ),
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-3.png',
-                                  serviceName: 'Physiotherapy',
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-4.png',
-                                  serviceName: 'ABA Therapy/Behaviour Therapy',
-                                ),
-                              ),
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-5.png',
-                                  serviceName: 'Special Education',
-                                ),
-                              ),
-                              Expanded(
-                                child: ServiceItem(
-                                  imageUrl: 'assets/images/service-6.png',
-                                  serviceName: 'Group Therapy',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ]),
+                        // const Text('Branch id '),
+                        // Text(userProfile.preferredLocation),
+                        FutureBuilder(
+                            future: TherapistApi()
+                                .fetchTherapies(userProfile.preferredLocation),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                );
+                              } else {
+                                // Data successfully loaded
+                                List<Therapy> therapies = snapshot.data!;
+
+                                return Column(
+                                  children: [
+                                    if (therapies.length >= 3)
+                                      Row(
+                                        children: therapies
+                                            .sublist(0, 3)
+                                            .map((therapy) => Expanded(
+                                                  child: ServiceItem(
+                                                    imageUrl:
+                                                        therapy.therapyIcon,
+                                                    serviceName:
+                                                        therapy.therapyName,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    if (therapies.length >= 6)
+                                      Row(
+                                        children: therapies
+                                            .sublist(3, 6)
+                                            .map((therapy) => Expanded(
+                                                  child: ServiceItem(
+                                                    imageUrl:
+                                                        therapy.therapyIcon,
+                                                    serviceName:
+                                                        therapy.therapyName,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                      ),
+                                  ],
+                                );
+
+                                // Row(
+                                //   children: [
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-1.png',
+                                //         serviceName:
+                                //             'Speech & Language Therapy',
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-2.png',
+                                //         serviceName: 'Occupational Therapy',
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-3.png',
+                                //         serviceName: 'Physiotherapy',
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // Row(
+                                //   children: [
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-4.png',
+                                //         serviceName:
+                                //             'ABA Therapy/Behaviour Therapy',
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-5.png',
+                                //         serviceName: 'Special Education',
+                                //       ),
+                                //     ),
+                                //     Expanded(
+                                //       child: ServiceItem(
+                                //         imageUrl:
+                                //             'assets/images/service-6.png',
+                                //         serviceName: 'Group Therapy',
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                              }
+                            }),
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -395,7 +457,7 @@ class ServiceItem extends StatelessWidget {
                 height: 55,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(imageUrl),
+                    image: NetworkImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
