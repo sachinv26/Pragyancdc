@@ -136,7 +136,7 @@ class _EditProfileState extends State<EditProfile> {
                             'prag_parent_name': nameController.text,
                             'prag_parent_email': emailController.text,
                             'prag_preferred_location': selectedBranchId,
-                            'prag_parent_address': selectedBranchId
+                            'prag_parent_address': adressController.text
                           };
                           final result = await editUserProfile(data);
                           if (context.mounted) {

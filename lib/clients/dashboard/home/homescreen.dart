@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 
 import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
+import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/therapy.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+class HomeScreen extends StatefulWidget {
   final BuildContext ctx;
-  HomeScreen({required this.ctx, super.key});
+
+  const HomeScreen({required this.ctx, super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late LocationProvider locationProvider;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +39,18 @@ class HomeScreen extends StatelessWidget {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
-            // String trimmedPath = trimString(
-            //     userProfile.profileImage, "/public/assets/profile_img/");
+            locationProvider =
+                Provider.of<LocationProvider>(context, listen: false);
+            if (locationProvider.selectedLocation.isEmpty) {
+              locationProvider
+                  .updateSelectedLocation(userProfile.preferredLocation);
+            }
+            //  selectedLocation = userProfile.preferredLocation;
+
             return Scaffold(
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
-                drawer: ClientAppDrawer(ctx: ctx),
+                drawer: ClientAppDrawer(ctx: widget.ctx),
                 appBar: AppBar(
                     elevation: 0,
                     backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
@@ -201,7 +217,50 @@ class HomeScreen extends StatelessWidget {
                         //   elevation: 5,
                         //   child: TextField('')
                         // )
-                        LocationSearch(),
+                        FutureBuilder(
+                          future: fetchLocations(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              // print('has data');
+                              var data = snapshot.data;
+
+                              // print('snapshot.data : $data');
+                              //return Text(data![0]['bran_name ']);
+                              return DropdownButton(
+                                // hint: const Text('Preferred Location'),
+                                //  isExpanded: true,
+                                value: locationProvider.selectedLocation,
+                                items: data!.map((location) {
+                                  return DropdownMenuItem(
+                                    value: location['bran_id'],
+                                    child: Text(
+                                      location['bran_name'],
+                                      style: khintTextStyle,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    locationProvider.updateSelectedLocation(value
+                                        as String); // Update the selected location
+                                    TherapistApi().fetchTherapies(
+                                        locationProvider.selectedLocation);
+                                  });
+
+                                  // setState(() {
+                                  //   selectedBranchId = value;
+                                  //   // print(SelectedBranchId);
+                                  // });
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text('Error ');
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          },
+                        ),
+                        //LocationSearch(),
                         const SizedBox(
                           height: 15,
                         ),
@@ -210,11 +269,12 @@ class HomeScreen extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
+                        kheight10,
                         // const Text('Branch id '),
                         // Text(userProfile.preferredLocation),
                         FutureBuilder(
-                            future: TherapistApi()
-                                .fetchTherapies(userProfile.preferredLocation),
+                            future: TherapistApi().fetchTherapies(
+                                locationProvider.selectedLocation),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -228,94 +288,31 @@ class HomeScreen extends StatelessWidget {
                               } else {
                                 // Data successfully loaded
                                 List<Therapy> therapies = snapshot.data!;
-
                                 return Column(
                                   children: [
-                                    if (therapies.length >= 3)
+                                    for (var i = 0;
+                                        i < therapies.length;
+                                        i += 3)
                                       Row(
                                         children: therapies
-                                            .sublist(0, 3)
-                                            .map((therapy) => Expanded(
-                                                  child: ServiceItem(
-                                                    imageUrl:
-                                                        therapy.therapyIcon,
-                                                    serviceName:
-                                                        therapy.therapyName,
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ),
-                                    if (therapies.length >= 6)
-                                      Row(
-                                        children: therapies
-                                            .sublist(3, 6)
-                                            .map((therapy) => Expanded(
-                                                  child: ServiceItem(
-                                                    imageUrl:
-                                                        therapy.therapyIcon,
-                                                    serviceName:
-                                                        therapy.therapyName,
-                                                  ),
+                                            .sublist(
+                                                i,
+                                                i + 3 > therapies.length
+                                                    ? therapies.length
+                                                    : i + 3)
+                                            .map((therapy) => ServiceItem(
+                                                  imageUrl: therapy.therapyIcon,
+                                                  serviceName:
+                                                      therapy.therapyName,
                                                 ))
                                             .toList(),
                                       ),
                                   ],
                                 );
-
-                                // Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-1.png',
-                                //         serviceName:
-                                //             'Speech & Language Therapy',
-                                //       ),
-                                //     ),
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-2.png',
-                                //         serviceName: 'Occupational Therapy',
-                                //       ),
-                                //     ),
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-3.png',
-                                //         serviceName: 'Physiotherapy',
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                // Row(
-                                //   children: [
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-4.png',
-                                //         serviceName:
-                                //             'ABA Therapy/Behaviour Therapy',
-                                //       ),
-                                //     ),
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-5.png',
-                                //         serviceName: 'Special Education',
-                                //       ),
-                                //     ),
-                                //     Expanded(
-                                //       child: ServiceItem(
-                                //         imageUrl:
-                                //             'assets/images/service-6.png',
-                                //         serviceName: 'Group Therapy',
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               }
                             }),
+
+                        kheight10,
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -384,6 +381,11 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+Future<List<dynamic>> fetchLocations() async {
+  final response = await ApiServices().getBranches();
+  return response['branch'];
+}
+
 Future<UserProfile?> fetchUserProfile() async {
   // Use FlutterSecureStorage to get userId and token
   final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -447,7 +449,8 @@ class ServiceItem extends StatelessWidget {
             MaterialPageRoute(builder: (context) => const SpeechTherapy()));
       },
       child: Container(
-        margin: const EdgeInsets.all(6),
+        margin: const EdgeInsets.only(top: 6),
+        // margin: const EdgeInsets.all(6),
         child: Column(
           children: [
             ClipRRect(
