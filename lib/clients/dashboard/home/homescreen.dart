@@ -4,10 +4,10 @@ import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
 
-import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/branch_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/model/therapy.dart';
+import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
@@ -25,6 +25,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late LocationProvider locationProvider;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String branchId = '';
+  String branchName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -227,22 +229,24 @@ class _HomeScreenState extends State<HomeScreen> {
                               // print('snapshot.data : $data');
                               //return Text(data![0]['bran_name ']);
                               return DropdownButton(
-                                // hint: const Text('Preferred Location'),
-                                //  isExpanded: true,
                                 value: locationProvider.selectedLocation,
                                 items: data!.map((location) {
+                                  branchId = location['bran_id'];
+                                  branchName = location['bran_name'];
                                   return DropdownMenuItem(
-                                    value: location['bran_id'],
+                                    value: branchId,
                                     child: Text(
-                                      location['bran_name'],
+                                      branchName,
                                       style: khintTextStyle,
                                     ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    locationProvider.updateSelectedLocation(value
-                                        as String); // Update the selected location
+                                    print('value changed $value');
+                                    branchId = value as String;
+                                    locationProvider.updateSelectedLocation(
+                                        value); // Update the selected location
                                     TherapistApi().fetchTherapies(
                                         locationProvider.selectedLocation);
                                   });
@@ -270,11 +274,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         kheight10,
-                        // const Text('Branch id '),
-                        // Text(userProfile.preferredLocation),
+
                         FutureBuilder(
-                            future: TherapistApi().fetchTherapies(
-                                locationProvider.selectedLocation),
+                            future: TherapistApi().fetchTherapies(branchId),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -301,9 +303,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ? therapies.length
                                                     : i + 3)
                                             .map((therapy) => ServiceItem(
-                                                  imageUrl: therapy.therapyIcon,
-                                                  serviceName:
-                                                      therapy.therapyName,
+                                                  therapy: therapy,
+                                                  branchId: branchId,
+                                                  branchName: branchName,
                                                 ))
                                             .toList(),
                                       ),
@@ -402,51 +404,28 @@ Future<UserProfile?> fetchUserProfile() async {
   }
 }
 
-// return Scaffold(
-//   body: Center(
-//     child: TextButton(
-//       child: const Text('Click me'),
-//       onPressed: () async {
-//         print('Click me clicked');
-//         final user = await fetchUserProfile();
-//         print('fetch method called and finished');
-//         print('user is not null $user');
-//         print(user!.parentName);
-//       },
-//     ),
-//   ),
-// );
-// final userDetails = Provider.of<UserProvider>(context).userProfile;
-// if (userDetails == null) {
-//   return const Center(child: CircularProgressIndicator());
-// }
-//
-//   ),
-//   body: Column(
-//     children: [Text(userProfile.parentName)],
-//   ),
-// );
-
-//     // Your existing UI code using userProfile
-//   }
-// });
-
 class ServiceItem extends StatelessWidget {
-  final String imageUrl;
-  final String serviceName;
+  final Therapy therapy;
+  final String branchId;
+  final String branchName;
 
   const ServiceItem({
     super.key,
-    required this.imageUrl,
-    required this.serviceName,
+    required this.branchId,
+    required this.branchName,
+    required this.therapy,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const SpeechTherapy()));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => BranchTherapies(
+                  branchId: branchId,
+                  therapy: therapy,
+                  branchName: branchName,
+                )));
       },
       child: Container(
         margin: const EdgeInsets.only(top: 6),
@@ -460,7 +439,7 @@ class ServiceItem extends StatelessWidget {
                 height: 55,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(imageUrl),
+                    image: NetworkImage(therapy.therapyIcon),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -471,7 +450,7 @@ class ServiceItem extends StatelessWidget {
               width:
                   100, // Adjust the width here to control the space for the text
               child: Text(
-                serviceName,
+                therapy.therapyName,
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -488,11 +467,3 @@ class ServiceItem extends StatelessWidget {
     );
   }
 }
-
-// final userDetails =
-//     Provider.of<UserProvider>(context, listen: false).userProfile;
-// print(authToken);
-// print(userDetails!.parentMobile);
-// print(userDetails.parentName);
-// print(userDetails.parentUserId);
-

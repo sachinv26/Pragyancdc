@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/speech_therapy.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/branch_therapy.dart';
 
 class LocationSearch extends StatelessWidget {
   final List<String> suggestions = [
@@ -23,8 +23,8 @@ class LocationSearch extends StatelessWidget {
         });
       },
       onSelected: (String selection) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SpeechTherapy()));
+        // Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (context) => const BranchTherapies()));
       },
       fieldViewBuilder: (BuildContext context,
           TextEditingController textEditingController,
