@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             } else if (snapshot.hasError) {
                               return const Text('Error ');
                             } else {
-                              return const CircularProgressIndicator();
+                              return Center(child:Loading());
                             }
                           },
                         ),
@@ -274,14 +274,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         kheight10,
-
                         FutureBuilder(
                             future: TherapistApi().fetchTherapies(branchId),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
+                                return Center(
+                                  child: Loading(),
                                 );
                               } else if (snapshot.hasError) {
                                 return Center(
@@ -291,6 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // Data successfully loaded
                                 List<Therapy> therapies = snapshot.data!;
                                 return Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     for (var i = 0;
                                         i < therapies.length;
@@ -313,8 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }
                             }),
-
-                        kheight10,
+                        kheight30,
                         Stack(
                           alignment: Alignment.center,
                           children: [
@@ -340,6 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Row(
                                       children: [
                                         Image.asset('assets/images/fb.png'),
+                                        kwidth10,
                                         const Text(
                                           'Pragyan CDC',
                                           style: TextStyle(
@@ -358,6 +358,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Row(
                                       children: [
                                         Image.asset('assets/images/insta.png'),
+                                        kwidth10,
                                         const Text(
                                           'Pragyan CDC',
                                           style: TextStyle(

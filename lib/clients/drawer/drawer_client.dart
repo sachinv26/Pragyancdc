@@ -46,16 +46,18 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
             final userProfile = snapshot.data!;
 
             return Drawer(
+
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
                   // Drawer Header
                   DrawerHeader(
+                    margin: EdgeInsets.only(bottom: 15),
                     decoration: const BoxDecoration(
                       color: Color.fromARGB(255, 183, 238, 174),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      // crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         userProfile.profileImage == ""
                             ? GestureDetector(
@@ -117,22 +119,20 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                                   ),
                                 ),
                               ),
-                        kheight10,
                         // Column(
                         //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         //   children: [
                         Text(userProfile.parentName,
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
-
                         Text(userProfile.parentEmail,
                             style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold)),
+                                fontSize: 10, fontWeight: FontWeight.bold)),
 
                         Text(userProfile.parentMobile,
                             style: const TextStyle(
-                                fontSize: 13, fontWeight: FontWeight.bold)),
+                                fontSize: 10, fontWeight: FontWeight.bold)),
                         //   ],
                         // ),
                       ],
@@ -140,6 +140,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                   ),
                   // Separation Line
                   //   const Divider(),
+                  kheight10,
                   ListTile(
                     visualDensity:
                         const VisualDensity(horizontal: 0, vertical: -4),

@@ -8,6 +8,7 @@ import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
+import 'package:pragyan_cdc/firebase_options.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/provider/child_image_provider.dart';
@@ -22,7 +23,9 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider()),
     ChangeNotifierProvider(create: (context) => SignUpDataProvider()),

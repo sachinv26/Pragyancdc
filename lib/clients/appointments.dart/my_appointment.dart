@@ -8,7 +8,10 @@ class AppointmentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'My Appointment'),
+      appBar: customAppBar(
+        title: 'My Appointment',
+        showLeading: false,
+      ),
       body: Padding(
           padding: const EdgeInsets.all(10),
           child: ListView.separated(

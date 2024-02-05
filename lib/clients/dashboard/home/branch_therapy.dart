@@ -21,20 +21,9 @@ class BranchTherapies extends StatefulWidget {
 }
 
 class _BranchTherapiesState extends State<BranchTherapies> {
-  // List<Map<String, String>> therapistData = [
-  //   {
-  //     'name': 'Dr. Amrita Rao',
-  //     'category': 'Speech & Language Therapy',
-  //   },
-  //   {
-  //     'name': 'Dr. Sangeeta',
-  //     'category': 'Physiotherapy',
-  //   },
-  //   {
-  //     'name': 'Dr. Tamilvani',
-  //     'category': 'ABA Therapy/Behaviour Therapy',
-  //   },
-  // ];
+
+
+
 
   String selectedRepeatOption = 'No';
 
@@ -45,12 +34,12 @@ class _BranchTherapiesState extends State<BranchTherapies> {
     return Scaffold(
       appBar: customAppBar(title: widget.therapy.therapyName),
       body: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
             Row(
               children: [
-                const Icon(Icons.person_4_outlined),
+                const Icon(Icons.person),
                 const SizedBox(
                   width: 3,
                 ),
@@ -65,11 +54,13 @@ class _BranchTherapiesState extends State<BranchTherapies> {
             //   imageProvider: NetworkImage(widget.therapy.therapyIcon),
 
             // ),
-            Image.network(
-              widget.therapy.therapyIcon,
-              width: 240,
-              //  cacheWidth: 500,
-              fit: BoxFit.fill,
+            Container(
+              child: Image.network(
+                widget.therapy.therapyIcon,
+                width: 240,
+                //  cacheWidth: 500,
+                fit: BoxFit.cover,
+              ),
             ),
             // ClipRRect(
             //   borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -77,24 +68,27 @@ class _BranchTherapiesState extends State<BranchTherapies> {
             //   // child: Image.asset(
             //   //     'assets/images/woman-doing-speech-therapy-with-little-boy-her-clinic 1.png'),
             // ),
-            kheight10,
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Therapists List',
-                  style: kTextStyle1,
-                ),
-                Text(
-                  'See all',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
+            kheight30,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Therapists List',
+                    style: kTextStyle1,
+                  ),
+                  Text(
+                    'See all',
+                    style: TextStyle(color: Colors.grey),
+                  )
+                ],
+              ),
             ),
             kheight10,
             FutureBuilder(
                 future: TherapistApi()
-                    .fetchTherapists(widget.branchId, widget.therapy.therapyId),
+                    .fetchTherapists('2', widget.therapy.therapyId),
                 builder:
                     (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -288,11 +282,13 @@ class TherapistCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.network(
-                "https://askmyg.com/${therapist.image}",
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
+              Container(
+                child: Image.network(
+                  "https://askmyg.com/${therapist.image}",
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
@@ -307,17 +303,16 @@ class TherapistCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    SizedBox(
-                      width: 150,
-                      child: Text(
-                        therapist.specialization,
-                        style: kTextStyle3,
-                        textAlign: TextAlign.left,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    Row(
+                      children: [
+                        const Text('specialization: '),
+                        Text(
+                          therapist.specialization,
+                          style: kTextStyle3,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 10),
+                    // const SizedBox(height: 10),
                     Row(
                       children: [
                         const Text('Description: '),

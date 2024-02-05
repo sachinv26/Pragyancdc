@@ -8,7 +8,7 @@ class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Wallet'),
+      appBar: customAppBar(title: 'Wallet',showLeading: false),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(

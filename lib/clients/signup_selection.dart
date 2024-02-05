@@ -9,11 +9,11 @@ class SignupSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20),
-        child: Column(
+    return Scaffold(
+        body: SafeArea(
+          child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20),
+                child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text('Welcome Back!', style: kTextStyle2),
@@ -35,7 +35,7 @@ class SignupSelection extends StatelessWidget {
                     return AuthWrapper();
                   },
                 ));
-
+          
                 //   Navigator.pushNamed(context, '/clientLogin');
               },
               child: Container(
@@ -106,8 +106,8 @@ class SignupSelection extends StatelessWidget {
               ),
             )
           ],
-        ),
-      )),
-    );
+                ),
+              ),
+        ));
   }
 }

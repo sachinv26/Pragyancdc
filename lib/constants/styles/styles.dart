@@ -4,7 +4,8 @@ import 'package:pragyan_cdc/constants/size_config.dart';
 Color kPrimaryColor = Colors.green;
 Color kSecondaryColor = const Color(0xff573353);
 
-const kTextStyle1 = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
+const kTextStyle1 =
+    TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20);
 const khintTextStyle =
     TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 15);
 const kTextStyle2 =

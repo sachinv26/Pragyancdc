@@ -38,7 +38,11 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
       context,
     );
     return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(),
+      ),
       body: SafeArea(
+
         child: Container(
           margin: const EdgeInsets.only(left: 25, right: 25),
           padding: const EdgeInsets.all(10),

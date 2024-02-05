@@ -23,6 +23,10 @@ class ClientLogin extends StatefulWidget {
 }
 
 class _ClientLoginState extends State<ClientLogin> {
+
+
+  bool _isLoading = false;
+
   final UserAPI userAPI = UserAPI();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -88,38 +92,31 @@ class _ClientLoginState extends State<ClientLogin> {
                           )),
                     ),
                     CustomButton(
-                        text: 'Login',
-                        onPressed: () async {
-                          print('got inside login button');
+                      text: 'Login',
+                      isLoading: _isLoading, // Set isLoading based on your login logic
+                      onPressed: () async {
+                        setState(() {
+                          _isLoading = true; // Set isLoading to true before starting the login process
+                        });
+
+                        try {
                           final String mobile = _mobileController.text;
                           final String password = _passwordController.text;
-                          final String encodedPassword =
-                              base64.encode(utf8.encode(password));
-                          final response = await ApiServices()
-                              .parentLogin(mobile, encodedPassword);
-                          if (response['status'] == 1) {
-                            print('api call done and status returned 1');
-                            //success
-                            final String authToken =
-                                response['prag_parent_auth_token'];
-                            final String userId =
-                                response['profile']['parent_user_id'];
+                          final String encodedPassword = base64.encode(utf8.encode(password));
+                          final response = await ApiServices().parentLogin(mobile, encodedPassword);
 
-                            AuthProvider authProvider =
-                                Provider.of<AuthProvider>(widget.ctx,
-                                    listen: false);
-                            // Save user credentials to FlutterSecureStorage
+                          if (response['status'] == 1) {
+                            final String authToken = response['prag_parent_auth_token'];
+                            final String userId = response['profile']['parent_user_id'];
+
+                            AuthProvider authProvider = Provider.of<AuthProvider>(widget.ctx, listen: false);
                             await authProvider.login(authToken, userId);
 
-                            debugPrint(' auth provider login');
-                            final userProfile =
-                                UserProfile.fromJson(response['profile']);
-                            // Set the user profile in the provider
-                            Provider.of<UserProvider>(widget.ctx, listen: false)
-                                .setUserProfile(userProfile);
-                            //  Navigator.pushNamed(context, '/dashboard/$ctx');
+                            final userProfile = UserProfile.fromJson(response['profile']);
+                            Provider.of<UserProvider>(widget.ctx, listen: false).setUserProfile(userProfile);
+                            // Navigate to the dashboard or any other screen if needed
+                            // Navigator.pushNamed(context, '/dashboard/$ctx');
                           } else {
-                            //error
                             Fluttertoast.showToast(
                               msg: response['message'],
                               toastLength: Toast.LENGTH_SHORT,
@@ -128,7 +125,14 @@ class _ClientLoginState extends State<ClientLogin> {
                               textColor: Colors.white,
                             );
                           }
-                        }),
+                        } finally {
+                          setState(() {
+                            _isLoading = false; // Set isLoading to false after the login process is complete
+                          });
+                        }
+                      },
+                    ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "94299295436",
-    "project_id": "pragyan-1ebac",
-    "storage_bucket": "pragyan-1ebac.appspot.com"
+    "project_number": "616165437324",
+    "project_id": "pragyancdc-2a8c1",
+    "storage_bucket": "pragyancdc-2a8c1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:94299295436:android:3cd1edd11f451f8f5afc69",
+        "mobilesdk_app_id": "1:616165437324:android:5f29d3a6794123ce6970a9",
         "android_client_info": {
           "package_name": "com.example.pragyan_cdc"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCMQdPD7ICIkYHtPUCD_mIFAaUFz5zuJcA"
+          "current_key": "AIzaSyDLwq4Q0VPZazjAhnIr5k8haib2wO3Ijuk"
         }
       ],
       "services": {
