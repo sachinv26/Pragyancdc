@@ -21,12 +21,10 @@ class _EditChildScreenState extends State<EditChildScreen> {
   String _selectedGender = ''; // Initialize with an empty string
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  // TextEditingController relationController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with existing values when the screen is created
     nameController.text = widget.childData.childName;
     dobController.text = widget.childData.childDob;
     dropdownValue = widget.childData.relationship;
@@ -85,38 +83,6 @@ class _EditChildScreenState extends State<EditChildScreen> {
                   ],
                 ),
                 kheight30,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text(
-                      'Relation with the child',
-                      style: khintTextStyle,
-                    ),
-                    DropdownButton(
-                      value: dropdownValue,
-                      // icon: const Icon(Icons.arrow_downward),
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.black),
-                      items: relation
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          dropdownValue = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-
-                // CustomTextFormField(
-                //   controller: relationController,
-                // ),
-                kheight30,
                 const Text(
                   'Child Gender:',
                   style: khintTextStyle,
@@ -167,7 +133,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
                       Navigator.of(context).pop(result);
                     }
                   },
-                  child: const Text('Edit Child'),
+                  child: const Text('Save Changes'),
                 ),
               ],
             ),

@@ -54,10 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 endDrawerEnableOpenDragGesture: false,
                 drawer: ClientAppDrawer(ctx: widget.ctx),
                 appBar: AppBar(
+                    backgroundColor: Colors.green.shade700,
                     elevation: 0,
-                    backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
                     leading: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.only(left: 20),
                       child: userProfile.profileImage == ""
                           ? GestureDetector(
                               onTap: () {
@@ -104,60 +104,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                             ),
-                      // SizedBox(
-                      //     width: 100,
-                      //     height: 100,
-                      //     child: CachedNetworkImage(
-                      //       imageUrl:
-                      //           "https://askmyg.com/public/assets/profile_img/parent_3_1703151855.jpg",
-                      //       placeholder: (context, url) =>
-                      //           const CircularProgressIndicator(),
-                      //       errorWidget: (context, url, error) =>
-                      //           const Icon(Icons.error),
-                      //     ),
-                      //   )
                     ),
                     title: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(width: 10),
+                          Spacer(),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // TextButton(
-                              //     onPressed: () async {
-                              //       debugPrint('User details');
-                              //       // debugPrint(userDetails.parentName);
-                              //       //debugPrint(userDetails.parentUserId);
-                              //       final token =
-                              //           await ApiServices().getToken(context);
-                              //       debugPrint('token fetched');
-                              //       debugPrint(token);
-                              //     },
-                              //     child: const Text(
-                              //       ' Click this',
-                              //       style: TextStyle(
-                              //           fontSize: 17, color: Colors.black),
-                              //     )),
                               Text(
                                 userProfile.parentName,
                                 style: const TextStyle(
                                     fontSize: 17, color: Colors.black),
                               ),
-
-                              // userDetails!.parentName,
-                              // style: const TextStyle(fontSize: 17, color: Colors.black),
-
-                              // const SizedBox(
-                              //   height: 4,
-                              // ),
-                              // Text(
-                              //   userDetails.,
-                              //   style: const TextStyle(
-                              //       fontSize: 13,
-                              //       color: Colors.black,
-                              //       fontWeight: FontWeight.bold),
-                              // ),
                             ],
                           ),
                           const Spacer(),
@@ -177,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ])),
                 body: Padding(
                     padding: const EdgeInsets.only(
-                        top: 5, left: 20, right: 20, bottom: 30),
+                        top: 20, left: 20, right: 20, bottom: 30),
                     child: ListView(
                       children: [
                         Stack(
@@ -215,17 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        // const Card(
-                        //   elevation: 5,
-                        //   child: TextField('')
-                        // )
                         FutureBuilder(
                           future: fetchLocations(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               // print('has data');
                               var data = snapshot.data;
-
                               // print('snapshot.data : $data');
                               //return Text(data![0]['bran_name ']);
                               return DropdownButton(
@@ -264,7 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                         ),
-                        //LocationSearch(),
                         const SizedBox(
                           height: 15,
                         ),
@@ -296,17 +249,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                         i < therapies.length;
                                         i += 3)
                                       Row(
+
                                         children: therapies
                                             .sublist(
                                                 i,
                                                 i + 3 > therapies.length
                                                     ? therapies.length
                                                     : i + 3)
-                                            .map((therapy) => ServiceItem(
-                                                  therapy: therapy,
-                                                  branchId: branchId,
-                                                  branchName: branchName,
-                                                ))
+                                            .map((therapy) => Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: ServiceItem(
+                                                    therapy: therapy,
+                                                    branchId: branchId,
+                                                    branchName: branchName,
+                                                  ),
+                                            ))
                                             .toList(),
                                       ),
                                   ],
@@ -448,8 +405,7 @@ class ServiceItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              width:
-                  100, // Adjust the width here to control the space for the text
+              width: 100,// Adjust the width here to control the space for the text
               child: Text(
                 therapy.therapyName,
                 style: const TextStyle(

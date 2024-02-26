@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/consultation_appointment.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_appointment_time.dart';
 import 'package:pragyan_cdc/model/therapist_model.dart';
@@ -21,23 +23,24 @@ class BranchTherapies extends StatefulWidget {
 }
 
 class _BranchTherapiesState extends State<BranchTherapies> {
-
-
-
-
   String selectedRepeatOption = 'No';
+  int _value = 1;
 
   final List<String> _selectedChildren = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: widget.therapy.therapyName),
+      appBar: customAppBar(
+        title: widget.therapy.therapyName,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.person),
                 const SizedBox(
@@ -50,24 +53,21 @@ class _BranchTherapiesState extends State<BranchTherapies> {
               ],
             ),
             kheight10,
-            // PhotoView(
-            //   imageProvider: NetworkImage(widget.therapy.therapyIcon),
-
-            // ),
             Container(
-              child: Image.network(
-                widget.therapy.therapyIcon,
-                width: 240,
-                //  cacheWidth: 500,
-                fit: BoxFit.cover,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.transparent, // Set color to transparent
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  "assets/images/womentherapy.png",
+                  width: 500,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            // ClipRRect(
-            //   borderRadius: const BorderRadius.all(Radius.circular(15)),
-            //   child: Image.network(widget.therapy.therapyIcon),
-            //   // child: Image.asset(
-            //   //     'assets/images/woman-doing-speech-therapy-with-little-boy-her-clinic 1.png'),
-            // ),
             kheight30,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -101,7 +101,6 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                       snapshot.data!['theropy'] != null &&
                       (snapshot.data!['theropy'] as List).isNotEmpty) {
                     List therapistData = snapshot.data!['theropy'];
-
                     return Expanded(
                       child: ListView.builder(
                         itemCount: therapistData.length,
@@ -122,140 +121,164 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                     return const Center(child: Text('No data available'));
                   }
                 }),
-            // Expanded(
-            //     child: ListView.builder(
-            //   itemCount: therapistData.length,
-            //   itemBuilder: (BuildContext context, int index) {
-            //     return Container(
-            //       margin: const EdgeInsets.all(10),
-            //       child: TherapistCard(
-            //       branchId: widget.branchId,
-            //       therapy: widget.therapy,
-            //       ),
-            //     );
-            //   },
-            // )),
-            // const CustomButton(
-            //   text: 'Schedule',
-            // )
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text(
-                        'Schedule for:',
-                        style: kTextStyle1,
-                      ),
-                      content: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 8.0),
-                            CheckboxListTile(
-                              title: const Text('1. Arun '),
-                              // value: _selectedChildren.contains('Arun'),
-                              value: true,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value!) {
-                                    _selectedChildren.add(' Arun');
-                                  } else {
-                                    _selectedChildren.remove('Arun');
-                                  }
-                                });
-                              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomButton(
+                  text: 'Schedule Therapy',
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'Choose your child',
+                              style: kTextStyle1,
                             ),
-                            CheckboxListTile(
-                              title: const Text('2. Amrita'),
-                              value: false,
-                              //  value: _selectedChildren.contains('Amrita'),
-                              onChanged: (value) {
-                                setState(() {
-                                  if (value!) {
-                                    _selectedChildren.add('Amrita ');
-                                  } else {
-                                    _selectedChildren.remove('Amrita');
-                                  }
-                                });
-                              },
+                            content: Container(
+                              height: 170,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: 1,
+                                          groupValue: _value,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value!;
+                                            });
+                                          }),
+                                      Text('Arun'),
+                                    ],
+                                  ),
+                                  kheight10,
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: 2,
+                                          groupValue: _value,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value!;
+                                            });
+                                          }),
+                                      Text('Amit'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment
+                                        .spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(
+                                                context);
+                                          },
+                                          child:
+                                          Text('Cancel')),
+                                      CustomButton(
+                                        text: 'Done',
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (context) =>
+                                                          ScheduleAppointment()));
+                                        },
+                                        width: 50,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
-                            kheight30,
-
-                            Text('Repeat Booking: $selectedRepeatOption'),
-                            kheight10,
-                            DropdownButton<String>(
-                              value: selectedRepeatOption,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedRepeatOption = newValue!;
-                                });
-                              },
-                              items: <String>[
-                                'No',
-                                '4 weeks',
-                                '8 weeks',
-                                '12 weeks'
-                              ].map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                            ),
-                            const SizedBox(height: 16.0),
-
-                            // Add more CheckboxListTile widgets for additional children
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) {
-                                return const ScheduleAppointment();
-                              },
-                            ));
-                            // Handle schedule button press here
-                            // print('Schedule clicked with options:');
-                            // print('Repeat Option: $_selectedRepeatOption');
-                            // print('Selected Children: $_selectedChildren');
-                            //Navigator.pop(context);
-                          },
-                          child: const Text('Done'),
-                        ),
-                      ],
-                    );
+                          );
+                        });
                   },
-                );
-              },
-              //  {
-              //   Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) {
-              //       return const ScheduleAppointment();
-              //     },
-              //   ));
-              // },
-              style: ElevatedButton.styleFrom(
-                // backgroundColor: Colors.green, // Background color (constant)
-                minimumSize:
-                    const Size(170, 40), // Width and height of the button
-              ),
-              child: const Text(
-                'Schedule',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+                ),
+                CustomButton(
+                  text: 'Book Consultation',
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'Choose your child',
+                              style: kTextStyle1,
+                            ),
+                            content: Container(
+                              height: 170,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: 1,
+                                          groupValue: _value,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value!;
+                                            });
+                                          }),
+                                      Text('Arun'),
+                                    ],
+                                  ),
+                                  kheight10,
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: 2,
+                                          groupValue: _value,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _value = value!;
+                                            });
+                                          }),
+                                      Text('Amit'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment
+                                        .spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(
+                                                context);
+                                          },
+                                          child:
+                                          Text('Cancel')),
+                                      CustomButton(
+                                        text: 'Done',
+                                        onPressed: () {
+                                          Navigator.pop(
+                                              context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (context) =>
+                                                      ConsultationAppointment()));
+                                        },
+                                        width: 50,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                ),
+              ],
             )
           ],
         ),
@@ -264,30 +287,46 @@ class _BranchTherapiesState extends State<BranchTherapies> {
   }
 }
 
-class TherapistCard extends StatelessWidget {
+enum SingingCharacter { arun, amit }
+
+class TherapistCard extends StatefulWidget {
   final Therapist therapist;
 
   const TherapistCard({super.key, required this.therapist});
 
   @override
+  State<TherapistCard> createState() => _TherapistCardState();
+}
+
+class _TherapistCardState extends State<TherapistCard> {
+  String _selectedChild = 'Arun';
+
+  @override
   Widget build(BuildContext context) {
     return Container(
+      width: 200,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          border: Border.all(color: Colors.grey, width: 1),
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                child: Image.network(
-                  "https://askmyg.com/${therapist.image}",
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.transparent, // Set color to transparent
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    "assets/images/psychologist.png",
+                    fit: BoxFit.cover,
+                    height: 80,
+                  ),
                 ),
               ),
               Padding(
@@ -296,7 +335,7 @@ class TherapistCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      therapist.name,
+                      widget.therapist.name,
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -307,7 +346,7 @@ class TherapistCard extends StatelessWidget {
                       children: [
                         const Text('specialization: '),
                         Text(
-                          therapist.specialization,
+                          widget.therapist.specialization,
                           style: kTextStyle3,
                         ),
                       ],
@@ -317,15 +356,9 @@ class TherapistCard extends StatelessWidget {
                       children: [
                         const Text('Description: '),
                         Text(
-                          therapist.description,
+                          widget.therapist.description,
                           style: kTextStyle3,
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text('Cost: '),
-                        Text(therapist.cost),
                       ],
                     ),
                   ],
@@ -333,6 +366,18 @@ class TherapistCard extends StatelessWidget {
               ),
             ],
           ),
+          kheight10,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Experience : 5 Years',
+              ),
+              Text(
+                'Rating : 5 stars',
+              ),
+            ],
+          )
         ],
       ),
     );

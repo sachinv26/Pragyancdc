@@ -58,7 +58,6 @@ class SignUpDataProvider extends ChangeNotifier {
     addressController.dispose();
     // phoneNumberController.dispose();
     passwordController.dispose();
-
     super.dispose();
   }
 }

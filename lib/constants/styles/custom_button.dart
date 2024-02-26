@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final double width;
@@ -14,21 +14,27 @@ class CustomButton extends StatelessWidget {
     this.width = 170,
     this.height = 40,
     this.isLoading = false, // Add this line
-  }) : super(key: key); // Add this line
+  }) : super(key: key);
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
 
+class _CustomButtonState extends State<CustomButton> {
+ // Add this line
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: widget.isLoading ? null : widget.onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green, // Background color (constant)
-        minimumSize: Size(width, height), // Width and height of the button
+
+        backgroundColor: Colors.green.shade700, // Background color (constant)
+        minimumSize: Size(widget.width, widget.height), // Width and height of the button
       ),
-      child: isLoading
+      child: widget.isLoading
           ? CircularProgressIndicator() // Show CircularProgressIndicator when isLoading is true
           : Text(
-              text,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              widget.text,
+              style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
             ),
     );
   }

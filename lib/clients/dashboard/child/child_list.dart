@@ -83,13 +83,6 @@ class _ChildListState extends State<ChildList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               childData.childImage == ""
-                                  // ? selectedChildImageProvider != null
-                                  // ? CircleAvatar(
-                                  //     radius: 30,
-                                  //     backgroundImage: FileImage(
-                                  //         selectedChildImageProvider
-                                  //             .selectedPath!),
-                                  //   )
                                   ? GestureDetector(
                                       child: const CircleAvatar(
                                         radius: 30,
@@ -162,16 +155,6 @@ class _ChildListState extends State<ChildList> {
                                         ),
                                       ),
                                     ),
-                              // ? const CircleAvatar(
-                              //     radius: 28,
-                              //     backgroundImage: AssetImage(
-                              //         'assets/images/empty-user.jpeg'),
-                              //   )
-                              // : CircleAvatar(
-                              //     radius: 28,
-                              //     backgroundImage:
-                              //         NetworkImage(childData.childImage),
-                              //   ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

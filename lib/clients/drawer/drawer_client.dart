@@ -53,8 +53,8 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                   // Drawer Header
                   DrawerHeader(
                     margin: EdgeInsets.only(bottom: 15),
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 183, 238, 174),
+                    decoration:  BoxDecoration(
+                      color: Colors.green.shade700,
                     ),
                     child: Column(
                       // crossAxisAlignment: CrossAxisAlignment.center,

@@ -46,6 +46,7 @@ class Pragyan extends StatelessWidget {
     SizeConfig().init(context); // Initialize SizeConfig
     return MaterialApp(
       theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
           textTheme: TextTheme(
             bodyLarge: TextStyle(
               fontSize: 1.7 * SizeConfig.textMultiplier,

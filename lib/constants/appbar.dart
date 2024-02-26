@@ -4,7 +4,7 @@ import 'package:pragyan_cdc/constants/styles/styles.dart';
 AppBar customAppBar({bool showLeading = true, String? title}) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.green.shade700,
     automaticallyImplyLeading: showLeading,
     elevation: 0,
     iconTheme: const IconThemeData(color: Colors.black),

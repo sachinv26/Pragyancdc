@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/appointments.dart/my_appointment.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/clients/support/support_home.dart';
-
 import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
@@ -38,49 +37,50 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: pages[_currentIndex],
-        bottomNavigationBar: Theme(
-          data: ThemeData(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-          ),
-          child: BottomNavigationBar(
-            selectedItemColor: Colors.black,
-            unselectedLabelStyle: const TextStyle(color: Colors.black),
-            currentIndex: _currentIndex,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.black,
-                ),
-                label: 'Home',
+      body: pages[_currentIndex],
+      bottomNavigationBar: Theme(
+        data: ThemeData(
+          // splashColor: Colors.transparent,
+          // highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.green,
+          selectedItemColor: Colors.green, // Set selected item color to green
+          unselectedLabelStyle: const TextStyle(color: Colors.black),
+          currentIndex: _currentIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: Colors.green,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.calendar_today,
-                  color: Colors.black,
-                ),
-                label: 'My Appointments',
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.calendar_today,
+                color: Colors.black,
               ),
-
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.contact_support_rounded,
-                  color: Colors.black,
-                ),
-                label: 'Support',
+              label: 'My Appointments',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.contact_support_rounded,
+                color: Colors.black,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.black,
-                ),
-                label: 'Wallet',
+              label: 'Support',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_balance_wallet,
+                color: Colors.black,
               ),
-            ],
-            onTap: _onItemTapped,
-          ),
-        ));
+              label: 'Wallet',
+            ),
+          ],
+          onTap: _onItemTapped,
+        ),
+      ),
+    );
   }
 }
