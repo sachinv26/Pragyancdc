@@ -55,7 +55,6 @@ class _GroupTherapyState extends State<GroupTherapy> {
                         ),
                         Text('📆 16/10/2023', style: kTextStyle5),
                         Text('🕑 09:30-11:00 AM ', style: kTextStyle5),
-                        Text('HSR Layout', style: kTextStyle5)
                       ],
                     ),
                   ),
@@ -158,7 +157,6 @@ class _GroupTherapyState extends State<GroupTherapy> {
                         ),
                         Text('📆 16/10/2023', style: kTextStyle5),
                         Text('🕑 11:00-12:30 PM  ', style: kTextStyle5),
-                        Text('HSR Layout', style: kTextStyle5)
                       ],
                     ),
                   ),
@@ -262,7 +260,6 @@ class _GroupTherapyState extends State<GroupTherapy> {
                         ),
                         Text('📆 16/10/2023', style: kTextStyle5),
                         Text('🕑 01:15-02:45 PM   ', style: kTextStyle5),
-                        Text('HSR Layout', style: kTextStyle5)
                       ],
                     ),
                   ),

@@ -2,24 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/booking_details.dart';
+import 'package:intl/intl.dart';
+
 
 class BookAppointment extends StatelessWidget {
-  const BookAppointment({super.key});
+  final DateTime selectedDate;
+  final String chosenTiming;
+
+  const BookAppointment({Key? key, required this.selectedDate, required this.chosenTiming}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String session;
+    // Determine session based on chosen timing
+    if (int.parse(chosenTiming.split(':')[0]) < 12) {
+      session = 'Morning';
+    } else if (int.parse(chosenTiming.split(':')[0]) >= 12 && int.parse(chosenTiming.split(':')[0]) < 17) {
+      session = 'Afternoon';
+    } else {
+      session = 'Evening';
+    }
+
     return Scaffold(
       appBar: customAppBar(title: 'Book Appointment'),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               'Note Your Appointment Timing:',
               style: kTextStyle1,
             ),
-            kheight30,
+            SizedBox(height: 20),
             PhysicalModel(
               color: Colors.white,
               elevation: 6,
@@ -27,68 +41,56 @@ class BookAppointment extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               child: Column(
                 children: [
-                  kheight30,
-                  const Row(
+                  SizedBox(height: 30),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('📆 16/10/2023'),
-                      Text('🕝 09:30 AM'),
-                      Text('Morning')
+                      Row(
+                        children: [
+                          Icon(Icons.calendar_today), // Calendar icon
+                          SizedBox(width: 5), // Adjust spacing
+                          Text(
+                            '${DateFormat("d MMM''yyyy").format(selectedDate)}', // Display selected date here
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time), // Clock icon
+                          SizedBox(width: 5), // Adjust spacing
+                          Text(
+                            chosenTiming, // Display chosen timing here
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.sunny), // Clock icon
+                          SizedBox(width: 5), // Adjust spacing
+                          Text(
+                            session, // Display session (Morning/Afternoon/Evening) here
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  kheight10,
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('📆 17/10/2023'),
-                      Text('🕝 12:30 PM'),
-                      Text('Morning')
-                    ],
-                  ),
-                  kheight10,
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('📆 18/10/2023'),
-                      Text('🕝 09:30 AM'),
-                      Text('Morning')
-                    ],
-                  ),
-                  kheight10,
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('📆 19/10/2023'),
-                      Text('🕝 02:45 PM'),
-                      Text('Afternoon')
-                    ],
-                  ),
-                  kheight10,
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text('📆 20/10/2023'),
-                      Text('🕝 01:15 PM'),
-                      Text('Morning')
-                    ],
-                  ),
-                  kheight30,
+                  SizedBox(height: 40),
                 ],
               ),
             ),
-            kheight60,
-//
 
-            kheight10,
+            SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const BookingDetails()));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Background color (constant)
-                minimumSize:
-                    const Size(170, 40), // Width and height of the button
+                backgroundColor: Colors.green,
+                minimumSize: const Size(170, 40),
               ),
               child: const Text(
                 'Next',
@@ -101,3 +103,5 @@ class BookAppointment extends StatelessWidget {
     );
   }
 }
+
+

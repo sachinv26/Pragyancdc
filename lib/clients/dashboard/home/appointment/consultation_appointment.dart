@@ -1,34 +1,42 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import intl package for date formatting
+import 'package:pragyan_cdc/components/button.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:intl/intl.dart';
 
 class ConsultationAppointment extends StatefulWidget {
-  const ConsultationAppointment({Key? key}) : super(key: key);
+  ConsultationAppointment({Key? key}) : super(key: key);
 
   @override
   State<ConsultationAppointment> createState() => _ConsultationAppointmentState();
 }
 
 class _ConsultationAppointmentState extends State<ConsultationAppointment> {
-  DateTime today = DateTime.now();
-  DateTime? _selectedDate;
-  String selectedDateRange = '';
-  List<bool> isTappedList = List.filled(14, false); // Adjust the size based on the number of slots
-  List<String> timeSlots = [
-    '9.00-9.45', '9.45-10.30', '10.30-11.15', '11.15-12.00', '12.00-12.45',
-    '12.45-13.30', '13.30-14.15', '14.15-15.00', '15.00-15.45', '15.45-16.30',
-    '16.30-17.15', '17.15-18.00', '18.00-18.45', '18.45-19.30'
+  //declaration
+  CalendarFormat _format = CalendarFormat.month;
+  DateTime _focusDay = DateTime.now();
+  DateTime _currentDay = DateTime.now();
+  int? _currentIndex;
+  bool _isWeekend = false;
+  bool _dateSelected = false;
+  bool _timeSelected = false;
+  DateTime? _selectedDate; // New
+
+  List<String> timings = [
+    '09:30',
+    '10:15',
+    '11:00',
+    '11:45',
+    '12:30',
+    '14:00',
+    '14:45',
+    '15:30',
+    '16:15',
+    '17:00',
+    '17:45',
+    '18:30',
+    '19:15'
   ];
-
-  void _updateSelectedDateRange() {
-    if (_selectedDate == null) {
-      selectedDateRange = '';
-      return;
-    }
-
-    final formatter = DateFormat('dd MMM');
-    selectedDateRange = formatter.format(_selectedDate!);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,190 +45,153 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
         centerTitle: true,
         title: Row(
           children: [
-            Spacer(),
-            Text('Schedule Consultation', style: TextStyle(fontSize: 16)),
-            Spacer(),
-            Text(selectedDateRange, style: TextStyle(fontSize: 15, color: Colors.red)),
+            Text('Schedule Consultation'),
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 0.0,bottom: 10.0,left: 10.0,right: 10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: TableCalendar(
-                  firstDay: DateTime.utc(2023, 9, 1),
-                  focusedDay: today,
-                  lastDay: DateTime.utc(2029, 9, 1),
-                  rowHeight: 38,
-                  weekendDays: const [DateTime.sunday],
-                  headerStyle: const HeaderStyle(
-                    formatButtonVisible: false,
-                    titleCentered: true,
+      body: CustomScrollView(
+        slivers: <Widget>[
+
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _tableCalendar(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                  child: Center(
+                    child: Text(
+                      'Select Consultation Time',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
-                  availableGestures: AvailableGestures.all,
-                  onDaySelected: (selectedDate, focusedDate) {
-                    setState(() {
-                      _selectedDate = selectedDate;
-                      _updateSelectedDateRange();
-                      // Reset all slots to green when a new date is selected
-                      isTappedList = List.filled(14, false);
-                    });
-                  },
-                  selectedDayPredicate: (day) => _selectedDate == day,
-                  calendarBuilders: CalendarBuilders(
-                    defaultBuilder: (context, day, focusedDay) {
-                      if (day.weekday == DateTime.sunday) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: const Color.fromARGB(255, 199, 135, 130)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              day.day.toString(),
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return null;
-                      }
-                    },
-                    selectedBuilder: (context, date, events) {
-                      return Container(
-                        margin: const EdgeInsets.all(4),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(width: 1, color: Colors.green),
-                          shape: BoxShape.rectangle,
-                          color: Colors.red,
-                        ),
-                        child: Text(
-                          '${date.day}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                    todayBuilder: (context, date, events) {
-                      if (date == _selectedDate) {
-                        return Container(
-                          margin: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 1, color: Colors.blue),
-                            shape: BoxShape.rectangle,
-                            color: Colors.blue.withOpacity(0.3),
-                          ),
-                          child: Text(
-                            '${date.day}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                          margin: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(width: 1, color: Colors.grey),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Text(
-                            '${date.day}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                ),
+              ],
+            ),
+          ),
+          _isWeekend
+              ? SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 30),
+              alignment: Alignment.center,
+              child: const Text(
+                'Weekend is not available, please select another date',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 10),
-              const Center(child: Text('Appointment Timing', style: TextStyle(fontWeight: FontWeight.bold))),
-              const SizedBox(height: 10),
-              _buildSlotTiles(),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Book Appointment'),
-                ),
-              )
-            ],
+            ),
+          )
+              : SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = index;
+                      _timeSelected = true;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _currentIndex == index
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      color: _currentIndex == index ? Colors.green : null,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${timings[index]}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color:
+                        _currentIndex == index ? Colors.white : null,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: timings.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, childAspectRatio: 1.5),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 80),
+              child: Button(
+                width: double.infinity,
+                title: 'Make Appointment',
+                onPressed: () {
+                  //convert date/day/time into string first
+                },
+                disable: _timeSelected && _dateSelected ? false : true,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSlotTiles() {
-    return GridView.count(
-      crossAxisCount: 4,
-      mainAxisSpacing: 1,
-      crossAxisSpacing: 15,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      children: timeSlots.map((slot) => _buildSlotTile(slot)).toList(),
-      padding: const EdgeInsets.all(10),
-    );
-  }
-
-  Widget _buildSlotTile(String slot) {
-    int index = timeSlots.indexOf(slot);
-
-    return GestureDetector(
-      onTap: () {
+  //table calendar
+  //table calendar
+  Widget _tableCalendar() {
+    return TableCalendar(
+      weekendDays: [DateTime.sunday],
+      focusedDay: _focusDay,
+      calendarFormat: _format,
+      currentDay: _currentDay,
+      rowHeight: 48,
+      headerStyle: const HeaderStyle(
+        titleCentered: true,
+      ),
+      calendarStyle: CalendarStyle(
+        weekendTextStyle: TextStyle(color: Colors.grey),
+        rangeStartTextStyle: TextStyle(color: Colors.grey),
+        outsideDaysVisible: true,
+        outsideTextStyle: TextStyle(color: Colors.grey),
+        todayDecoration: BoxDecoration(
+            color: Colors.green,
+            shape: BoxShape.circle), // Set the style for outside days
+      ),
+      availableCalendarFormats: {
+        CalendarFormat.month: 'Month',
+      },
+      onFormatChanged: (format) {
         setState(() {
-          // Reset all slots to green when a new date is selected
-          for (int i = 0; i < isTappedList.length; i++) {
-            isTappedList[i] = false;
-          }
-          // Toggle the tapped slot to red
-          isTappedList[index] = true;
+          _format = format;
         });
       },
-      child: Container(
-        height: 30,
-        width: 60,
-        margin: const EdgeInsets.only(top: 20, bottom: 20, left: 0), // Adjust margin as needed
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey),
-          color: isTappedList[index] ? Colors.red : Colors.green,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            slot,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
+      onDaySelected: ((selectedDay, focusedDay) {
+        setState(() {
+          _currentDay = selectedDay;
+          _focusDay = focusedDay;
+          _dateSelected = true;
+          _selectedDate = selectedDay; // Updated
+          //check if weekend is selected
+          if (selectedDay.weekday == 7) {
+            _isWeekend = true;
+            _timeSelected = false;
+            _currentIndex = null;
+          } else {
+            _isWeekend = false;
+          }
+        });
+      }),
+      lastDay: DateTime(2026, 12, 31),
+      firstDay: DateTime.now(),
     );
   }
 }
-
-

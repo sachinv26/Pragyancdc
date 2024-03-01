@@ -1,396 +1,205 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/constants/appbar.dart';
-import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/book_appointment.dart';
+import 'package:pragyan_cdc/components/button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleAppointment extends StatefulWidget {
-  const ScheduleAppointment({Key? key}) : super(key: key);
+  ScheduleAppointment({Key? key}) : super(key: key);
 
   @override
   State<ScheduleAppointment> createState() => _ScheduleAppointmentState();
 }
 
 class _ScheduleAppointmentState extends State<ScheduleAppointment> {
-  DateTime today = DateTime.now();
-  DateTime? selectedDate;
-  Map<DateTime, List<String>> selectedTimeSlots = {};
-  List<String> timesMorning = ['09:30', '10:15', '11:00', '11:45', '12:30'];
-  List<String> timesAfterNoon = ['14:00', '14:45', '15.30', '16:15', '17:00', '17:45'];
-  List<String> timesEvening = ['18:30', '07:15'];
-  bool showSlotSelectionMessage = false;
+  //declaration
+  CalendarFormat _format = CalendarFormat.month;
+  DateTime _focusDay = DateTime.now();
+  DateTime _currentDay = DateTime.now();
+  int? _currentIndex;
+  bool _isWeekend = false;
+  bool _dateSelected = false;
+  bool _timeSelected = false;
+  DateTime? _selectedDate;
+  String? chosenTiming;
 
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    if (day.weekday == DateTime.sunday) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Booking not allowed on Sundays'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    } else {
-      setState(() {
-        selectedDate = day;
-        today = day;
-        showSlotSelectionMessage = true;
-        // Clear previously selected time slots
-        selectedTimeSlots.clear();
-      });
-    }
-  }
-
-
-  List<DateTime> _getSelectedWeekDates(DateTime selectedDate) {
-    List<DateTime> weekDates = [];
-    DateTime currentDay = selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
-    int daysAdded = 0;
-    while (daysAdded < 6) {
-      if (currentDay.weekday != DateTime.sunday) {
-        weekDates.add(currentDay);
-        daysAdded++;
-      }
-      currentDay = currentDay.add(Duration(days: 1));
-    }
-    return weekDates;
-  }
-
-  bool isWithinNextSevenDays(DateTime date) {
-    if (selectedDate == null) return false;
-
-    final nextSevenDays = List.generate(7, (index) => selectedDate!.add(Duration(days: index)));
-    return nextSevenDays.contains(date);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(title: 'Schedule Therapy'),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                child: TableCalendar(
-                  calendarFormat: CalendarFormat.week,
-                  calendarStyle: const CalendarStyle(
-                    cellMargin: EdgeInsets.all(8),
-                    isTodayHighlighted: false,
-                    outsideDaysVisible: true,
-                  ),
-                  firstDay: DateTime.now(),
-                  focusedDay: today,
-                  lastDay: DateTime.utc(2029, 9, 1).add(const Duration(days: 7)),
-                  rowHeight: 38,
-                  weekendDays: const [DateTime.sunday],
-                  headerStyle: const HeaderStyle(
-                    formatButtonVisible: false,
-                    titleCentered: true,
-                    titleTextStyle: kTextStyle1,
-                  ),
-                  availableGestures: AvailableGestures.all,
-                  onDaySelected: _onDaySelected,
-                  selectedDayPredicate: (day) => isSameDay(day, selectedDate ?? DateTime.now()),
-                  calendarBuilders: CalendarBuilders(
-                    outsideBuilder: (context, day, _) {
-                      if (isWithinNextSevenDays(day)) {
-                        return Container(
-                          margin: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            border: Border.all(width: 1, color: Colors.green),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        );
-                      } else {
-                        return Container(
-                          margin: const EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          // Customize the styling for outside month dates here
-                          child: Text(
-                            '${day.day}',
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        );
-                      }
-                    },
-                    defaultBuilder: (context, day, focusedDay) {
-                      final isOutsideMonth = day.month != focusedDay.month;
-
-                      if (selectedDate != null &&
-                          day.isAfter(selectedDate!.subtract(Duration(days: selectedDate!.weekday - 1))) &&
-                          day.isBefore(selectedDate!.add(Duration(days: 7 - selectedDate!.weekday)))) {
-                        if (day.weekday != DateTime.sunday) {
-                          return Container(
-                            margin: const EdgeInsets.all(4),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              border: Border.all(width: 1, color: Colors.green),
-                              shape: BoxShape.rectangle, // Changed shape to rectangle
-                            ),
-                            child: Text(
-                              '${day.day}',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          );
-                        }
-                      } else if (day.weekday == DateTime.sunday) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 199, 135, 130),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              day.day.toString(),
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        );
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ),
-              if (showSlotSelectionMessage)
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: AnimatedOpacity(
-                    duration: const Duration(seconds: 1),
-                    opacity: showSlotSelectionMessage ? 1.0 : 0.0,
-                    child: const Text(
-                      'Please choose the slot timings',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              const Center(
-                child: Text(
-                  'Appointment Timing',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Morning Session',
-                style: kTextStyle1,
-              ),
-              const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: timesMorning.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      return TimeSlot(
-                        time: timesMorning[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
-                        selectedTimeSlots: selectedTimeSlots,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Afternoon Session',
-                style: kTextStyle1,
-              ),
-              const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: timesAfterNoon.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      return TimeSlot(
-                        time: timesAfterNoon[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
-                        selectedTimeSlots: selectedTimeSlots,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const Text(
-                'Evening Session',
-                style: kTextStyle1,
-              ),
-              const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
-              const SizedBox(height: 10),
-              Column(
-                children: [
-                  ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: timesEvening.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const SizedBox(height: 10);
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      return TimeSlot(
-                        time: timesEvening[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
-                        selectedTimeSlots: selectedTimeSlots,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AppointmentSummary(selectedTimeSlots: selectedTimeSlots),
-                    ));
-                  },
-                  child: const Text('Book Appointment'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HoursSlot extends StatelessWidget {
-  final List<DateTime> selectedWeekDates;
-
-  const HoursSlot({
-    required this.selectedWeekDates,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: selectedWeekDates.map((date) {
-        return Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.blue,
-          ),
-          child: Text(
-            '${date.month}/${date.day}',
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-}
-
-class TimeSlot extends StatefulWidget {
-  final String time;
-  final DateTime selectedDate;
-  final Map<DateTime, List<String>> selectedTimeSlots;
-
-  const TimeSlot({
-    required this.time,
-    required this.selectedDate,
-    required this.selectedTimeSlots,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<TimeSlot> createState() => _TimeSlotState();
-}
-
-class _TimeSlotState extends State<TimeSlot> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(6, (index) {
-        bool isSelected = widget.selectedTimeSlots[widget.selectedDate]?.contains(widget.time) ?? false;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              if (isSelected) {
-                widget.selectedTimeSlots[widget.selectedDate]?.remove(widget.time);
-              } else {
-                widget.selectedTimeSlots[widget.selectedDate] = [widget.time];
-              }
-            });
-          },
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(5),
-              color: isSelected ? Colors.green : Colors.transparent,
-            ),
-            child: Text(
-              widget.time,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class AppointmentSummary extends StatelessWidget {
-  final Map<DateTime, List<String>> selectedTimeSlots;
-
-  const AppointmentSummary({Key? key, required this.selectedTimeSlots}) : super(key: key);
+  List<String> timings = [
+    '09:30',
+    '10:15',
+    '11:00',
+    '11:45',
+    '12:30',
+    '14:00',
+    '14:45',
+    '15:30',
+    '16:15',
+    '17:00',
+    '17:45',
+    '18:30',
+    '19:15'
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Appointment Summary'),
+        centerTitle: true,
+        title: Row(
+          children: [
+            Text('Schedule Appointment'),
+          ],
+        ),
       ),
-      body: ListView(
-        children: selectedTimeSlots.entries.map((entry) {
-          return ListTile(
-            title: Text('Date: ${entry.key}'),
-            subtitle: Text('Time Slots: ${entry.value.join(', ')}'),
-          );
-        }).toList(),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _tableCalendar(),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Center(
+                    child: Text(
+                      'Select Consultation Time',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _isWeekend
+              ? SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 20),
+              alignment: Alignment.center,
+              child: const Text(
+                'Weekend is not available, please select another date',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          )
+              : SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    setState(() {
+                      _currentIndex = index;
+                      _timeSelected = true;
+                    });
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _currentIndex == index
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      color: _currentIndex == index ? Colors.green : null,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${timings[index]}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color:
+                        _currentIndex == index ? Colors.white : null,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              childCount: timings.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, childAspectRatio: 1.5),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Button(
+                width: double.infinity,
+                title: 'Make Appointment',
+                onPressed: () {
+                  if (_dateSelected && _timeSelected) {
+                    String chosenTiming = timings[_currentIndex!]; // Get the selected timing
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookAppointment(selectedDate: _focusDay, chosenTiming: chosenTiming),
+                      ),
+                    );
+                  }
+                },
+                disable: _timeSelected && _dateSelected ? false : true,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+
+  //table calendar
+  //table calendar
+  Widget _tableCalendar() {
+    return TableCalendar(
+      weekendDays: [DateTime.sunday],
+      focusedDay: _focusDay,
+      calendarFormat: _format,
+      currentDay: _currentDay,
+      rowHeight: 48,
+      headerStyle: const HeaderStyle(
+        titleCentered: true,
+      ),
+      calendarStyle: CalendarStyle(
+        weekendTextStyle: TextStyle(color: Colors.grey),
+        rangeStartTextStyle: TextStyle(color: Colors.grey),
+        outsideDaysVisible: true,
+        outsideTextStyle: TextStyle(color: Colors.grey),
+        todayDecoration: BoxDecoration(
+            color: Colors.green,
+            shape: BoxShape.circle), // Set the style for outside days
+      ),
+      availableCalendarFormats: {
+        CalendarFormat.month: 'Month',
+      },
+      onFormatChanged: (format) {
+        setState(() {
+          _format = format;
+        });
+      },
+      onDaySelected: ((selectedDay, focusedDay) {
+        setState(() {
+          _currentDay = selectedDay;
+          _focusDay = focusedDay;
+          _dateSelected = true;
+          _selectedDate = selectedDay; // Updated
+          //check if weekend is selected
+          if (selectedDay.weekday == 7) {
+            _isWeekend = true;
+            _timeSelected = false;
+            _currentIndex = null;
+          } else {
+            _isWeekend = false;
+          }
+        });
+      }),
+      lastDay: DateTime(2026, 12, 31),
+      firstDay: DateTime.now(),
+    );
+  }
 }
-
-

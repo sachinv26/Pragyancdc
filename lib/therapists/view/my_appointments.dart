@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/therapists/view/home.dart';
+
+import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
 
 class MyAppointments extends StatelessWidget {
   const MyAppointments({super.key});

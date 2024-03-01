@@ -42,27 +42,22 @@ class BookingDetails extends StatelessWidget {
                 ),
               ),
             ),
-            // const Text(
-            //   'Select Payment Method',
-            //   style: kTextStyle1,
-            // ),
-            // const ListTile(
-            //   contentPadding: EdgeInsets.all(5),
-            //   leading: Text('Pay on Online modes'),
-            //   trailing: Icon(
-            //     Icons.radio_button_checked,
-            //     color: Colors.green,
-            //   ),
-            // ),
             Center(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(170, 40)),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const PaymentModes()));
-                    },
-                    child: const Text('Proceed to Pay')))
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => PaymentModes()));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  minimumSize: const Size(170, 40),
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
           ],
         ),
       ),
