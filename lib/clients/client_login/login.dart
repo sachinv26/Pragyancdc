@@ -23,8 +23,6 @@ class ClientLogin extends StatefulWidget {
 }
 
 class _ClientLoginState extends State<ClientLogin> {
-
-
   bool _isLoading = false;
 
   final UserAPI userAPI = UserAPI();
@@ -93,27 +91,36 @@ class _ClientLoginState extends State<ClientLogin> {
                     ),
                     CustomButton(
                       text: 'Login',
-                      isLoading: _isLoading, // Set isLoading based on your login logic
+                      isLoading:
+                          _isLoading, // Set isLoading based on your login logic
                       onPressed: () async {
                         setState(() {
-                          _isLoading = true; // Set isLoading to true before starting the login process
+                          _isLoading =
+                              true; // Set isLoading to true before starting the login process
                         });
-
                         try {
                           final String mobile = _mobileController.text;
                           final String password = _passwordController.text;
-                          final String encodedPassword = base64.encode(utf8.encode(password));
-                          final response = await ApiServices().parentLogin(mobile, encodedPassword);
+                          final String encodedPassword =
+                              base64.encode(utf8.encode(password));
+                          final response = await ApiServices()
+                              .parentLogin(mobile, encodedPassword);
 
                           if (response['status'] == 1) {
-                            final String authToken = response['prag_parent_auth_token'];
-                            final String userId = response['profile']['parent_user_id'];
+                            final String authToken =
+                                response['prag_parent_auth_token'];
+                            final String userId =
+                                response['profile']['parent_user_id'];
 
-                            AuthProvider authProvider = Provider.of<AuthProvider>(widget.ctx, listen: false);
+                            AuthProvider authProvider =
+                                Provider.of<AuthProvider>(widget.ctx,
+                                    listen: false);
                             await authProvider.login(authToken, userId);
 
-                            final userProfile = UserProfile.fromJson(response['profile']);
-                            Provider.of<UserProvider>(widget.ctx, listen: false).setUserProfile(userProfile);
+                            final userProfile =
+                                UserProfile.fromJson(response['profile']);
+                            Provider.of<UserProvider>(widget.ctx, listen: false)
+                                .setUserProfile(userProfile);
                             // Navigate to the dashboard or any other screen if needed
                             // Navigator.pushNamed(context, '/dashboard/$ctx');
                           } else {
@@ -127,12 +134,12 @@ class _ClientLoginState extends State<ClientLogin> {
                           }
                         } finally {
                           setState(() {
-                            _isLoading = false; // Set isLoading to false after the login process is complete
+                            _isLoading =
+                                false; // Set isLoading to false after the login process is complete
                           });
                         }
                       },
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

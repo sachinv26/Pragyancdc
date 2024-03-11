@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/Today_client_details.dart';
-class AppointmentDetails extends StatelessWidget {
-  const AppointmentDetails({
+import 'package:pragyan_cdc/therapists/view/upcoming_client_details.dart';
+class UpcomingAppointmentDetails extends StatelessWidget {
+  const UpcomingAppointmentDetails({
     super.key,
   });
 
@@ -14,7 +15,7 @@ class AppointmentDetails extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) {
-                  return const TodayClientDetails();
+                  return const UpcomingClientDetails();
                 },
               ));
             },
@@ -68,16 +69,6 @@ class AppointmentDetails extends StatelessWidget {
                         const Text('📆: 16/10/2023',
                             style: TextStyle(color: Colors.grey, fontSize: 11)),
                         kheight10,
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.green)),
-                          child: const Text(
-                            'Pending',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
                       ],
                     )
                   ],

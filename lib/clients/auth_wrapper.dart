@@ -25,16 +25,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         debugPrint('Authwrapper context: $context');
-        debugPrint(
-            'AuthWrapper rebuild: isLoggedIn=${authProvider.isLoggedIn}');
+        debugPrint('AuthWrapper rebuild: isLoggedIn=${authProvider.isLoggedIn}');
         if (authProvider.isCheckingLogin) {
           return Center(child: Loading());
         } else if (authProvider.isLoggedIn) {
           return DashBoard(ctx: context);
         } else {
-          return ClientLogin(
-            ctx: context,
-          );
+          return ClientLogin(ctx: context,);
         }
       },
     );

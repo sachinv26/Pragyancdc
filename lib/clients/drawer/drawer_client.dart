@@ -29,7 +29,6 @@ class ClientAppDrawer extends StatefulWidget {
 class _ClientAppDrawerState extends State<ClientAppDrawer> {
   File? _selectedImage;
   final api = ApiServices();
-
   @override
   Widget build(BuildContext context) {
     //final userDetails = Provider.of<UserProvider>(context).userProfile;
@@ -44,9 +43,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
-
             return Drawer(
-
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [

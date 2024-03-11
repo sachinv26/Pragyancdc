@@ -14,7 +14,6 @@ class AuthProvider with ChangeNotifier {
   Future<void> checkLoginStatus() async {
     _isCheckingLogin = true; // Set to true when starting to check login status
     notifyListeners();
-
     String? authToken = await _storage.read(key: 'authToken');
     _userId = await _storage.read(key: 'userId');
     _isLoggedIn = authToken != null;

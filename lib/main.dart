@@ -18,6 +18,8 @@ import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
 
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
+import 'package:pragyan_cdc/therapists/view/dashboard.dart';
+import 'package:pragyan_cdc/therapists/view/home.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -67,7 +69,8 @@ class Pragyan extends StatelessWidget {
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
         '/dashboard/:context': (context) => DashBoard(
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
-        '/addChildScreen': (context) => const AddChildScreen()
+        '/addChildScreen': (context) => const AddChildScreen(),
+        '/therapistDashboard' :(context) => TherapistDashBoard(),
         // '/dashBoard': (context) =>  DashBoard(ctx: ,),
       },
     );

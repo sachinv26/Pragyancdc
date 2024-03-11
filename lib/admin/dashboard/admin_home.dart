@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:pragyan_cdc/clients/dashboard/home/location_search.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/therapists/view/booked_client_details.dart';
+import 'package:pragyan_cdc/therapists/view/Today_client_details.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -113,7 +113,7 @@ class AdminAppointmentsView extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) {
-                return const ClientDetails();
+                return const TodayClientDetails();
               },
             ));
           },

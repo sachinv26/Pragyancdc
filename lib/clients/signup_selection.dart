@@ -11,9 +11,9 @@ class SignupSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-          child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20),
-                child: Column(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text('Welcome Back!', style: kTextStyle2),
@@ -30,18 +30,22 @@ class SignupSelection extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return AuthWrapper();
-                  },
-                ));
-          
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AuthWrapper();
+                    },
+                  ),
+                );
                 //   Navigator.pushNamed(context, '/clientLogin');
               },
               child: Container(
                 decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 19, 138, 23),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                  color: Color.fromARGB(255, 19, 138, 23),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
                 padding: const EdgeInsets.only(left: 7, right: 4),
                 width: double.infinity,
                 height: 40,
@@ -53,7 +57,9 @@ class SignupSelection extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                    CircleAvatar(child: Icon(Icons.person))
+                    CircleAvatar(
+                      child: Icon(Icons.person),
+                    ),
                   ],
                 ),
               ),
@@ -63,8 +69,11 @@ class SignupSelection extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TherapistLogin()));
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const TherapistLogin(),
+                  ),
+                );
               },
               child: ListTile(
                 leading: Image.asset('assets/images/Group 10128.png'),
@@ -86,7 +95,7 @@ class SignupSelection extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return const AdminLogin();
+                      return AdminLogin();
                     },
                   ),
                 );
@@ -98,16 +107,17 @@ class SignupSelection extends StatelessWidget {
                   style: khintTextStyle,
                 ),
                 trailing: const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 7,
-                    child: CircleAvatar(
-                      radius: 5,
-                    )),
+                  backgroundColor: Colors.white,
+                  radius: 7,
+                  child: CircleAvatar(
+                    radius: 5,
+                  ),
+                ),
               ),
             )
           ],
-                ),
-              ),
-        ));
+        ),
+      ),
+    ));
   }
 }

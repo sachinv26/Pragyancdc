@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
+import 'package:pragyan_cdc/therapists/view/widgets/upcoming_appointment_details.dart';
 
 class UpcomingSchedule extends StatefulWidget {
-  const UpcomingSchedule({super.key});
+  const UpcomingSchedule({Key? key}) : super(key: key);
 
   @override
   State<UpcomingSchedule> createState() => _UpcomingScheduleState();
@@ -12,6 +15,7 @@ class UpcomingSchedule extends StatefulWidget {
 class _UpcomingScheduleState extends State<UpcomingSchedule> {
   String? selectedOption;
   DateTime? selectedDate;
+  DateTimeRange? selectedDateRange;
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +27,56 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
           children: [
             Text(
               selectedDate != null
-                  ? 'Selected Date: ${selectedDate!.toString().split(' ')[0]}'
+                  ? selectedOption == 'Select Date'
+                  ? 'Selected Date: ${DateFormat('dd-MM-yyyy').format(selectedDate!)}'
+                  : 'Selected Range: ${DateFormat('dd-MM-yyyy').format(selectedDateRange!.start)} - ${DateFormat('dd-MM-yyyy').format(selectedDateRange!.end)}'
                   : 'Please select a date',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
+              ),
               onPressed: () {
-                _selectDate(context);
+                _showSelectDialog(context);
               },
-              child: Text('Select Date'),
+              child: Text('Select'),
             ),
           ],
         ),
         kheight10,
-        if (selectedDate != null)
-          Expanded(child: AppointmentDetails()),
+        if (selectedDate != null || selectedDateRange!=null) Expanded(child: UpcomingAppointmentDetails()),
       ],
+    );
+  }
+
+  Future<void> _showSelectDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Option"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('Select Date'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _selectDate(context);
+                },
+              ),
+              ListTile(
+                title: Text('Select Date Range'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _selectDateRange(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -52,8 +90,26 @@ class _UpcomingScheduleState extends State<UpcomingSchedule> {
 
     if (picked != null) {
       setState(() {
+        selectedOption = 'Select Date';
         selectedDate = picked;
       });
     }
   }
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedOption = 'Select Date Range';
+        selectedDateRange = picked;
+      });
+    }
+  }
+
 }
+

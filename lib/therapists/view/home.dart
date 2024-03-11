@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/therapists/view/fliter_appointments.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/upcoming_schedule.dart';
 
@@ -18,6 +21,8 @@ class _TherapistHomeState extends State<TherapistHome> {
   TextEditingController _childNameController = TextEditingController();
   TextEditingController _parentNameController = TextEditingController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -31,45 +36,79 @@ class _TherapistHomeState extends State<TherapistHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Apply Leave'),
+              onTap: () {
+                // Add action for item 1
+              },
+            ),
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                // Add action for item 2
+              },
+            ),
+            // Add more ListTile widgets or other widgets as needed
+          ],
+        ),
+      ),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0, // No elevation
-            leading: const CircleAvatar(
-              radius: 20,
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          backgroundColor: Colors.green.shade700,
+          elevation: 0, // No elevation
+          leading: IconButton(
+            icon: const CircleAvatar(
+              radius: 50,
               backgroundImage: AssetImage(
                 'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png',
               ),
             ),
-            title: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Dr. Amrita Rao',
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  'Speech & Language Therapy',
-                  maxLines: 2,
-                  style: TextStyle(
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            },
+          ),
+          title: const Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Dr. Amrita Rao',
+                style: TextStyle(
+                    fontSize: 15,
                     color: Colors.black,
-                    fontSize: 13,
-                  ),
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Speech & Language Therapy',
+                maxLines: 2,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 13,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 12, right: 12, bottom: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,38 +142,44 @@ class _TherapistHomeState extends State<TherapistHome> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
-                    fixedSize: const Size(170, 30),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _currentWidget = _appointmentDetailsWidget;
-                    });
-                  },
-                  child: const Text(
-                    'Today Appointments',
-                    style: TextStyle(fontSize: 12, color: Colors.black),
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                      fixedSize: const Size(170, 30),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentWidget = _appointmentDetailsWidget;
+                      });
+                    },
+                    child: const Text(
+                      'Today Appointments',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
-                    fixedSize: const Size(170, 30),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _currentWidget = _upcomingScheduleWidget;
-                    });
-                  },
-                  child: const Text(
-                    'Upcoming Schedule',
-                    style: TextStyle(fontSize: 12),
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)),
+                      fixedSize: const Size(170, 30),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _currentWidget = _upcomingScheduleWidget;
+                      });
+                    },
+                    child: const Text(
+                      'Upcoming Schedule',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   ),
                 ),
                 IconButton(
@@ -147,10 +192,8 @@ class _TherapistHomeState extends State<TherapistHome> {
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                           child: Container(
-
                             padding: EdgeInsets.all(20.0),
                             child: Column(
-                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   'Filter',
@@ -163,16 +206,16 @@ class _TherapistHomeState extends State<TherapistHome> {
                                 TextField(
                                   controller: _childNameController,
                                   decoration: InputDecoration(
-                                    labelText: 'Child Name',
+                                    labelText: 'Search by Child Name',
                                     border: OutlineInputBorder(),
                                   ),
                                 ),
                                 SizedBox(height: 20.0),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.end,
                                   children: [
                                     TextButton(
-
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
@@ -181,16 +224,23 @@ class _TherapistHomeState extends State<TherapistHome> {
                                     SizedBox(width: 10.0),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green.shade700
-                                      ),
+                                          backgroundColor:
+                                          Colors.green.shade700),
                                       onPressed: () {
                                         // Add logic to apply filters
-                                        String childName = _childNameController.text;
-                                        String parentName = _parentNameController.text;
+                                        String childName =
+                                            _childNameController.text;
+                                        String parentName =
+                                            _parentNameController.text;
                                         // You can use childName and parentName for filtering
-                                        Navigator.of(context).pop();
+                                        Navigator.pop(context);
+                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>FilterAppointments()));
                                       },
-                                      child: Text('Apply',style: TextStyle(color: Colors.white),),
+                                      child: Text(
+                                        'Apply',
+                                        style: TextStyle(
+                                            color: Colors.white),
+                                      ),
                                     ),
                                   ],
                                 ),
