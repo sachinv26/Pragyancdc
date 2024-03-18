@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: Colors.green.shade700,
                     elevation: 0,
                     leading: Padding(
-                      padding:  EdgeInsets.only(left: 20),
+                      padding: EdgeInsets.only(left: 20),
                       child: userProfile.profileImage == ""
                           ? GestureDetector(
                               onTap: () {
@@ -143,12 +143,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           alignment: Alignment.center,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Image.asset('assets/images/children.png'),
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                  width: double.infinity,
+                                  child: Image.asset(
+                                    'assets/images/children.png',
+                                    fit: BoxFit.contain,
+                                  )),
                             ),
                             Positioned(
                               left: 8,
-                              top: 5,
+                              top: 10,
                               child: Image.asset(
                                 'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
                               ),
@@ -214,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             } else if (snapshot.hasError) {
                               return const Text('Error ');
                             } else {
-                              return Center(child:Loading());
+                              return Center(child: Loading());
                             }
                           },
                         ),
@@ -243,13 +248,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // Data successfully loaded
                                 List<Therapy> therapies = snapshot.data!;
                                 return Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     for (var i = 0;
                                         i < therapies.length;
                                         i += 3)
                                       Row(
-
                                         children: therapies
                                             .sublist(
                                                 i,
@@ -257,13 +262,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ? therapies.length
                                                     : i + 3)
                                             .map((therapy) => Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: ServiceItem(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: ServiceItem(
                                                     therapy: therapy,
                                                     branchId: branchId,
                                                     branchName: branchName,
                                                   ),
-                                            ))
+                                                ))
                                             .toList(),
                                       ),
                                   ],
@@ -276,8 +282,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.asset(
-                                  'assets/images/children-learning-globe-with-woman-bedroom 1.png'),
+                              child: Container(
+                                width: double.infinity,
+                                child: Image.asset(
+                                    'assets/images/children-learning-globe-with-woman-bedroom 1.png',fit: BoxFit.contain,),
+                              ),
                             ),
                             Positioned(
                               left: 8,
@@ -288,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Positioned(
                               bottom: 10,
-                              left: 5,
+                              left: 10,
                               child: SizedBox(
                                 width: 150,
                                 child: Column(
@@ -405,7 +414,8 @@ class ServiceItem extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             SizedBox(
-              width: 100,// Adjust the width here to control the space for the text
+              width:
+                  100, // Adjust the width here to control the space for the text
               child: Text(
                 therapy.therapyName,
                 style: const TextStyle(

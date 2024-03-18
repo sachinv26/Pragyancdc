@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/upcoming_appointment_details.dart';
 
 class UpcomingSchedule extends StatefulWidget {

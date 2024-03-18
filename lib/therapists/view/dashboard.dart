@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/therapists/view/group_therapy.dart';
 import 'package:pragyan_cdc/therapists/view/home.dart';
 import 'package:pragyan_cdc/therapists/view/my_appointments.dart';
@@ -18,7 +17,6 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
   final List<Widget> pages = [
     const TherapistHome(),
     const MyAppointments(),
-    const GroupTherapy(),
   ];
 
   void _onItemTapped(int index) {
@@ -34,6 +32,9 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
       //
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.white,
+        backgroundColor: Colors.green.shade700,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -43,16 +44,10 @@ class _TherapistDashBoardState extends State<TherapistDashBoard> {
             icon: Icon(Icons.event),
             label: 'My Appointments',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: 'Group Therapy',
-          ),
         ],
-        currentIndex: 0, // Set the initial selected index.
+        currentIndex: _currentIndex, // Set the initial selected index.
         onTap: (index) {
           _onItemTapped(index);
-          // Handle navigation to different tabs.
-          // You can navigate to different screens or update the content based on the selected tab.
         },
       ),
     );

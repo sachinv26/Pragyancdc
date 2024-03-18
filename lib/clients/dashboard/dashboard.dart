@@ -38,49 +38,41 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[_currentIndex],
-      bottomNavigationBar: Theme(
-        data: ThemeData(
-          // splashColor: Colors.transparent,
-          // highlightColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.green,
-          selectedItemColor: Colors.green, // Set selected item color to green
-          unselectedLabelStyle: const TextStyle(color: Colors.black),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.green.shade700,
+        showUnselectedLabels: true,
+
           currentIndex: _currentIndex,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
-                color: Colors.green,
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.calendar_today,
-                color: Colors.black,
               ),
               label: 'My Appointments',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.contact_support_rounded,
-                color: Colors.black,
               ),
               label: 'Support',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.account_balance_wallet,
-                color: Colors.black,
               ),
               label: 'Wallet',
             ),
           ],
           onTap: _onItemTapped,
         ),
-      ),
     );
   }
 }

@@ -25,7 +25,6 @@ class ClientLogin extends StatefulWidget {
 class _ClientLoginState extends State<ClientLogin> {
   bool _isLoading = false;
 
-  final UserAPI userAPI = UserAPI();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -36,7 +35,7 @@ class _ClientLoginState extends State<ClientLogin> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height * 0.78),
@@ -171,7 +170,6 @@ class _ClientLoginState extends State<ClientLogin> {
             ),
           ),
         )
-        //assets\images\2 94701.png
         );
   }
 }

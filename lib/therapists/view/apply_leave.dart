@@ -17,6 +17,8 @@ class _ApplyLeaveState extends State<ApplyLeave> {
   int _selectedReason = -1; // Variable to track selected reason index
   String _selectedHalfDay = ''; // Variable to track selected half-day option
 
+  DateTimeRange? selectedDateRange;
+
   void _selectFrequency(int index) {
     setState(() {
       _selectedFrequency = index;
@@ -54,7 +56,7 @@ class _ApplyLeaveState extends State<ApplyLeave> {
           children: [
             Text(
               'Leave Type',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
             ),
             SizedBox(height: 10),
             Row(
@@ -65,15 +67,18 @@ class _ApplyLeaveState extends State<ApplyLeave> {
                     child: Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(1),
                         border: Border.all(
-                            color: _selectedLeaveType == i ? Colors.green.shade700 : Colors.black),
+                          width: 1.5,
+                          color: Colors.black
+                        ),
+                        borderRadius: BorderRadius.circular(1),
+                        color: _selectedLeaveType == i ? Colors.green.shade700 : Colors.transparent,
                       ),
                       child: Center(
                         child: Text(
                           'General Leave',
                           style: TextStyle(
-                            color: _selectedLeaveType == i ? Colors.green.shade700 : Colors.black,
+                            color: _selectedLeaveType == i ? Colors.white : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -85,7 +90,7 @@ class _ApplyLeaveState extends State<ApplyLeave> {
             SizedBox(height: 30),
             Text(
               'Frequency',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
             ),
             SizedBox(height: 10),
             Row(
@@ -95,24 +100,22 @@ class _ApplyLeaveState extends State<ApplyLeave> {
                 for (int i = 0; i < 3; i++)
                   GestureDetector(
                     onTap: () => _selectFrequency(i),
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(1),
-                          border: Border.all(color: Colors.black),
-                          color: _selectedFrequency == i ? Colors.green.shade700 : Colors.transparent,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 1.5,
+                            color: Colors.black
                         ),
-                        child: Center(
-                          child: Text(
-                            i == 0
-                                ? 'Single Day'
-                                : (i == 1 ? 'Continuous Dates' : 'Half Day'),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: _selectedFrequency == i ? Colors.white70 : Colors.black,
-                            ),
+                        borderRadius: BorderRadius.circular(1),
+                        color: _selectedFrequency == i ? Colors.green.shade700 : Colors.transparent,
+                      ),
+                      child: Center(
+                        child: Text(
+                          i == 0 ? 'Single Day' : (i == 1 ? 'Continuous Dates' : 'Half Day'),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: _selectedFrequency == i ? Colors.white : Colors.black,
                           ),
                         ),
                       ),
@@ -123,49 +126,54 @@ class _ApplyLeaveState extends State<ApplyLeave> {
             SizedBox(height: 30),
             Text(
               'Reason For Leave',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 18),
             ),
             SizedBox(height: 10),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 for (int i = 0; i < 2; i++)
-                  GestureDetector(
-                    onTap: () => _selectReason(i),
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 20),
+                  Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: GestureDetector(
+                      onTap: () => _selectReason(i),
                       child: Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: _selectedReason == i ? Colors.green.shade700 : Colors.transparent,
-                          borderRadius: BorderRadius.circular(1),
                           border: Border.all(
+                            width: 1.5,
                             color: Colors.black,
                           ),
+                          color: _selectedReason == i ? Colors.green.shade700 : Colors.transparent,
+                          borderRadius: BorderRadius.circular(1),
                         ),
                         child: Center(
                           child: Text(
                             i == 0 ? 'Personal work' : 'Unwell',
                             style: TextStyle(
-                              color: _selectedReason == i ? Colors.white70 : Colors.black,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedReason == i ? Colors.white : Colors.black,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                SizedBox(width: 20), // Adjust the width as needed
               ],
             ),
+
             SizedBox(height: 20),
             Row(
               children: [
                 Text(
-                  'Select Dates',
+                  'Selected Dates:',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(width: 10),
-                if (_selectedFrequency == 1 && _selectedDate is DateTimeRange)
+                if (_selectedFrequency == 1 && selectedDateRange != null)
                   Text(
-                    '${(_selectedDate as DateTimeRange).start.day}/${(_selectedDate as DateTimeRange).start.month}/${(_selectedDate as DateTimeRange).start.year} - ${(_selectedDate as DateTimeRange).end.day}/${(_selectedDate as DateTimeRange).end.month}/${(_selectedDate as DateTimeRange).end.year}',
+                    '${selectedDateRange!.start.day}/${selectedDateRange!.start.month}/${selectedDateRange!.start.year} - ${selectedDateRange!.end.day}/${selectedDateRange!.end.month}/${selectedDateRange!.end.year}',
                     style: TextStyle(fontSize: 18, color: Colors.green.shade700),
                   )
                 else if (_selectedFrequency == 2 && _selectedHalfDay.isNotEmpty)
@@ -190,7 +198,8 @@ class _ApplyLeaveState extends State<ApplyLeave> {
                     }
                   },
                   child: Icon(
-                    Icons.calendar_today,
+                    Icons.calendar_month_outlined,
+                    size: 30,
                     color: Colors.green.shade700,
                   ),
                 ),
@@ -200,10 +209,31 @@ class _ApplyLeaveState extends State<ApplyLeave> {
             TextField(
               controller: _reasonController,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.green, // Set the color to green
+                    width: 1, // Set the width as needed
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.green.shade700, // Set the color to green
+                    width: 3, // Set the width as needed
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.green, // Set the color to green
+                    width: 3, // Set the width as needed
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 hintText: 'Enter reason',
               ),
             ),
+
             SizedBox(height: 20),
             Center(
               child: ElevatedButton(
@@ -247,54 +277,59 @@ class _ApplyLeaveState extends State<ApplyLeave> {
     final DateTimeRange? picked = await showDateRangePicker(
       context: context,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: DateTime(2101),
     );
 
     if (picked != null) {
       setState(() {
-        _selectedDate = picked as DateTime;
+        selectedDateRange = picked;
       });
     }
   }
 
   Future<void> _selectHalfDay(BuildContext context) async {
-    final selectedHalfDay = await showDialog<String>(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Half Day'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedHalfDay = 'Morning';
-                  });
-                  Navigator.pop(context, 'Morning');
-                },
-                child: Text('Morning'),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedHalfDay = 'Evening';
-                  });
-                  Navigator.pop(context, 'Evening');
-                },
-                child: Text('Evening'),
-              ),
-            ],
-          ),
-        );
-      },
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    if (selectedHalfDay != null) {
-      setState(() {
-        // Update selected date according to the half-day selected
-        _selectedDate = DateTime.now();
-      });
+
+    if (pickedDate != null) {
+      final selectedHalfDay = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Select Half Day'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedHalfDay = 'Morning';
+                      _selectedDate = pickedDate;
+                    });
+                    Navigator.pop(context, 'Morning');
+                  },
+                  child: Text('Morning'),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _selectedHalfDay = 'Evening';
+                      _selectedDate = pickedDate;
+                    });
+                    Navigator.pop(context, 'Evening');
+                  },
+                  child: Text('Evening'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
   }
 }
