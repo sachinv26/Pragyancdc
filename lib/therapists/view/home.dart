@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gap/gap.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/therapists/view/cancel_appointments.dart';
 import 'package:pragyan_cdc/therapists/view/fliter_appointments.dart';
+import 'package:pragyan_cdc/therapists/view/apply_leave.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
+import 'package:pragyan_cdc/therapists/view/fliter.dart';
 import 'package:pragyan_cdc/therapists/view/widgets/upcoming_schedule.dart';
 
 class TherapistHome extends StatefulWidget {
@@ -19,7 +23,6 @@ class _TherapistHomeState extends State<TherapistHome> {
   late Widget _upcomingScheduleWidget;
   String _selectedBranch = 'Basavangudi Branch';
   TextEditingController _childNameController = TextEditingController();
-  TextEditingController _parentNameController = TextEditingController();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -53,10 +56,17 @@ class _TherapistHomeState extends State<TherapistHome> {
                 ),
               ),
             ),
+
             ListTile(
-              title: Text('Apply Leave'),
+              title: Text('Cancel Appointment'),
               onTap: () {
-                // Add action for item 1
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CancelAppointments()));
+              },
+            ),
+            ListTile(
+              title: Text('Apply leave'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ApplyLeave()));
               },
             ),
             ListTile(
@@ -115,6 +125,7 @@ class _TherapistHomeState extends State<TherapistHome> {
             Container(
               width: double.infinity,
               child: DropdownButton<String>(
+                hint: Text('choose a branch'),
                 isExpanded: true,
                 elevation: 5,
                 value: _selectedBranch,
@@ -162,6 +173,7 @@ class _TherapistHomeState extends State<TherapistHome> {
                     ),
                   ),
                 ),
+                Gap(10),
                 Expanded(
                   flex: 3,
                   child: ElevatedButton(
@@ -184,72 +196,7 @@ class _TherapistHomeState extends State<TherapistHome> {
                 ),
                 IconButton(
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Filter',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 20.0),
-                                TextField(
-                                  controller: _childNameController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Search by Child Name',
-                                    border: OutlineInputBorder(),
-                                  ),
-                                ),
-                                SizedBox(height: 20.0),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text('Cancel'),
-                                    ),
-                                    SizedBox(width: 10.0),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                          Colors.green.shade700),
-                                      onPressed: () {
-                                        // Add logic to apply filters
-                                        String childName =
-                                            _childNameController.text;
-                                        String parentName =
-                                            _parentNameController.text;
-                                        // You can use childName and parentName for filtering
-                                        Navigator.pop(context);
-                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>FilterAppointments()));
-                                      },
-                                      child: Text(
-                                        'Apply',
-                                        style: TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>FiltersScreen()));
                   },
                   icon: Icon(Icons.filter_list),
                 ),

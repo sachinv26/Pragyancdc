@@ -13,7 +13,7 @@ class CustomButton extends StatefulWidget {
     this.onPressed,
     this.width = 170,
     this.height = 40,
-    this.isLoading = false, // Add this line
+    this.isLoading = false,  // Add this line
   }) : super(key: key);
   @override
   State<CustomButton> createState() => _CustomButtonState();

@@ -10,7 +10,11 @@ AppBar customAppBar({bool showLeading = true, String? title}) {
     iconTheme: const IconThemeData(color: Colors.black),
     title: Text(
       title ?? '',
-      style: kTextStyle1,
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 20
+      ),
     ),
   );
 }

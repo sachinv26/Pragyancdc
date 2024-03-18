@@ -20,6 +20,16 @@ class AppointmentDetails extends StatelessWidget {
             },
             child: Card(
               child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white70,
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.green.shade700,
+                        width: 4.0,
+                      ),
+                    ),
+                    borderRadius: BorderRadius.circular(10.0)
+                ),
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [

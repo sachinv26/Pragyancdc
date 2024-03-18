@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
-import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 
 class ApplyLeave extends StatefulWidget {
   const ApplyLeave({Key? key}) : super(key: key);
@@ -11,198 +9,292 @@ class ApplyLeave extends StatefulWidget {
 }
 
 class _ApplyLeaveState extends State<ApplyLeave> {
-  final _formKey = GlobalKey<FormState>();
-  DateTime? _startDate;
-  DateTime? _endDate;
-  TimeOfDay? _startTime;
-  TimeOfDay? _endTime;
-  String? _reason;
+  final TextEditingController _reasonController = TextEditingController();
+  late DateTime _selectedDate = DateTime.now();
 
-  Future<void> _pickDateRange(BuildContext context) async {
-    final DateTimeRange? picked = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 1),
-    );
-    if (picked != null && picked.start != picked.end) {
-      setState(() {
-        _startDate = picked.start;
-        _endDate = picked.end;
-      });
+  int _selectedFrequency = -1; // Variable to track selected frequency index
+  int _selectedLeaveType = -1; // Variable to track selected leave type index
+  int _selectedReason = -1; // Variable to track selected reason index
+  String _selectedHalfDay = ''; // Variable to track selected half-day option
+
+  void _selectFrequency(int index) {
+    setState(() {
+      _selectedFrequency = index;
+    });
+
+    if (_selectedFrequency == 0) {
+      _selectDate(context);
+    } else if (_selectedFrequency == 1) {
+      _selectDateRange(context);
+    } else if (_selectedFrequency == 2) {
+      _selectHalfDay(context);
     }
   }
 
-  Future<void> _pickTime(BuildContext context, bool isStartTime) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isStartTime) {
-          _startTime = picked;
-        } else {
-          _endTime = picked;
-        }
-      });
-    }
+  void _selectLeaveType(int index) {
+    setState(() {
+      _selectedLeaveType = index;
+    });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      // Here you can implement your submission logic, such as sending data to a server or saving it locally
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            duration: Duration(seconds: 1),
-            content: Text(
-              'Leave application submitted successfully',
-            )),
-      );
-      Future.delayed(
-        Duration(
-          seconds: 1,
-        ),
-        () {
-          Navigator.pop(context);
-        },
-      );
-
-    }
+  void _selectReason(int index) {
+    setState(() {
+      _selectedReason = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Cancel Appointments',
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green.shade700, // Background color (constant)
-                ),
-                onPressed: () => _pickDateRange(context),
-                child: Text(
-                  _startDate == null
-                      ? 'Select Date Range'
-                      : 'From: ${DateFormat('yyyy-MM-dd').format(_startDate!)} To: ${DateFormat('yyyy-MM-dd').format(_endDate!)}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green.shade700, // Background color (constant)
-                ),
-                onPressed: () => _pickTime(context, true),
-                child: Text(
-                  _startTime == null
-                      ? 'Select Start Time'
-                      : 'Start Time: ${_startTime!.format(context)}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green.shade700, // Background color (constant)
-                ),
-                onPressed: () => _pickTime(context, false),
-                child: Text(
-                  _endTime == null
-                      ? 'Select End Time'
-                      : 'End Time: ${_endTime!.format(context)}',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Reason for Leave',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a reason for your leave';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _reason = value;
-                },
-              ),
-              const SizedBox(height: 32),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  child: Text(
-                    'Cancel Appointments',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                      backgroundColor: Colors.green.shade700),
-                ),
-              ),
-              const SizedBox(height: 32),
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Instructions:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+      appBar: customAppBar(title: 'Apply Leave'),
+      body: Padding(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Leave Type',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                for (int i = 0; i < 1; i++)
+                  GestureDetector(
+                    onTap: () => _selectLeaveType(i),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(1),
+                        border: Border.all(
+                            color: _selectedLeaveType == i ? Colors.green.shade700 : Colors.black),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'General Leave',
+                          style: TextStyle(
+                            color: _selectedLeaveType == i ? Colors.green.shade700 : Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "- Please select the date range for your leave.",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+              ],
+            ),
+            SizedBox(height: 30),
+            Text(
+              'Frequency',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (int i = 0; i < 3; i++)
+                  GestureDetector(
+                    onTap: () => _selectFrequency(i),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(1),
+                          border: Border.all(color: Colors.black),
+                          color: _selectedFrequency == i ? Colors.green.shade700 : Colors.transparent,
+                        ),
+                        child: Center(
+                          child: Text(
+                            i == 0
+                                ? 'Single Day'
+                                : (i == 1 ? 'Continuous Dates' : 'Half Day'),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: _selectedFrequency == i ? Colors.white70 : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    Text(
-                      "- Choose the start and end time for your leave if applicable.",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                  ),
+              ],
+            ),
+            SizedBox(height: 30),
+            Text(
+              'Reason For Leave',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                for (int i = 0; i < 2; i++)
+                  GestureDetector(
+                    onTap: () => _selectReason(i),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: _selectedReason == i ? Colors.green.shade700 : Colors.transparent,
+                          borderRadius: BorderRadius.circular(1),
+                          border: Border.all(
+                            color: Colors.black,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            i == 0 ? 'Personal work' : 'Unwell',
+                            style: TextStyle(
+                              color: _selectedReason == i ? Colors.white70 : Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    Text(
-                      "- Provide a reason for your leave.",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    Text(
-                      "- Click 'Apply Leave' to submit your request.",
-                      style: TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                  ],
+                  ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  'Select Dates',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 10),
+                if (_selectedFrequency == 1 && _selectedDate is DateTimeRange)
+                  Text(
+                    '${(_selectedDate as DateTimeRange).start.day}/${(_selectedDate as DateTimeRange).start.month}/${(_selectedDate as DateTimeRange).start.year} - ${(_selectedDate as DateTimeRange).end.day}/${(_selectedDate as DateTimeRange).end.month}/${(_selectedDate as DateTimeRange).end.year}',
+                    style: TextStyle(fontSize: 18, color: Colors.green.shade700),
+                  )
+                else if (_selectedFrequency == 2 && _selectedHalfDay.isNotEmpty)
+                  Text(
+                    '$_selectedHalfDay, ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                    style: TextStyle(fontSize: 18, color: Colors.green.shade700),
+                  )
+                else
+                  Text(
+                    '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                    style: TextStyle(fontSize: 18, color: Colors.green.shade700),
+                  ),
+                SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    if (_selectedFrequency == 0) {
+                      _selectDate(context);
+                    } else if (_selectedFrequency == 1) {
+                      _selectDateRange(context);
+                    } else if (_selectedFrequency == 2) {
+                      _selectHalfDay(context);
+                    }
+                  },
+                  child: Icon(
+                    Icons.calendar_today,
+                    color: Colors.green.shade700,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _reasonController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter reason',
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green.shade700,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  String reason = _reasonController.text;
+                  // Do something with selected date and reason
+                },
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked as DateTime;
+      });
+    }
+  }
+
+  Future<void> _selectHalfDay(BuildContext context) async {
+    final selectedHalfDay = await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Half Day'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedHalfDay = 'Morning';
+                  });
+                  Navigator.pop(context, 'Morning');
+                },
+                child: Text('Morning'),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _selectedHalfDay = 'Evening';
+                  });
+                  Navigator.pop(context, 'Evening');
+                },
+                child: Text('Evening'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    if (selectedHalfDay != null) {
+      setState(() {
+        // Update selected date according to the half-day selected
+        _selectedDate = DateTime.now();
+      });
+    }
   }
 }

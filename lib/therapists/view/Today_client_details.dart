@@ -10,7 +10,7 @@ class TodayClientDetails extends StatefulWidget {
 }
 
 class _TodayClientDetailsState extends State<TodayClientDetails> {
-  String _selectedStatus = 'Planned';
+  String _selectedStatus = 'Completed';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +124,7 @@ class _TodayClientDetailsState extends State<TodayClientDetails> {
                       _selectedStatus = newValue!;
                     });
                   },
-                  items: <String>['Completed', 'Planned', 'Absent']
+                  items: <String>['Completed','Child Absent']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
