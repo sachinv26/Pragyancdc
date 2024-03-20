@@ -15,6 +15,9 @@ class AdminHome extends StatefulWidget {
 class _AdminHomeState extends State<AdminHome>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
+  String _selectedBranch = 'All Branches';
+
+  String _selectedtherapist= 'All Therapist';
   @override
   void initState() {
     super.initState();
@@ -27,35 +30,96 @@ class _AdminHomeState extends State<AdminHome>
       drawer: const AdminDrawer(),
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AppBar(
-              backgroundColor: Colors.white,
-              elevation: 0, // No elevation
-              leading: const CircleAvatar(
-                radius: 20,
+          child: AppBar(
+            backgroundColor: Colors.green.shade700,
+            elevation: 0, // No elevation
+            leading: Padding(
+              padding: EdgeInsets.only(left:10),
+              child: CircleAvatar(
+                radius: 30,
                 backgroundImage: AssetImage(
                   'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png',
                 ),
               ),
-              title: const Text(
-                'Dr. Amrita Rao',
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
+            ),
+            title: const Text(
+              'Dr. Amrita Rao',
+              style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
             ),
           )),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10.0),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
               children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                      hintText: 'Search..', prefixIcon: Icon(Icons.search)),
+                Container(
+                  width: double.infinity,
+                  child: DropdownButton<String>(
+                    alignment: Alignment.center,
+                    borderRadius: BorderRadius.circular(10),
+                    dropdownColor: Colors.green.shade700,
+                    hint: Text('choose a branch'),
+                    isExpanded: true,
+                    elevation: 5,
+                    value: _selectedBranch,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedBranch = newValue!;
+                      });
+                    },
+                    items: [
+                      'All Branches',
+                      'Basavangudi Branch',
+                      'Rajajinagar Branch',
+                      'Nagarbhavi Branch',
+                      'Marathahalli Branch'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: kTextStyle1,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                kheight30,
+                Container(
+                  width: double.infinity,
+                  child: DropdownButton<String>(
+                    alignment: Alignment.center,
+                    borderRadius: BorderRadius.circular(10),
+                    dropdownColor: Colors.green.shade700,
+                    hint: Text('choose a branch'),
+                    isExpanded: true,
+                    elevation: 5,
+                    value: _selectedtherapist,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedtherapist = newValue!;
+                      });
+                    },
+                    items: [
+                      'All Therapist',
+                      'Dr. Amrita Rao',
+                      'Dr. Rashmi',
+                      'Dr. Jaya',
+                      'Dr. Shilpa'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: kTextStyle1,
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 kheight10,
                 ElevatedButton(

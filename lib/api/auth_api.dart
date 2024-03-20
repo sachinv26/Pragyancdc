@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
-  static String baseUrl = 'https://askmyg.com/auth';
+  static const String baseUrl = 'https://cdcconnect.in/apiservice/auth/';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
 //for testing network issues
@@ -24,7 +24,7 @@ class ApiServices {
     required String otpFor,
   }) async {
     const String apiUrl =
-        'https://askmyg.com/auth/user_generate_otp'; // Replace with your actual API endpoint
+        '${baseUrl}user_generate_otp'; // Replace with your actual API endpoint
 
     try {
       final response = await http.post(
@@ -90,7 +90,7 @@ class ApiServices {
       required String otpCode}) async {
     try {
       const String apiUrl =
-          'https://askmyg.com/auth//user_validate_otp'; // Replace with your actual OTP validation API endpoint
+          '${baseUrl}user_validate_otp'; // Replace with your actual OTP validation API endpoint
 
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -149,7 +149,7 @@ class ApiServices {
 
   //API method to get branches of pragyan
   Future<Map<String, dynamic>> getBranches() async {
-    const String apiUrl = 'https://askmyg.com/auth/get_pragyanbranch';
+    const String apiUrl = '${baseUrl}get_pragyan_branch';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -187,7 +187,7 @@ class ApiServices {
 //API Method for client sign up
   Future<Map<String, dynamic>> parentSignup(
       Map<String, dynamic> inputData) async {
-    const String apiUrl = 'https://askmyg.com/auth/parent_signup';
+    const String apiUrl = '${baseUrl}parent_signup';
 
     try {
       final response = await http.post(
@@ -222,7 +222,7 @@ class ApiServices {
   //API Method for Client Login
   Future<Map<String, dynamic>> parentLogin(
       String phoneNo, String passwordEncoded) async {
-    const String apiUrl = 'https://askmyg.com/auth/parent_login';
+    const String apiUrl = '${baseUrl}parent_login';
     try {
       final response = await http.post(Uri.parse(apiUrl),
           body: jsonEncode({
@@ -267,7 +267,7 @@ class ApiServices {
   //API method to logout
   Future<Map<String, dynamic>> parentLogout(
       String userId, String authtoken) async {
-    const String apiUrl = "https://askmyg.com/auth/parent_logout";
+    const String apiUrl = "${baseUrl}parent_logout";
     try {
       final response = await http.post(Uri.parse(apiUrl),
           headers: {'praguserid': userId, 'pragusertoken': authtoken});
@@ -390,7 +390,7 @@ class ApiServices {
   // }
 
   Future<UserProfile?> fetchUserProfile(String userId, String userToken) async {
-    const String apiUrl = "https://askmyg.com/parentboard/get_profiledetail";
+    const String apiUrl = "https://cdcconnect.in/apiservice/parentboard/get_profiledetail";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
@@ -425,7 +425,7 @@ class ApiServices {
   Future<Map<String, dynamic>?> editUserProfile(
       String userId, String userToken, Map<String, dynamic> inputData) async {
     const String apiUrl =
-        "https://askmyg.com/parentboard/set_editparent_profile";
+        "https://cdcconnect.in/apiservice/parentboard/set_editparent_profile";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
@@ -449,7 +449,7 @@ class ApiServices {
 //change password
   Future<Map<String, dynamic>> changePassword(
       String encodedOldPassword, String encodedNewPassword) async {
-    const String apiUrl = 'https://askmyg.com/parentboard/set_passwordchange';
+    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/set_passwordchange';
 
     final String userId = await fetchUserId();
     final String token = await fetchUserToken();
@@ -485,7 +485,7 @@ class ApiServices {
 
   Future<Map<String, dynamic>> forgotPassword(
       String encodedNewPassword, String mobileNumber) async {
-    const String apiUrl = 'https://askmyg.com/auth/set_forgotpasswordchange';
+    const String apiUrl = '${baseUrl}set_forgotpasswordchange';
     final String userId = await fetchUserId();
     final String token = await fetchUserToken();
     final Map<String, String> headers = {

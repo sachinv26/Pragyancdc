@@ -5,7 +5,7 @@ import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:http/http.dart' as http;
 
 class TherapistApi {
-  static const String baseUrl = 'https://askmyg.com/parentboard/';
+  static const String baseUrl = 'https://cdcconnect.in/apiservice/parentboard/';
 
   //fetch list of therapies
   Future<List<Therapy>> fetchTherapies(String branchid) async {
