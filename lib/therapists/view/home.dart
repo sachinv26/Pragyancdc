@@ -74,7 +74,7 @@ class _TherapistHomeState extends State<TherapistHome> {
               const VisualDensity(horizontal: 0, vertical: -4),
               title: Text('Logout'),
               onTap: () {
-                // Add action for item 2
+                Navigator.pop(context);
               },
             ),
             // Add more ListTile widgets or other widgets as needed

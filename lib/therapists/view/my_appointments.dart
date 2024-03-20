@@ -43,45 +43,6 @@ class _MyAppointmentsState extends State<MyAppointments> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-
-            ListTile(
-              title: Text('Cancel Appointment'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>CancelAppointments()));
-              },
-            ),
-            ListTile(
-              title: Text('Apply leave'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>ApplyLeave()));
-              },
-            ),
-            ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                // Add action for item 2
-              },
-            ),
-            // Add more ListTile widgets or other widgets as needed
-          ],
-        ),
-      ),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
