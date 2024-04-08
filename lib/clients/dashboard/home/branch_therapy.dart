@@ -75,7 +75,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Therapists',
+                    'Therapists: List',
                     style: kTextStyle1,
                   ),
                   Text(
