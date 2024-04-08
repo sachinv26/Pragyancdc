@@ -26,7 +26,9 @@ class _CustomButtonState extends State<CustomButton> {
     return ElevatedButton(
       onPressed: widget.isLoading ? null : widget.onPressed,
       style: ElevatedButton.styleFrom(
-
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         backgroundColor: Colors.green.shade700, // Background color (constant)
         minimumSize: Size(widget.width, widget.height), // Width and height of the button
       ),

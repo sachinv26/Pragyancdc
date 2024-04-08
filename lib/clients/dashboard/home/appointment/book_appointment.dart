@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/booking_details.dart';
 import 'package:intl/intl.dart';
@@ -81,22 +82,11 @@ class BookAppointment extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BookingDetails()));
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                minimumSize: const Size(170, 40),
-              ),
-              child: const Text(
-                'Next',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
+            CustomButton(text: 'Next',onPressed: (){
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const BookingDetails()));
+            },)
           ],
         ),
       ),

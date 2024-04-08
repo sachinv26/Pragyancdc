@@ -10,14 +10,11 @@ class TherapistApi {
   //fetch list of therapies
   Future<List<Therapy>> fetchTherapies(String branchid) async {
     const String apiUrl =
-        'https://askmyg.com/parentboard/get_theropy_frombranch';
+        'https://cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
-      final userToken =
-          await const FlutterSecureStorage().read(key: 'authToken');
-      // print('branch id $branchid');
-
+      final userToken = await const FlutterSecureStorage().read(key: 'authToken');
       if (userId != null && userToken != null) {
         final Map<String, String> headers = {
           'praguserid': userId,
@@ -30,7 +27,6 @@ class TherapistApi {
           headers: headers,
           body: json.encode({"prag_branchid": branchid}),
         );
-
         if (response.statusCode == 200) {
           final dynamic responseBody = json.decode(response.body);
 
@@ -38,7 +34,9 @@ class TherapistApi {
             final List<dynamic> data = responseBody['theropy'];
 
             if (data.isNotEmpty) {
+              print(data);
               return data.map((json) => Therapy.fromJson(json)).toList();
+
             } else {
               print('No therapy records found for branchid: $branchid');
               return [];
@@ -80,7 +78,7 @@ class TherapistApi {
             headers: headers,
             body: jsonEncode({
               "prag_branchid": branchId,
-              "prag_theropyid": therapyId,
+              "prag_therapyid": therapyId,
             }));
 
         if (response.statusCode == 200) {
@@ -88,6 +86,7 @@ class TherapistApi {
           print('API Response: $data');
 
           if (data['status'] == 1) {
+
             return data;
           } else {
             throw Exception(data['message']);

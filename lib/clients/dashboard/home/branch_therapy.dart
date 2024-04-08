@@ -5,7 +5,6 @@ import 'package:pragyan_cdc/clients/dashboard/home/appointment/temp.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_appointment_time.dart';
 import 'package:pragyan_cdc/model/therapist_model.dart';
 import 'package:pragyan_cdc/model/therapy_model.dart';
 
@@ -89,7 +88,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
             kheight10,
             FutureBuilder(
                 future: TherapistApi()
-                    .fetchTherapists('2', widget.therapy.therapyId),
+                    .fetchTherapists(widget.branchId, widget.therapy.therapyId),
                 builder:
                     (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -99,16 +98,15 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                     // Show an error message if fetching data fails
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData &&
-                      snapshot.data!['theropy'] != null &&
-                      (snapshot.data!['theropy'] as List).isNotEmpty) {
-                    List therapistData = snapshot.data!['theropy'];
+                      snapshot.data!['therapy'] != null &&
+                      (snapshot.data!['therapy'] as List).isNotEmpty) {
+                    List therapistData = snapshot.data!['therapy'];
                     return Expanded(
                       child: ListView.builder(
                         itemCount: therapistData.length,
                         itemBuilder: (BuildContext context, int index) {
                           Therapist therapist =
                               Therapist.fromJson(therapistData[index]);
-
                           return Container(
                             margin: const EdgeInsets.all(10),
                             child: TherapistCard(
@@ -122,6 +120,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                     return const Center(child: Text('No data available'));
                   }
                 }),
+            Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

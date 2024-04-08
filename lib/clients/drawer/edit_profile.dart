@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
+import 'package:pragyan_cdc/shared/loading.dart';
 
 class EditProfile extends StatefulWidget {
   UserProfile userProfile;
@@ -17,9 +23,18 @@ class EditProfile extends StatefulWidget {
 dynamic selectedBranchId;
 
 class _EditProfileState extends State<EditProfile> {
+  String _imagepath = '';
+
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController adressController = TextEditingController();
+  bool _loading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _imagepath="https://cdcconnect.in/${widget.userProfile.profileImage}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,46 +44,72 @@ class _EditProfileState extends State<EditProfile> {
         padding: const EdgeInsets.all(25),
         child: SingleChildScrollView(
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      child: ClipOval(
-                        child: Image.network(
-                          "https://askmyg.com/${widget.userProfile.profileImage}",
-                          width: 75,
-                          height: 75,
-                          fit: BoxFit.fill,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            } else {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            }
-                          },
-                          errorBuilder: (BuildContext context, Object error,
-                              StackTrace? stackTrace) {
-                            return const Icon(Icons.error);
-                          },
+                    Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(7),
+                          child: CircleAvatar(
+                            radius: 35,
+                            child: ClipOval(
+                              child: Image.network(
+                                _imagepath,
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context, Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  } else {
+                                    return Center(
+                                      child: Loading(),
+                                    );
+                                  }
+                                },
+                                errorBuilder: (BuildContext context, Object error,
+                                    StackTrace? stackTrace) {
+                                  return const Icon(Icons.error);
+                                },
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          bottom: -5,
+                          right: -8,
+                          child: Transform.scale(
+                            scale: 0.8, // Adjust the scale factor as needed
+                            child: IconButton(
+                              style: IconButton.styleFrom(
+                                  backgroundColor: Colors.green),
+                              onPressed: () async {
+                                if (!_loading) {
+                                  // Check if not loading before allowing image selection
+                                  await _requestPermissions();
+                                  final result =
+                                  await _pickImageFromGallery(widget.userProfile);
+                                  if (result != null && result.isNotEmpty) {
+                                    setState(() {
+                                      _imagepath = result;
+                                    });
+                                  }
+                                }
+                              },
+                              icon: Icon(Icons.camera_alt, size: 20), // Edit icon
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const Text('Profile Picture')
                   ],
                 ),
               ),
+
               Form(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,23 +169,20 @@ class _EditProfileState extends State<EditProfile> {
                     ),
 
                     const SizedBox(height: 16.0),
+
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          // Handle form submission
-                          Map<String, dynamic> data = {
-                            'prag_parent_name': nameController.text,
-                            'prag_parent_email': emailController.text,
-                            'prag_preferred_location': selectedBranchId,
-                            'prag_parent_address': adressController.text
-                          };
-                          final result = await editUserProfile(data);
-                          if (context.mounted) {
-                            Navigator.of(context).pop(result);
-                          }
-                        },
-                        child: const Text('Edit'),
-                      ),
+                      child: CustomButton(text: 'Save Changes',onPressed: ()async{
+                        Map<String, dynamic> data = {
+                          'prag_parent_name': nameController.text,
+                          'prag_parent_email': emailController.text,
+                          'prag_preferred_location': selectedBranchId,
+                          'prag_parent_address': adressController.text
+                        };
+                        final result = await editUserProfile(data);
+                        if (context.mounted) {
+                          Navigator.of(context).pop(result);
+                        }
+                      },),
                     ),
                   ],
                 ),
@@ -185,9 +223,70 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
+  Future<String?> _pickImageFromGallery(UserProfile userProfile) async {
+    final api = ApiServices();
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _loading = true; // Set loading state to true when uploading image
+      });
+
+      final token = await const FlutterSecureStorage().read(key: 'authToken');
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      if (userId != null && token != null) {
+        try {
+          File imageFile = File(image.path);
+          Map<String, dynamic> response = await api.callImageUploadApi(
+              {"child_id": 0, "call_from": 1},
+              imageFile,
+              userId,
+              token);
+          if (response['status'] == 1) {
+            debugPrint('Image uploaded successfully');
+            debugPrint('Image saved in ${response["path"]}');
+            // setState(() {
+            //   // _loading =
+            //   // false; // Set loading state to false after uploading image
+            // });
+            return "https://cdcconnect.in/${response["path"]}"; // Return the path to update the image
+          } else {
+            // setState(() {
+            //   // _loading =
+            //   // false; // Set loading state to false if image upload fails
+            // });
+            print('Image upload failed: ${response['message']}');
+            return null;
+          }
+        } catch (e) {
+          // setState(() {
+          //   // _loading =
+          //   // false; // Set loading state to false if error occurs during image upload
+          // });
+          debugPrint('Error uploading image: $e');
+          return null;
+        }
+      }
+    }
+    return null; // Return null if image selection fails
+  }
+
   Future<List<dynamic>> fetchLocations() async {
     final response = await ApiServices().getBranches();
     return response['branch'];
+  }
+
+  Future<void> _requestPermissions() async {
+    var status = await Permission.storage.status;
+    if (status != PermissionStatus.granted) {
+      status = await Permission.storage.request();
+      if (status != PermissionStatus.granted) {
+        // Handle the case where the user denied permissions
+        print('Storage permissions denied');
+        return; // Or show a custom message to the user
+      }
+    }
   }
 
   Widget buildTextField(

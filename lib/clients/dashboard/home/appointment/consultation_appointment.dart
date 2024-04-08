@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import intl package for date formatting
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/book_appointment.dart';
 import 'package:pragyan_cdc/components/button.dart';
+import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ConsultationAppointment extends StatefulWidget {
@@ -41,13 +43,8 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Row(
-          children: [
-            Text('Schedule Consultation'),
-          ],
-        ),
+      appBar: customAppBar(
+        title: 'Schedule Consultation'
       ),
       body: CustomScrollView(
         slivers: <Widget>[
@@ -130,13 +127,22 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 80),
-              child: Button(
+              child: CustomButton(
                 width: double.infinity,
-                title: 'Make Appointment',
+
                 onPressed: () {
-                  //convert date/day/time into string first
+                  if (_dateSelected && _timeSelected) {
+                    String chosenTiming = timings[_currentIndex!]; // Get the selected timing
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookAppointment(selectedDate: _focusDay, chosenTiming: chosenTiming),
+                      ),
+                    );
+                  }
                 },
-                disable: _timeSelected && _dateSelected ? false : true,
+                // disable: _timeSelected && _dateSelected ? false : true,
+                text: 'Make Appointment',
               ),
             ),
           ),

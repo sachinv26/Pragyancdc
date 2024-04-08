@@ -15,7 +15,7 @@ class Therapy {
     return Therapy(
       therapyId: json['therapy_id'],
       therapyName: json['therapy_name'],
-      therapyIcon: 'https://askmyg.com/${json['therapy_icon']}',
+      therapyIcon: 'https://cdcconnect.in/${json['therapy_icon']}',
       cost: json['cost'],
     );
   }

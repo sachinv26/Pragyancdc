@@ -23,7 +23,7 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
     '17:00',
     '17:45'
   ];
-  List<String> timesEvening = ['18:30', '07:15'];
+  List<String> timesEvening = ['18:30', '19:15'];
   bool showSlotSelectionMessage = false;
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {

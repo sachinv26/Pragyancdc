@@ -36,13 +36,6 @@ class _ChildListState extends State<ChildList> {
             setState(() {});
             print('Received result from ScreenB: $result');
           }
-
-          // .then((result) {
-          //   // if (result == true) {
-          //   //   // Refresh the child list when returning from addChildScreen
-          //   //   _refreshChildList();
-          //   // }
-          // });
         },
         child: const Icon(Icons.add),
       ),
@@ -58,7 +51,6 @@ class _ChildListState extends State<ChildList> {
             return const Center(child: Text('No Children Found'));
           } else {
             final List<ChildModel> childList = snapshot.data!;
-
             return Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
@@ -69,9 +61,6 @@ class _ChildListState extends State<ChildList> {
                       itemCount: childList.length,
                       itemBuilder: (context, index) {
                         final ChildModel childData = childList[index];
-
-                        // ... rest of your UI code
-
                         return Container(
                           decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 192, 228, 193),
@@ -82,79 +71,44 @@ class _ChildListState extends State<ChildList> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              childData.childImage == ""
-                                  ? GestureDetector(
-                                      child: const CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: AssetImage(
-                                            'assets/images/empty-user.jpeg'),
-                                      ),
-                                      onTap: () async {
-                                        debugPrint('child id');
-                                        debugPrint(childData.childId);
-
-                                        await _requestPermissions();
-                                        final result =
-                                            await _pickImageFromGallery(
-                                                childData);
-                                        if (result) {
-                                          setState(() {});
-                                        }
-                                      },
-                                    )
-                                  : GestureDetector(
-                                      onTap: () async {
-                                        print('child id');
-
-                                        await _requestPermissions();
-
-                                        final result =
-                                            await _pickImageFromGallery(
-                                                childData);
-                                        if (result) {
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 30,
-                                        child: ClipOval(
-                                          child: Image.network(
-                                            "https://askmyg.com/${childData.childImage}",
-                                            width: 70,
-                                            height: 70,
-                                            fit: BoxFit.cover,
-                                            loadingBuilder:
-                                                (BuildContext context,
-                                                    Widget child,
-                                                    ImageChunkEvent?
-                                                        loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              } else {
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    value: loadingProgress
-                                                                .expectedTotalBytes !=
-                                                            null
-                                                        ? loadingProgress
-                                                                .cumulativeBytesLoaded /
-                                                            loadingProgress
-                                                                .expectedTotalBytes!
-                                                        : null,
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                            errorBuilder: (BuildContext context,
-                                                Object error,
-                                                StackTrace? stackTrace) {
-                                              return const Icon(Icons.error);
-                                            },
-                                          ),
+                              Stack(
+                                children: [
+                                  Container(
+                                    padding : EdgeInsets.all(7),
+                                    child: CircleAvatar(
+                                      radius: 35,
+                                      child: ClipOval(
+                                        child: Image.network(
+                                          "https://cdcconnect.in/${childData.childImage}",
+                                          width: 70,
+                                          height: 70,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (BuildContext context, Widget child,
+                                              ImageChunkEvent? loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Center(
+                                                child: CircularProgressIndicator(
+                                                  value: loadingProgress.expectedTotalBytes != null
+                                                      ? loadingProgress.cumulativeBytesLoaded /
+                                                      loadingProgress.expectedTotalBytes!
+                                                      : null,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          errorBuilder: (BuildContext context, Object error,
+                                              StackTrace? stackTrace) {
+                                            return const Icon(Icons.error);
+                                          },
                                         ),
                                       ),
                                     ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 10,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -239,54 +193,7 @@ class _ChildListState extends State<ChildList> {
     );
   }
 
-  Future _pickImageFromGallery(
-    ChildModel childModel,
 
-    //ChildImageProvider childImageProvider
-  ) async {
-    final api = ApiServices();
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      // childImageProvider.setSelectedImage(File(image.path));
-      // debugPrint('newly selected image is');
-      // debugPrint(childImageProvider.selectedPath!.path);
-
-      // debugPrint(
-      // 'before setstate: value of childmodel.selectedimage ${childModel.selectedImage}');
-      // setState(() {
-      //   childModel.selectedImage = File(image.path);
-      // });
-      // debugPrint('after setstate: ${childModel.selectedImage}');
-
-      final token = await const FlutterSecureStorage().read(key: 'authToken');
-      final userId = await const FlutterSecureStorage().read(key: 'userId');
-      if (userId != null && token != null) {
-        try {
-          // Read the raw image data
-          // List<int> imageBytes = await File(image.path).readAsBytes();
-          // Convert the XFile to a File
-          File imageFile = File(image.path);
-          //call api
-          Map<String, dynamic> response = await api.callImageUploadApi(
-              {"child_id": childModel.childId, "call_from": 2},
-              imageFile,
-              userId,
-              token);
-          if (response['status'] == 1) {
-            debugPrint('image uploaded');
-            debugPrint('image saved in ${response["path"]}');
-          } else {
-            print('failed ${response['message']}');
-          }
-        } catch (e) {
-          debugPrint('Error uploading image: $e');
-        }
-        return true;
-      }
-    }
-  }
 
   Future<List<ChildModel>?> getChildListfromApi() async {
     // Use FlutterSecureStorage to get userId and token
@@ -371,34 +278,5 @@ class _ChildListState extends State<ChildList> {
   }
 }
 
-Future uploadImageToApi(XFile image, String childId) async {
-  final token = await const FlutterSecureStorage().read(key: 'authToken');
-  final userId = await const FlutterSecureStorage().read(key: 'userId');
-  if (userId != null && token != null) {
-    try {
-      File imageFile = File(image.path);
-      Map<String, dynamic> response = await ApiServices().callImageUploadApi(
-          {"child_id": childId, "call_from": 2}, imageFile, userId, token);
-      if (response['status'] == 1) {
-        debugPrint('image uploaded');
-        debugPrint('image saved in ${response["path"]}');
-      } else {
-        print('failed ${response['message']}');
-      }
-    } catch (e) {
-      debugPrint('Error uploading image: $e');
-    }
-  }
-}
 
-Future<void> _requestPermissions() async {
-  var status = await Permission.storage.status;
-  if (status != PermissionStatus.granted) {
-    status = await Permission.storage.request();
-    if (status != PermissionStatus.granted) {
-      // Handle the case where the user denied permissions
-      print('Storage permissions denied');
-      return; // Or show a custom message to the user
-    }
-  }
-}
+

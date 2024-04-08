@@ -47,8 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               locationProvider
                   .updateSelectedLocation(userProfile.preferredLocation);
             }
-            //  selectedLocation = userProfile.preferredLocation;
-
+            // selectedLocation = userProfile.preferredLocation;
             return Scaffold(
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
@@ -75,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: ClipOval(
                                 child: Image.network(
-                                  "https://askmyg.com/${userProfile.profileImage}",
+                                  "https://cdcconnect.in/${userProfile.profileImage}",
                                   fit: BoxFit.cover,
                                   loadingBuilder: (BuildContext context,
                                       Widget child,
@@ -135,8 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ])),
                 body: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 20, left: 20, right: 20, bottom: 30),
+                    padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 30),
                     child: ListView(
                       children: [
                         Stack(
@@ -183,15 +181,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           future: fetchLocations(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              // print('has data');
                               var data = snapshot.data;
-                              // print('snapshot.data : $data');
-                              //return Text(data![0]['bran_name ']);
                               return DropdownButton(
                                 value: locationProvider.selectedLocation,
                                 items: data!.map((location) {
-                                  branchId = location['bran_id'];
-                                  branchName = location['bran_name'];
+                                  var branchId = location['bran_id'];
+                                  var branchName = location['bran_name'];
                                   return DropdownMenuItem(
                                     value: branchId,
                                     child: Text(
@@ -202,22 +197,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    print('value changed $value');
-                                    branchId = value as String;
+                                    print('Selected value: $value');
+                                    branchId =
+                                        value.toString(); // Update branchId
+                                    branchName = data.firstWhere((element) =>
+                                        element['bran_id'] ==
+                                        value)['bran_name'];
                                     locationProvider.updateSelectedLocation(
-                                        value); // Update the selected location
-                                    TherapistApi().fetchTherapies(
-                                        locationProvider.selectedLocation);
+                                        value.toString()); // Update branchName
                                   });
-
-                                  // setState(() {
-                                  //   selectedBranchId = value;
-                                  //   // print(SelectedBranchId);
-                                  // });
                                 },
                               );
                             } else if (snapshot.hasError) {
-                              return const Text('Error ');
+                              return const Text('Error');
                             } else {
                               return Center(child: Loading());
                             }
@@ -245,7 +237,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Text('Error: ${snapshot.error}'),
                                 );
                               } else {
-                                // Data successfully loaded
                                 List<Therapy> therapies = snapshot.data!;
                                 return Column(
                                   mainAxisAlignment:
@@ -267,7 +258,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   child: ServiceItem(
                                                     therapy: therapy,
                                                     branchId: branchId,
-                                                    branchName: branchName,
+                                                    branchName:
+                                                        branchName, // Pass the correct branchName here
                                                   ),
                                                 ))
                                             .toList(),
@@ -285,7 +277,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Container(
                                 width: double.infinity,
                                 child: Image.asset(
-                                    'assets/images/children-learning-globe-with-woman-bedroom 1.png',fit: BoxFit.contain,),
+                                  'assets/images/children-learning-globe-with-woman-bedroom 1.png',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                             Positioned(
@@ -371,7 +365,7 @@ Future<UserProfile?> fetchUserProfile() async {
   }
 }
 
-class ServiceItem extends StatelessWidget {
+class ServiceItem extends StatefulWidget {
   final Therapy therapy;
   final String branchId;
   final String branchName;
@@ -384,14 +378,19 @@ class ServiceItem extends StatelessWidget {
   });
 
   @override
+  State<ServiceItem> createState() => _ServiceItemState();
+}
+
+class _ServiceItemState extends State<ServiceItem> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => BranchTherapies(
-                  branchId: branchId,
-                  therapy: therapy,
-                  branchName: branchName,
+                  branchId: widget.branchId,
+                  therapy: widget.therapy,
+                  branchName: widget.branchName,
                 )));
       },
       child: Container(
@@ -406,7 +405,7 @@ class ServiceItem extends StatelessWidget {
                 height: 55,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(therapy.therapyIcon),
+                    image: NetworkImage(widget.therapy.therapyIcon),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -417,7 +416,7 @@ class ServiceItem extends StatelessWidget {
               width:
                   100, // Adjust the width here to control the space for the text
               child: Text(
-                therapy.therapyName,
+                widget.therapy.therapyName,
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,

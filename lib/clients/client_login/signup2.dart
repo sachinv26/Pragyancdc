@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
@@ -9,7 +8,6 @@ import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/full_signup_model.dart';
 import 'package:pragyan_cdc/model/temp_signup_model.dart';
-
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:provider/provider.dart';
 
@@ -171,37 +169,4 @@ class _SignupSecondState extends State<SignupSecond> {
     );
   }
 }
-
-  // Future<void> checkAndRequestPermissions() async {
-  //   // Check if the permission is already granted
-  //   PermissionStatus status = await Permission.storage.status;
-
-  //   if (status.isGranted) {
-  //     // Permission is already granted, proceed with file access
-  //     print('Permission already granted');
-  //     return;
-  //   } else {
-  //     // Request permission
-  //     PermissionStatus result = await Permission.storage.request();
-
-  //     if (result.isGranted) {
-  //       // Permission granted, proceed with file access
-  //       print('Permission granted');
-  //     } else {
-  //       // Permission denied, handle accordingly
-  //       print('Permission denied');
-  //     }
-  //   }
-    //   void showToast() => Fluttertoast.showToast(
-    //       msg: 'User Created Successfully',
-    //       fontSize: 18,
-    //       gravity: ToastGravity.CENTER);
-    // }
-
-    // Widget buildToast() {
-    //   return Container(
-    //       padding: const EdgeInsets.all(10),
-    //       decoration: BoxDecoration(
-    //           color: Colors.green, borderRadius: BorderRadius.circular(25)),
-    //       child: const Text('User Created successfully'));
   

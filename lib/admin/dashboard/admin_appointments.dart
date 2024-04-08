@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:pragyan_cdc/constants/appbar.dart';
-import 'package:pragyan_cdc/therapists/view/apply_leave.dart';
-import 'package:pragyan_cdc/therapists/view/cancel_appointments.dart';
+import 'package:pragyan_cdc/admin/dashboard/appointment/today_appointments.dart';
+import 'package:pragyan_cdc/admin/dashboard/appointment/upcoming_appointments.dart';
 import 'package:pragyan_cdc/therapists/view/fliter.dart';
-import 'package:pragyan_cdc/therapists/view/widgets/appointment_details.dart';
-import 'package:pragyan_cdc/therapists/view/widgets/upcoming_schedule.dart';
-
 import '../../constants/styles/styles.dart';
 
-
-
-
 class AdminAppointments extends StatefulWidget {
-  const AdminAppointments({super.key});
+  const AdminAppointments({Key? key}) : super(key: key);
 
   @override
   State<AdminAppointments> createState() => _AdminAppointmentsState();
@@ -21,24 +14,20 @@ class AdminAppointments extends StatefulWidget {
 
 class _AdminAppointmentsState extends State<AdminAppointments> {
   late Widget _currentWidget;
-  // Holds the currently displayed widget
   late Widget _appointmentDetailsWidget;
-
   late Widget _upcomingScheduleWidget;
 
   String _selectedBranch = 'Basavangudi Branch';
+  late DateTime _selectedDate = DateTime.now();
 
   TextEditingController _childNameController = TextEditingController();
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    // Initialize widgets
-    _appointmentDetailsWidget = AppointmentDetails();
-    _upcomingScheduleWidget = UpcomingSchedule();
-    // Initially display AppointmentDetails widget
+    _appointmentDetailsWidget = TodayAppointments();
+    _upcomingScheduleWidget = UpcomingAppointments();
     _currentWidget = _appointmentDetailsWidget;
   }
 
@@ -46,40 +35,54 @@ class _AdminAppointmentsState extends State<AdminAppointments> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: customAppBar(
-        title: 'Appointments'
+      appBar: AppBar(
+        backgroundColor: Colors.green.shade700,
+        title: Text(
+          'Appointments',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
-              child: DropdownButton<String>(
-                hint: Text('choose a branch'),
-                isExpanded: true,
-                elevation: 5,
-                value: _selectedBranch,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedBranch = newValue!;
-                  });
-                },
-                items: [
-                  'Basavangudi Branch',
-                  'Rajajinagar Branch',
-                  'Nagarbhavi Branch',
-                  'Marathahalli Branch'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: kTextStyle1,
-                    ),
-                  );
-                }).toList(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DropdownButton<String>(
+                    hint: Text('choose a branch'),
+                    isExpanded: true,
+                    elevation: 5,
+                    value: _selectedBranch,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedBranch = newValue!;
+                      });
+                    },
+                    items: [
+                      'Basavangudi Branch',
+                      'Rajajinagar Branch',
+                      'Nagarbhavi Branch',
+                      'Marathahalli Branch'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: kTextStyle1,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
             ),
             Row(
@@ -89,19 +92,27 @@ class _AdminAppointmentsState extends State<AdminAppointments> {
                   flex: 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.zero,
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      fixedSize: const Size(170, 30),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      minimumSize: const Size(170, 30),
                     ),
                     onPressed: () {
                       setState(() {
                         _currentWidget = _appointmentDetailsWidget;
                       });
                     },
-                    child: const Text(
-                      'Today Appointments',
-                      style: TextStyle(fontSize: 10, color: Colors.black),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        'Appointments',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green.shade700,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -110,37 +121,94 @@ class _AdminAppointmentsState extends State<AdminAppointments> {
                   flex: 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.zero,
                       backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      fixedSize: const Size(170, 30),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      minimumSize: const Size(170, 30),
                     ),
                     onPressed: () {
                       setState(() {
                         _currentWidget = _upcomingScheduleWidget;
                       });
                     },
-                    child: const Text(
-                      'Cancelled Appointments',
-                      style: TextStyle(fontSize: 10,fontWeight: FontWeight.bold),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        'Cancelled Appointments',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green.shade700,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                IconButton(
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _selectedDate == DateTime.now()
+                    ? Text(
+                  'Please select a Date',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                    : Text(
+                  'Selected Date: ${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    minimumSize: const Size(100, 30),
+                  ),
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=>FiltersScreen()));
+                    _selectDate(context);
                   },
-                  icon: Icon(Icons.filter_list),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      'Select Date',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 10), // Add spacing between buttons and content
-            Expanded(
-              child: _currentWidget, // Display the currently selected widget
-            ),
+            SizedBox(height: 10),
+            _selectedDate == DateTime.now() ? SizedBox() : Expanded(child: _currentWidget),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate)
+      setState(() {
+        _selectedDate = picked;
+      });
   }
 }

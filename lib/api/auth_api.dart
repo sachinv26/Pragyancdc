@@ -149,7 +149,7 @@ class ApiServices {
 
   //API method to get branches of pragyan
   Future<Map<String, dynamic>> getBranches() async {
-    const String apiUrl = '${baseUrl}get_pragyan_branch';
+    const String apiUrl = '${baseUrl}get_pragyanbranch';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -312,7 +312,7 @@ class ApiServices {
   //upload image
   Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
       File image, String userId, String token) async {
-    const String apiUrl = 'https://askmyg.com/parentboard/upload_profileimage';
+    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/upload_profileimage';
 
     // Create a multipart request
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));

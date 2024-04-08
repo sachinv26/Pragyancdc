@@ -1,6 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/add_child.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
@@ -8,7 +6,6 @@ import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
 import 'package:pragyan_cdc/constants/size_config.dart';
-import 'package:pragyan_cdc/firebase_options.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/provider/child_image_provider.dart';
@@ -16,18 +13,24 @@ import 'package:pragyan_cdc/provider/forgot_pass_provider.dart';
 import 'package:pragyan_cdc/provider/change_pass_provider.dart';
 import 'package:pragyan_cdc/provider/phone_verification_provider.dart';
 import 'package:pragyan_cdc/provider/user_provider.dart';
-
 import 'package:pragyan_cdc/provider/user_signup_data.dart';
 import 'package:pragyan_cdc/therapists/view/dashboard.dart';
-import 'package:pragyan_cdc/therapists/view/home.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
 
 void main() async {
+  HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => AuthProvider()),
     ChangeNotifierProvider(create: (context) => SignUpDataProvider()),

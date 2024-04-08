@@ -47,7 +47,7 @@ class ChildApi {
     required String userToken,
     required Map<String, String> childDetails,
   }) async {
-    const String apiUrl = 'https://askmyg.com/parentboard/set_addnewchild';
+    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/set_addnewchild';
 
     final Map<String, String> headers = {
       'praguserid': userId,

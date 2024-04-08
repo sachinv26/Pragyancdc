@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/payment/payment_modes.dart';
 
@@ -43,19 +44,12 @@ class BookingDetails extends StatelessWidget {
               ),
             ),
             Center(
-              child: ElevatedButton(
-                onPressed: () {
+              child: CustomButton(
+                text: 'Next',
+                onPressed: (){
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => PaymentModes()));
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  minimumSize: const Size(170, 40),
-                ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
               ),
             ),
           ],

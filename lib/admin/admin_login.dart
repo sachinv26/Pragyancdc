@@ -48,11 +48,7 @@ class _AdminLoginState extends State<AdminLogin> {
       _saveCredentials(_mobileController.text, _passwordController.text);
 
       // Navigate to the HomeScreen.
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) {
-          return const AdminDashboard();
-        },
-      ));
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>AdminDashboard()));
     } else {
       // Handle incorrect credentials (e.g., show an error message).
       print('Invalid credentials');
