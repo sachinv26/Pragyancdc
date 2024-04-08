@@ -76,7 +76,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Therapists',
+                    'Therapists list here',
                     style: kTextStyle1,
                   ),
                   Text(
@@ -169,27 +169,22 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       TextButton(
                                           onPressed: () {
-                                            Navigator.pop(
-                                                context);
+                                            Navigator.pop(context);
                                           },
-                                          child:
-                                          Text('Cancel')),
+                                          child: Text('Cancel')),
                                       CustomButton(
                                         text: 'Done',
                                         onPressed: () {
-                                          Navigator.pop(
-                                              context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder:
-                                                      (context) =>
-                                                          ScheduleAppointment()));
+                                                  builder: (context) =>
+                                                      ScheduleAppointment()));
                                         },
                                         width: 50,
                                       )
@@ -246,26 +241,21 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceEvenly,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       TextButton(
                                           onPressed: () {
-                                            Navigator.pop(
-                                                context);
+                                            Navigator.pop(context);
                                           },
-                                          child:
-                                          Text('Cancel')),
+                                          child: Text('Cancel')),
                                       CustomButton(
                                         text: 'Done',
                                         onPressed: () {
-                                          Navigator.pop(
-                                              context);
+                                          Navigator.pop(context);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder:
-                                                      (context) =>
+                                                  builder: (context) =>
                                                       ConsultationAppointment()));
                                         },
                                         width: 50,
