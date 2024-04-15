@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pragyan_cdc/model/booking_details_model.dart';
 import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,8 +10,7 @@ class TherapistApi {
 
   //fetch list of therapies
   Future<List<Therapy>> fetchTherapies(String branchid) async {
-    const String apiUrl =
-        'https://cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
+    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -34,7 +34,6 @@ class TherapistApi {
             final List<dynamic> data = responseBody['theropy'];
 
             if (data.isNotEmpty) {
-              print(data);
               return data.map((json) => Therapy.fromJson(json)).toList();
 
             } else {
@@ -83,10 +82,7 @@ class TherapistApi {
 
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
-          print('API Response: $data');
-
           if (data['status'] == 1) {
-
             return data;
           } else {
             throw Exception(data['message']);
@@ -102,4 +98,46 @@ class TherapistApi {
     // Default return statement in case none of the conditions are met
     return {'status': 0, 'message': 'Unknown error occurred'};
   }
+
+  Future<Map<String, dynamic>> bookAppointmentApi(BookingDetailsModel bookingDetails) async {
+    const String apiUrl = 'https://cdcconnect.in/apiservice/consultation/set_bookappointment';
+
+    try {
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      final userToken = await const FlutterSecureStorage().read(key: 'authToken');
+
+      if (userId != null && userToken != null) {
+        final Map<String, String> headers = {
+          'praguserid': userId,
+          'pragusertoken': userToken,
+          'Content-Type': 'application/json',
+        };
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: headers,
+          body: jsonEncode(bookingDetails.toJson()),
+        );
+
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          if (data['status'] == 1) {
+            print(data);
+            return data;
+          } else {
+            throw Exception(data['message']);
+          }
+        } else {
+          throw Exception(
+              'Failed to book appointment. Status code: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      return {'status': 0, 'message': e.toString()};
+    }
+
+    // Default return statement in case none of the conditions are met
+    return {'status': 0, 'message': 'Unknown error occurred'};
+  }
+
 }

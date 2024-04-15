@@ -29,15 +29,34 @@ class _CustomButtonState extends State<CustomButton> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        backgroundColor: Colors.green.shade700, // Background color (constant)
+        padding: EdgeInsets.zero, // Remove padding
         minimumSize: Size(widget.width, widget.height), // Width and height of the button
+        elevation: 0, // Remove elevation// Set primary color to transparent
       ),
-      child: widget.isLoading
-          ? CircularProgressIndicator() // Show CircularProgressIndicator when isLoading is true
-          : Text(
-              widget.text,
-              style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.green.shade700, Colors.green.shade500],
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          alignment: Alignment.center,
+          child: widget.isLoading
+              ? CircularProgressIndicator() // Show CircularProgressIndicator when isLoading is true
+              : Text(
+            widget.text,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/payment/payment_success.dart';
+import 'package:pragyan_cdc/model/booking_details_model.dart';
 
 class PaymentModes extends StatelessWidget {
+
+
   const PaymentModes({super.key});
 
   @override

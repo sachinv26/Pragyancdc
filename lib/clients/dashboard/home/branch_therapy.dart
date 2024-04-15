@@ -1,32 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/consultation_appointment.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/temp.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_consultation.dart';
+
+import 'package:pragyan_cdc/clients/widgets/therapist_card.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/model/child_model.dart';
 import 'package:pragyan_cdc/model/therapist_model.dart';
 import 'package:pragyan_cdc/model/therapy_model.dart';
+import 'package:pragyan_cdc/shared/loading.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_therapy.dart';
 
 class BranchTherapies extends StatefulWidget {
   final Therapy therapy;
   final String branchId;
   final String branchName;
-  const BranchTherapies(
-      {required this.therapy,
-      required this.branchId,
-      required this.branchName,
-      super.key});
+  final String parentid;
+
+  const BranchTherapies({
+    required this.therapy,
+    required this.branchId,
+    required this.branchName,
+    required this.parentid,
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<BranchTherapies> createState() => _BranchTherapiesState();
 }
 
 class _BranchTherapiesState extends State<BranchTherapies> {
-  String selectedRepeatOption = 'No';
-  int _value = 1;
+  String? _selectedChildId;
 
-  final List<String> _selectedChildren = [];
+  Future<void> showChildSelectionDialog(
+      String branchId,
+      String parentId,
+      String childId,
+      String therapistId,
+      String therapyId,
+      String therapyCost,
+      String buttonPressed,
+      ) async {
+    try {
+      final userId = await FlutterSecureStorage().read(key: 'userId');
+      final token = await FlutterSecureStorage().read(key: 'authToken');
+      final List<ChildModel> childList =
+      await ChildApi().getChildList(userId.toString(), token.toString());
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder(
+            future: Future.delayed(Duration(milliseconds: 200)),
+            builder: (context, snapshot) {
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return AlertDialog(
+                      title: const Text(
+                        'Choose your child',
+                        style: kTextStyle1,
+                      ),
+                      content: Container(
+                        height: 100,
+                        child: Column(
+                          children: childList.map((child) {
+                            return Row(
+                              children: [
+                                Radio(
+                                  value: child.childId,
+                                  groupValue: _selectedChildId,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _selectedChildId = value as String?;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  child.childName,
+                                  style: kTextStyle1,
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        CustomButton(
+                          text: 'Done',
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  if (buttonPressed == 'consultation') {
+                                    return ConsultationAppointment(
+                                      branchId: branchId,
+                                      parentId: parentId,
+                                      childId: _selectedChildId ?? '',
+                                      therapyCost: therapyCost,
+                                      therapistId: therapistId,
+                                      therapyId: therapyId,
+                                    );
+                                  } else {
+                                    // Navigate to some other page for booking a consultation
+                                    return  ScheduleTherapy(
+                                      branchId: branchId,
+                                      parentId: parentId,
+                                      childId: _selectedChildId ?? '',
+                                      therapyCost: therapyCost,
+                                      therapistId: therapistId,
+                                      therapyId: therapyId,
+                                    );
+                                  }
+                                },
+                              ),
+                            );
+                          },
+                          width: 50,
+                        ),
+                      ],
+                    );
+                  }
+                },
+              );
+            },
+          );
+        },
+      );
+    } catch (error) {
+      print('Error fetching child list: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +157,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.person),
+                const Icon(Icons.location_on_outlined),
                 const SizedBox(
                   width: 3,
                 ),
@@ -52,12 +167,12 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                 )
               ],
             ),
-            kheight10,
+            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: Colors.transparent, // Set color to transparent
+                color: Colors.transparent,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
@@ -68,307 +183,81 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                 ),
               ),
             ),
-            kheight30,
+            SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Therapists list here',
+                    'Therapists',
                     style: kTextStyle1,
                   ),
-                  Text(
-                    'See all',
-                    style: TextStyle(color: Colors.grey),
-                  )
                 ],
               ),
             ),
-            kheight10,
+            SizedBox(height: 10),
             FutureBuilder(
-                future: TherapistApi()
-                    .fetchTherapists(widget.branchId, widget.therapy.therapyId),
-                builder:
-                    (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading indicator while fetching data
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    // Show an error message if fetching data fails
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.hasData &&
-                      snapshot.data!['therapy'] != null &&
-                      (snapshot.data!['therapy'] as List).isNotEmpty) {
-                    List therapistData = snapshot.data!['therapy'];
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: therapistData.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          Therapist therapist =
-                              Therapist.fromJson(therapistData[index]);
-                          return Container(
-                            margin: const EdgeInsets.all(10),
-                            child: TherapistCard(
-                              therapist: therapist,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return const Center(child: Text('No data available'));
-                  }
-                }),
-            Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CustomButton(
-                  text: 'Schedule Therapy',
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text(
-                              'Choose your child',
-                              style: kTextStyle1,
-                            ),
-                            content: Container(
-                              height: 170,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Radio(
-                                          value: 1,
-                                          groupValue: _value,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _value = value!;
-                                            });
-                                          }),
-                                      Text('Arun'),
-                                    ],
-                                  ),
-                                  kheight10,
-                                  Row(
-                                    children: [
-                                      Radio(
-                                          value: 2,
-                                          groupValue: _value,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _value = value!;
-                                            });
-                                          }),
-                                      Text('Amit'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Cancel')),
-                                      CustomButton(
-                                        text: 'Done',
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ScheduleAppointment()));
-                                        },
-                                        width: 50,
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                ),
-                CustomButton(
-                  text: 'Book Consultation',
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text(
-                              'Choose your child',
-                              style: kTextStyle1,
-                            ),
-                            content: Container(
-                              height: 170,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Radio(
-                                          value: 1,
-                                          groupValue: _value,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _value = value!;
-                                            });
-                                          }),
-                                      Text('Arun'),
-                                    ],
-                                  ),
-                                  kheight10,
-                                  Row(
-                                    children: [
-                                      Radio(
-                                          value: 2,
-                                          groupValue: _value,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _value = value!;
-                                            });
-                                          }),
-                                      Text('Amit'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Cancel')),
-                                      CustomButton(
-                                        text: 'Done',
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ConsultationAppointment()));
-                                        },
-                                        width: 50,
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                ),
-              ],
-            )
+              future: TherapistApi()
+                  .fetchTherapists(widget.branchId, widget.therapy.therapyId),
+              builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: Loading());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData &&
+                    snapshot.data!['status'] == 1 &&
+                    snapshot.data!['therapiest'] != null &&
+                    (snapshot.data!['therapiest'] as List).isNotEmpty) {
+                  List therapistData = snapshot.data!['therapiest'];
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: therapistData.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Therapist therapist =
+                        Therapist.fromJson(therapistData[index]);
+                        return TherapistCard(
+                          therapist: therapist,
+                          therapyAmount: widget.therapy.cost,
+                          branchId: widget.branchId,
+                          parentId: widget.parentid,
+                          childId: _selectedChildId ?? '',
+                          therapistId: therapist.id,
+                          therapyId: widget.therapy.therapyId,
+                          onScheduleTherapyPressed: () {
+                            showChildSelectionDialog(
+                              widget.branchId,
+                              widget.parentid,
+                              _selectedChildId ?? '',
+                              therapist.id,
+                              widget.therapy.therapyId,
+                              widget.therapy.cost,
+                              'schedule',
+                            );
+                          },
+                          onBookConsultationPressed: () {
+                            showChildSelectionDialog(
+                              widget.branchId,
+                              widget.parentid,
+                              _selectedChildId ?? '',
+                              therapist.id,
+                              widget.therapy.therapyId,
+                              widget.therapy.cost,
+                              'consultation',
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return Center(child: Text('No therapists available'));
+                }
+              },
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-enum SingingCharacter { arun, amit }
-
-class TherapistCard extends StatefulWidget {
-  final Therapist therapist;
-
-  const TherapistCard({super.key, required this.therapist});
-
-  @override
-  State<TherapistCard> createState() => _TherapistCardState();
-}
-
-class _TherapistCardState extends State<TherapistCard> {
-  String _selectedChild = 'Arun';
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1),
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.transparent, // Set color to transparent
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    "assets/images/psychologist.png",
-                    fit: BoxFit.cover,
-                    height: 80,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.therapist.name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        const Text('specialization: '),
-                        Text(
-                          widget.therapist.specialization,
-                          style: kTextStyle3,
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const Text('Description: '),
-                        Text(
-                          widget.therapist.description,
-                          style: kTextStyle3,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          kheight10,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Experience : 5 Years',
-              ),
-              Text(
-                'Rating : 5 stars',
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

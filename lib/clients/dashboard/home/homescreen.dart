@@ -1,9 +1,12 @@
+import 'dart:math';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
-
 import 'package:pragyan_cdc/clients/dashboard/home/branch_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
@@ -15,18 +18,16 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final BuildContext ctx;
-
   const HomeScreen({required this.ctx, super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late LocationProvider locationProvider;
+  late  LocationProvider locationProvider;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String branchId = '';
-  String branchName = '';
+  String branchId=''; // Fix: Remove final keyword
+  String branchName=''; // Fix: Remove final keyword
 
   @override
   Widget build(BuildContext context) {
@@ -41,98 +42,111 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
-            locationProvider =
-                Provider.of<LocationProvider>(context, listen: false);
+            locationProvider = Provider.of<LocationProvider>(context, listen: false);
             if (locationProvider.selectedLocation.isEmpty) {
-              locationProvider
-                  .updateSelectedLocation(userProfile.preferredLocation);
+              locationProvider.updateSelectedLocation(userProfile.preferredLocation, '');
             }
-            // selectedLocation = userProfile.preferredLocation;
+            branchId = locationProvider.selectedLocation;
+            branchName= locationProvider.branchName;
+            print(branchName);
             return Scaffold(
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
                 drawer: ClientAppDrawer(ctx: widget.ctx),
                 appBar: AppBar(
-                    backgroundColor: Colors.green.shade700,
-                    elevation: 0,
-                    leading: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: userProfile.profileImage == ""
-                          ? GestureDetector(
-                              onTap: () {
-                                _scaffoldKey.currentState?.openDrawer();
-                              },
-                              child: const CircleAvatar(
-                                radius: 28,
-                                backgroundImage:
-                                    AssetImage('assets/images/empty-user.jpeg'),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                _scaffoldKey.currentState?.openDrawer();
-                              },
-                              child: ClipOval(
-                                child: Image.network(
-                                  "https://cdcconnect.in/${userProfile.profileImage}",
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  errorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return const Icon(Icons.error);
-                                  },
-                                ),
-                              ),
-                            ),
+                  automaticallyImplyLeading: false,
+                  foregroundColor: Colors.white,
+                  flexibleSpace: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.green.shade700, Colors.green.shade500],
+                      ),
                     ),
-                    title: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                userProfile.parentName,
-                                style: const TextStyle(
-                                    fontSize: 17, color: Colors.black),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.notifications,
-                              color: Colors.black,
+                  ),
+                  backgroundColor: Colors.green.shade700,
+                  elevation: 0,
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      userProfile.profileImage == ""
+                          ? GestureDetector(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: const CircleAvatar(
+                          radius: 25,
+                          backgroundImage:
+                          AssetImage('assets/images/empty-user.jpeg'),
+                        ),
+                      )
+                          : GestureDetector(
+                        onTap: () {
+                          _scaffoldKey.currentState?.openDrawer();
+                        },
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: ClipOval(
+                            child: Image.network(
+                              "https://cdcconnect.in/${userProfile.profileImage}",
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                          .expectedTotalBytes !=
+                                          null
+                                          ? loadingProgress
+                                          .cumulativeBytesLoaded /
+                                          loadingProgress
+                                              .expectedTotalBytes!
+                                          : null,
+                                    ),
+                                  );
+                                }
+                              },
+                              errorBuilder: (BuildContext context,
+                                  Object error, StackTrace? stackTrace) {
+                                return const Icon(Icons.error);
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) {
-                                  return const NotificationScreen();
-                                },
-                              ));
-                            },
                           ),
-                        ])),
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userProfile.parentName,
+                            style: const TextStyle(
+                                fontSize: 17, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.notifications,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return const NotificationScreen();
+                            },
+                          ));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
                 body: Padding(
                     padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 30),
                     child: ListView(
@@ -181,12 +195,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           future: fetchLocations(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              var data = snapshot.data;
+                              var data = snapshot.data!;
                               return DropdownButton(
                                 value: locationProvider.selectedLocation,
-                                items: data!.map((location) {
-                                  var branchId = location['bran_id'];
-                                  var branchName = location['bran_name'];
+                                items: data.map((location) {
+                                  branchId = location['bran_id'];
+                                  branchName = location['bran_name'];
                                   return DropdownMenuItem(
                                     value: branchId,
                                     child: Text(
@@ -197,14 +211,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    print('Selected value: $value');
-                                    branchId =
-                                        value.toString(); // Update branchId
-                                    branchName = data.firstWhere((element) =>
-                                        element['bran_id'] ==
-                                        value)['bran_name'];
-                                    locationProvider.updateSelectedLocation(
-                                        value.toString()); // Update branchName
+                                    branchId = value.toString(); // Update branchId
+                                    branchName = data.firstWhere((element) => element['bran_id'] == value)['bran_name'];
+                                    locationProvider.updateSelectedLocation(value.toString(), branchName);
+                                    // Update branchName
                                   });
                                 },
                               );
@@ -256,10 +266,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: ServiceItem(
+                                                    userId: userProfile.parentUserId,
                                                     therapy: therapy,
                                                     branchId: branchId,
-                                                    branchName:
-                                                        branchName, // Pass the correct branchName here
+                                                    branchName: branchName, // Pass the correct branchName here
                                                   ),
                                                 ))
                                             .toList(),
@@ -344,11 +354,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Future<List<dynamic>> fetchLocations() async {
-  final response = await ApiServices().getBranches();
-  return response['branch'];
-}
-
 Future<UserProfile?> fetchUserProfile() async {
   // Use FlutterSecureStorage to get userId and token
   final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -365,16 +370,24 @@ Future<UserProfile?> fetchUserProfile() async {
   }
 }
 
+Future<List<dynamic>> fetchLocations() async {
+  final response = await ApiServices().getBranches();
+  return response['branch'];
+}
+
 class ServiceItem extends StatefulWidget {
   final Therapy therapy;
   final String branchId;
   final String branchName;
+
+  final String userId;
 
   const ServiceItem({
     super.key,
     required this.branchId,
     required this.branchName,
     required this.therapy,
+    required this.userId,
   });
 
   @override
@@ -384,10 +397,12 @@ class ServiceItem extends StatefulWidget {
 class _ServiceItemState extends State<ServiceItem> {
   @override
   Widget build(BuildContext context) {
+    print("branch id is this "+ widget.branchId + "branch name is " + widget.branchName);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => BranchTherapies(
+                  parentid: widget.userId,
                   branchId: widget.branchId,
                   therapy: widget.therapy,
                   branchName: widget.branchName,

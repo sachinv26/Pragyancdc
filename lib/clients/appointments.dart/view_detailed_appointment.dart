@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/booking_details.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/booking_dates.dart';
 
 class AppointmentInfo extends StatelessWidget {
   const AppointmentInfo({super.key});
@@ -13,7 +13,7 @@ class AppointmentInfo extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(children: [
-          BookingInfo(),
+          // BookingInfo(),
           kheight30,
           Container(
             height: 60,

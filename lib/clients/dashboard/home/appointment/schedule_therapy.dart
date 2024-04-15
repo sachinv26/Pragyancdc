@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/appointment_summary.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class ScheduleAppointment extends StatefulWidget {
-  const ScheduleAppointment({Key? key}) : super(key: key);
-
+class ScheduleTherapy extends StatefulWidget {
+  final String branchId;
+  final String parentId;
+  final String childId;
+  final String therapistId;
+  final String therapyId;
+  final String therapyCost;
+  const ScheduleTherapy({Key? key, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId, required this.therapyCost}) : super(key: key);
   @override
-  State<ScheduleAppointment> createState() => _ScheduleAppointmentState();
+  State<ScheduleTherapy> createState() => _ScheduleTherapyState();
 }
 
-class _ScheduleAppointmentState extends State<ScheduleAppointment> {
+class _ScheduleTherapyState extends State<ScheduleTherapy> {
   DateTime today = DateTime.now();
+  Map<DateTime, String?> selectedTimeSlots = {};
+  Map<String, List<String>> generateSelectedTimeSlotsData(Map<DateTime, String?> selectedTimeSlots) {
+    Map<String, List<String>> selectedTimeSlotsData = {};
+    selectedTimeSlots.forEach((date, time) {
+      String formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+      if (selectedTimeSlotsData.containsKey(formattedDate)) {
+        selectedTimeSlotsData[formattedDate]!.add(time!);
+      } else {
+        selectedTimeSlotsData[formattedDate] = [time!];
+      }
+    });
+    return selectedTimeSlotsData;
+  }
+
   DateTime? selectedDate;
-  Map<DateTime, List<String>> selectedTimeSlots = {};
   List<String> timesMorning = ['09:30', '10:15', '11:00', '11:45', '12:30'];
-  List<String> timesAfterNoon = [
-    '14:00',
-    '14:45',
-    '15.30',
-    '16:15',
-    '17:00',
-    '17:45'
-  ];
+  List<String> timesAfterNoon = ['14:00', '14:45', '15.30', '16:15', '17:00', '17:45'];
   List<String> timesEvening = ['18:30', '19:15'];
+
   bool showSlotSelectionMessage = false;
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
@@ -66,9 +79,7 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
 
   bool isWithinNextSevenDays(DateTime date) {
     if (selectedDate == null) return false;
-
-    final nextSevenDays =
-    List.generate(7, (index) => selectedDate!.add(Duration(days: index)));
+    final nextSevenDays = List.generate(7, (index) => selectedDate!.add(Duration(days: index)));
     return nextSevenDays.contains(date);
   }
 
@@ -136,7 +147,6 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                     },
                     defaultBuilder: (context, day, focusedDay) {
                       final isOutsideMonth = day.month != focusedDay.month;
-
                       if (selectedDate != null &&
                           day.isAfter(selectedDate!.subtract(
                               Duration(days: selectedDate!.weekday - 1))) &&
@@ -178,38 +188,15 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                   ),
                 ),
               ),
-              if (showSlotSelectionMessage)
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: AnimatedOpacity(
-                    duration: const Duration(seconds: 1),
-                    opacity: showSlotSelectionMessage ? 1.0 : 0.0,
-                    child: const Text(
-                      'Please choose the slot timings',
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              const Center(
-                child: Text(
-                  'Appointment Timing',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+              const SizedBox(height: 10),
+              Center(
+                child: const Text(
+                  'Morning Session',
+                  style: kTextStyle1,
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Morning Session',
-                style: kTextStyle1,
-              ),
-              const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates:
-                _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
+              DaysSlot(selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [
@@ -220,25 +207,19 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                       return const SizedBox(height: 10);
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      return TimeSlot(
-                        time: timesMorning[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
-                        selectedTimeSlots: selectedTimeSlots,
-                      );
+                      return TimeSlot(time: timesMorning[index],selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),selectedTimeSlots: selectedTimeSlots);
                     },
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              const Text(
-                'Afternoon Session',
-                style: kTextStyle1,
+              Center(
+                child: const Text(
+                  'Afternoon Session',
+                  style: kTextStyle1,
+                ),
               ),
               const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates:
-                _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
+              DaysSlot(selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [
@@ -251,22 +232,21 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                     itemBuilder: (BuildContext context, int index) {
                       return TimeSlot(
                         time: timesAfterNoon[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
+                        selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),
                         selectedTimeSlots: selectedTimeSlots,
                       );
                     },
                   ),
                 ],
               ),
-              const Text(
-                'Evening Session',
-                style: kTextStyle1,
+              Center(
+                child: const Text(
+                  'Evening Session',
+                  style: kTextStyle1,
+                ),
               ),
               const SizedBox(height: 10),
-              HoursSlot(
-                selectedWeekDates:
-                _getSelectedWeekDates(selectedDate ?? DateTime.now()),
-              ),
+              DaysSlot(selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [
@@ -277,31 +257,27 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
                       return const SizedBox(height: 10);
                     },
                     itemBuilder: (BuildContext context, int index) {
-                      return TimeSlot(
-                        time: timesEvening[index],
-                        selectedDate: selectedDate ?? DateTime.now(),
-                        selectedTimeSlots: selectedTimeSlots,
-                      );
+                      return TimeSlot(time: timesEvening[index],selectedWeekDates: _getSelectedWeekDates(selectedDate ?? DateTime.now()),selectedTimeSlots: selectedTimeSlots,);
                     },
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    if (selectedTimeSlots.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please select the time slots'),
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AppointmentSummary(
-                            selectedTimeSlots: selectedTimeSlots),
-                      ));
-                    }
+                    Map<String, List<String>> selectedTimeSlotsData = generateSelectedTimeSlotsData(selectedTimeSlots);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BookAppointment(
+                        selecteddateslots: selectedTimeSlotsData,
+                        branchId: widget.branchId,
+                        parentId: widget.parentId,
+                        childId: widget.childId,
+                        therapistId: widget.therapistId,
+                        therapyId: widget.therapyId,
+                        therapyCost: widget.therapyCost,
+                      ),
+                    ));
                   },
                   child: const Text('Book Appointment'),
                 ),
@@ -314,19 +290,23 @@ class _ScheduleAppointmentState extends State<ScheduleAppointment> {
   }
 }
 
-class HoursSlot extends StatelessWidget {
+class DaysSlot extends StatefulWidget {
   final List<DateTime> selectedWeekDates;
-
-  const HoursSlot({
+  const DaysSlot({
     required this.selectedWeekDates,
     Key? key,
   }) : super(key: key);
 
   @override
+  State<DaysSlot> createState() => _DaysSlotState();
+}
+
+class _DaysSlotState extends State<DaysSlot> {
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: selectedWeekDates.map((date) {
+      children: widget.selectedWeekDates.map((date) {
         return Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
@@ -347,14 +327,15 @@ class HoursSlot extends StatelessWidget {
   }
 }
 
+
 class TimeSlot extends StatefulWidget {
   final String time;
-  final DateTime selectedDate;
-  final Map<DateTime, List<String>> selectedTimeSlots;
+  final List<DateTime> selectedWeekDates; // Dates for the week
+  final Map<DateTime, String?> selectedTimeSlots; // Selected time slots for each date
 
   const TimeSlot({
     required this.time,
-    required this.selectedDate,
+    required this.selectedWeekDates,
     required this.selectedTimeSlots,
     Key? key,
   }) : super(key: key);
@@ -368,22 +349,23 @@ class _TimeSlotState extends State<TimeSlot> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(6, (index) {
-        bool isSelected = widget.selectedTimeSlots.containsKey(widget.selectedDate) &&
-            widget.selectedTimeSlots[widget.selectedDate] == widget.time;
-
+      children: widget.selectedWeekDates.map((date) {
+        final isSelected = widget.selectedTimeSlots[date] == widget.time;
         return GestureDetector(
           onTap: () {
             setState(() {
               if (isSelected) {
-                widget.selectedTimeSlots.remove(widget.selectedDate);
+                // If the slot is already selected, deselect it
+                widget.selectedTimeSlots.remove(date);
               } else {
-                widget.selectedTimeSlots[widget.selectedDate] = [widget.time];
+                // Otherwise, select this slot for the selected date
+                widget.selectedTimeSlots[date] = widget.time;
               }
-            }); // Added missing closing parenthesis here
+            });
           },
           child: Container(
-            padding: const EdgeInsets.all(4),
+            padding: EdgeInsets.all(5),
+            alignment: Alignment.center,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5),
@@ -392,39 +374,26 @@ class _TimeSlotState extends State<TimeSlot> {
             child: Text(
               widget.time,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: isSelected ? Colors.white : Colors.black,
               ),
             ),
           ),
         );
-      }),
+      }).toList(),
     );
   }
 }
 
 
-class AppointmentSummary extends StatelessWidget {
-  final Map<DateTime, List<String>> selectedTimeSlots;
 
-  const AppointmentSummary({Key? key, required this.selectedTimeSlots})
-      : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Appointment Summary'),
-      ),
-      body: ListView(
-        children: selectedTimeSlots.entries.map((entry) {
-          return ListTile(
-            title: Text('Date: ${entry.key}'),
-            subtitle: Text('Time Slots: ${entry.value.join(', ')}'),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+
+
+
+
+
+
+
+

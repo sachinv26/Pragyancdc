@@ -3,9 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/edit_child.dart';
 

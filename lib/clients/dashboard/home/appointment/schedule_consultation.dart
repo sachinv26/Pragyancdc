@@ -1,20 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/book_appointment.dart';
-import 'package:pragyan_cdc/components/button.dart';
+import 'package:intl/intl.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/appointment_summary.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ConsultationAppointment extends StatefulWidget {
-  ConsultationAppointment({Key? key}) : super(key: key);
 
+  final String branchId;
+  final String parentId;
+  final String childId;
+  final String therapistId;
+  final String therapyId;
+  final String therapyCost;
+  ConsultationAppointment({Key? key, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId, required this.therapyCost}) : super(key: key);
   @override
-  State<ConsultationAppointment> createState() => _ConsultationAppointmentState();
+  State<ConsultationAppointment> createState() =>
+      _ConsultationAppointmentState();
 }
 
 class _ConsultationAppointmentState extends State<ConsultationAppointment> {
-  //declaration
   CalendarFormat _format = CalendarFormat.month;
   DateTime _focusDay = DateTime.now();
   DateTime _currentDay = DateTime.now();
@@ -43,12 +49,9 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Schedule Consultation'
-      ),
+      appBar: customAppBar(title: 'Schedule Consultation'),
       body: CustomScrollView(
         slivers: <Widget>[
-
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,20 +132,31 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 80),
               child: CustomButton(
                 width: double.infinity,
-
                 onPressed: () {
                   if (_dateSelected && _timeSelected) {
                     String chosenTiming = timings[_currentIndex!]; // Get the selected timing
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookAppointment(selectedDate: _focusDay, chosenTiming: chosenTiming),
-                      ),
-                    );
+                    if (_selectedDate != null) {
+                      String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+                      String formattedTime = chosenTiming;
+                      Map<String, List<String>> dateTimeMap = {formattedDate: [formattedTime]};
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookAppointment(
+                            selecteddateslots: dateTimeMap, // Pass the dateTimeMap to the BookAppointment screen
+                            branchId: widget.branchId,
+                            parentId: widget.parentId,
+                            childId: widget.childId,
+                            therapistId: widget.therapistId,
+                            therapyId: widget.therapyId,
+                            therapyCost: widget.therapyCost,
+                          ),
+                        ),
+                      );
+                    }
                   }
                 },
-                // disable: _timeSelected && _dateSelected ? false : true,
-                text: 'Make Appointment',
+                text: 'Book Appointment',
               ),
             ),
           ),
@@ -151,8 +165,6 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
     );
   }
 
-  //table calendar
-  //table calendar
   Widget _tableCalendar() {
     return TableCalendar(
       weekendDays: [DateTime.sunday],
@@ -170,7 +182,7 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
         outsideTextStyle: TextStyle(color: Colors.grey),
         todayDecoration: BoxDecoration(
             color: Colors.green,
-            shape: BoxShape.circle), // Set the style for outside days
+            shape: BoxShape.circle),
       ),
       availableCalendarFormats: {
         CalendarFormat.month: 'Month',
@@ -185,8 +197,7 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
           _currentDay = selectedDay;
           _focusDay = focusedDay;
           _dateSelected = true;
-          _selectedDate = selectedDay; // Updated
-          //check if weekend is selected
+          _selectedDate = selectedDay;
           if (selectedDay.weekday == 7) {
             _isWeekend = true;
             _timeSelected = false;

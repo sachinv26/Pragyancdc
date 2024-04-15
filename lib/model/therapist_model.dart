@@ -1,37 +1,37 @@
 class Therapist {
   final String id;
   final String name;
-  final String email;
   final String number;
   final String image;
   final String certificate;
-  final String specialization;
   final String description;
-  final String cost;
+  final String weekOff;
+  final String multipleBranch;
+  final List<Map<String, String>> timeSchedule;
 
   Therapist({
     required this.id,
     required this.name,
-    required this.email,
     required this.number,
     required this.image,
     required this.certificate,
-    required this.specialization,
     required this.description,
-    required this.cost,
+    required this.weekOff,
+    required this.multipleBranch,
+    required this.timeSchedule,
   });
 
   factory Therapist.fromJson(Map<String, dynamic> json) {
     return Therapist(
       id: json['prag_therapist_id'] ?? '',
       name: json['therapist_name'] ?? '',
-      email: json['therapist_email'] ?? '',
       number: json['therapist_number'] ?? '',
       image: json['therapist_img'] ?? '',
       certificate: json['therapist_certificate'] ?? '',
-      specialization: json['therapist_speclist'] ?? '',
       description: json['therapist_description'] ?? '',
-      cost: json['therapist_cost'] ?? '',
+      weekOff: json['week_off'] ?? '',
+      multipleBranch: json['multiple_branch'] ?? '',
+      timeSchedule: List<Map<String, String>>.from(json['timeschedule']?.map((x) => Map<String, String>.from(x)) ?? []),
     );
   }
 }

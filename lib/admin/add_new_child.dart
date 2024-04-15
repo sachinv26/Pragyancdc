@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/consultation_appointment.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/temp.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_consultation.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -287,7 +286,7 @@ class _AddChildState extends State<AddChild> {
                       child: CustomButton(
                         text: 'Next',
                         onPressed: () {
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>ScheduleAppointment()));
+                          // Navigator.push(context,MaterialPageRoute(builder: (context)=>ScheduleAppointment()));
                         },
                       ),
                     ),
