@@ -34,7 +34,7 @@ class BranchTherapies extends StatefulWidget {
 
 class _BranchTherapiesState extends State<BranchTherapies> {
   String? _selectedChildId;
-
+  String? _selectedChildName;
   Future<void> showChildSelectionDialog(
       String branchId,
       String parentId,
@@ -43,6 +43,8 @@ class _BranchTherapiesState extends State<BranchTherapies> {
       String therapyId,
       String therapyCost,
       String buttonPressed,
+      String therapistName,
+      String childname,
       ) async {
     try {
       final userId = await FlutterSecureStorage().read(key: 'userId');
@@ -66,7 +68,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                         style: kTextStyle1,
                       ),
                       content: Container(
-                        height: 100,
+                        height: 150,
                         child: Column(
                           children: childList.map((child) {
                             return Row(
@@ -77,6 +79,7 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedChildId = value as String?;
+                                      _selectedChildName= child.childName;
                                     });
                                   },
                                 ),
@@ -111,6 +114,10 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                                       therapyCost: therapyCost,
                                       therapistId: therapistId,
                                       therapyId: therapyId,
+                                      branchName: widget.branchName,
+                                      childname: _selectedChildName?? '',
+                                      therapyName: widget.therapy.therapyName,
+                                      therapistName: therapistName,
                                     );
                                   } else {
                                     // Navigate to some other page for booking a consultation
@@ -121,6 +128,10 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                                       therapyCost: therapyCost,
                                       therapistId: therapistId,
                                       therapyId: therapyId,
+                                      branchName: widget.branchName,
+                                      childname: _selectedChildName?? '',
+                                      therapyName: widget.therapy.therapyName,
+                                      therapistName: therapistName,
                                     );
                                   }
                                 },
@@ -234,6 +245,8 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                               widget.therapy.therapyId,
                               widget.therapy.cost,
                               'schedule',
+                              therapist.name,
+                                _selectedChildName??''
                             );
                           },
                           onBookConsultationPressed: () {
@@ -245,6 +258,8 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                               widget.therapy.therapyId,
                               widget.therapy.cost,
                               'consultation',
+                              therapist.name,
+                              _selectedChildName??''
                             );
                           },
                         );

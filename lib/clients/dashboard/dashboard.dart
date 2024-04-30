@@ -39,40 +39,42 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
       body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
+        elevation: 10,
+        backgroundColor: Colors.white, // Set the background color to transparent
+        type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.black,
-        selectedItemColor: Colors.green.shade700,
+        selectedItemColor: Colors.green.shade600,
         showUnselectedLabels: true,
-
-          currentIndex: _currentIndex,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-              ),
-              label: 'Home',
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.calendar_today,
-              ),
-              label: 'My Appointments',
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.calendar_today,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.contact_support_rounded,
-              ),
-              label: 'Support',
+            label: 'My Appointments',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.contact_support_rounded,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_balance_wallet,
-              ),
-              label: 'Wallet',
+            label: 'Support',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.account_balance_wallet,
             ),
-          ],
-          onTap: _onItemTapped,
-        ),
+            label: 'Wallet',
+          ),
+        ],
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
+

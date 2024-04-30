@@ -11,12 +11,12 @@ class TherapistCard extends StatelessWidget {
   final String therapyId;
   final String therapyAmount;
   final VoidCallback onScheduleTherapyPressed;
-  final VoidCallback onBookConsultationPressed;
+  final VoidCallback? onBookConsultationPressed;
 
   const TherapistCard({
     required this.therapist,
     required this.onScheduleTherapyPressed,
-    required this.onBookConsultationPressed, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId, required this.therapyAmount,
+    this.onBookConsultationPressed, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId, required this.therapyAmount,
   });
 
   @override
@@ -48,7 +48,7 @@ class TherapistCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      "https://cdcconnect.in/${therapist.image}",
+                      "https://app.cdcconnect.in/${therapist.image}",
                       fit: BoxFit.cover,
                       height: 80,
                     ),

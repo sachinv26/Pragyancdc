@@ -11,7 +11,7 @@ class ChildApi {
       'pragusertoken': userToken,
     };
 
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/get_childlist';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_childlist';
 
     try {
       final response = await http.post(Uri.parse(apiUrl), headers: headers);
@@ -47,7 +47,7 @@ class ChildApi {
     required String userToken,
     required Map<String, String> childDetails,
   }) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/set_addnewchild';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_addnewchild';
 
     final Map<String, String> headers = {
       'praguserid': userId,
@@ -84,7 +84,7 @@ class ChildApi {
     required String childId,
     required Map<String, String> childDetails,
   }) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/set_editexitingchild';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_editexitingchild';
 
     try {
       final Map<String, String> headers = {
@@ -124,7 +124,7 @@ class ChildApi {
     required String childId,
   }) async {
     const String apiUrl =
-        'https://cdcconnect.in/apiservice/parentboard/set_deleteexitingchild';
+        'https://app.cdcconnect.in/apiservice/parentboard/set_deleteexitingchild';
 
     try {
       final Map<String, String> headers = {

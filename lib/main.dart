@@ -73,7 +73,7 @@ class Pragyan extends StatelessWidget {
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
         '/addChildScreen': (context) => const AddChildScreen(),
         '/therapistDashboard' :(context) => TherapistDashBoard(),
-        // '/dashBoard': (context) =>  DashBoard(ctx: ,),
+        '/dashboard': (context) => DashBoard(ctx: context), // Provide the context here
       },
     );
   }

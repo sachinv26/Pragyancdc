@@ -33,7 +33,7 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _imagepath="https://cdcconnect.in/${widget.userProfile.profileImage}";
+    _imagepath="https://app.cdcconnect.in/${widget.userProfile.profileImage}";
   }
 
   @override
@@ -250,7 +250,7 @@ class _EditProfileState extends State<EditProfile> {
             //   // _loading =
             //   // false; // Set loading state to false after uploading image
             // });
-            return "https://cdcconnect.in/${response["path"]}"; // Return the path to update the image
+            return "https://app.cdcconnect.in/${response["path"]}"; // Return the path to update the image
           } else {
             // setState(() {
             //   // _loading =

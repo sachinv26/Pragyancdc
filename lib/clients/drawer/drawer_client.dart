@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,7 +12,6 @@ import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/provider/auth_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
-
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -31,7 +29,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
   final api = ApiServices();
   @override
   Widget build(BuildContext context) {
-    //final userDetails = Provider.of<UserProvider>(context).userProfile;
+    // final userDetails = Provider.of<UserProvider>(context).userProfile;
     return FutureBuilder<UserProfile?>(
         future: fetchUserProfile(),
         builder: (context, snapshot) {
@@ -83,7 +81,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                                   radius: 30,
                                   child: ClipOval(
                                     child: Image.network(
-                                      "https://cdcconnect.in/${userProfile.profileImage}",
+                                      "https://app.cdcconnect.in/${userProfile.profileImage}",
                                       width: 70,
                                       height: 70,
                                       fit: BoxFit.cover,

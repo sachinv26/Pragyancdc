@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:pragyan_cdc/model/booking_details_model.dart';
+
 import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:http/http.dart' as http;
 
 class TherapistApi {
-  static const String baseUrl = 'https://cdcconnect.in/apiservice/parentboard/';
+  static const String baseUrl = 'https://app.cdcconnect.in/apiservice/parentboard/';
 
   //fetch list of therapies
   Future<List<Therapy>> fetchTherapies(String branchid) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -99,9 +99,8 @@ class TherapistApi {
     return {'status': 0, 'message': 'Unknown error occurred'};
   }
 
-  Future<Map<String, dynamic>> bookAppointmentApi(BookingDetailsModel bookingDetails) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/consultation/set_bookappointment';
-
+  Future<Map<String, dynamic>> bookAppointmentApi(Map<String, dynamic> bookingData) async {
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/set_bookappointment';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -112,15 +111,16 @@ class TherapistApi {
           'pragusertoken': userToken,
           'Content-Type': 'application/json',
         };
-
+        print(bookingData);
         final response = await http.post(
           Uri.parse(apiUrl),
           headers: headers,
-          body: jsonEncode(bookingDetails.toJson()),
+          body: jsonEncode(bookingData), // Pass the bookingData directly
         );
 
         if (response.statusCode == 200) {
           final Map<String, dynamic> data = json.decode(response.body);
+          print(data);
           if (data['status'] == 1) {
             print(data);
             return data;
@@ -139,5 +139,6 @@ class TherapistApi {
     // Default return statement in case none of the conditions are met
     return {'status': 0, 'message': 'Unknown error occurred'};
   }
+
 
 }

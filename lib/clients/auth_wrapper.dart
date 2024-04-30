@@ -16,7 +16,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     super.initState();
-    // Check the login status when the widget is first created
     Provider.of<AuthProvider>(context, listen: false).checkLoginStatus();
   }
 

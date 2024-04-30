@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,7 @@ import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
-import 'package:provider/provider.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 class HomeScreen extends StatefulWidget {
   final BuildContext ctx;
   const HomeScreen({required this.ctx, super.key});
@@ -24,10 +22,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late  LocationProvider locationProvider;
+  late LocationProvider locationProvider;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String branchId=''; // Fix: Remove final keyword
-  String branchName=''; // Fix: Remove final keyword
+  String branchId = ''; // Fix: Remove final keyword
+  String branchName = ''; // Fix: Remove final keyword
+  final List<String> imgList = [
+    'assets/images/children.png',
+    'assets/images/children-learning-globe-with-woman-bedroom 1.png',
+  ];
+
+  Future<List<dynamic>> fetchLocations() async {
+    final response = await ApiServices().getBranches();
+    return response['branch'];
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,18 +50,17 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
-            locationProvider = Provider.of<LocationProvider>(context, listen: false);
-            if (locationProvider.selectedLocation.isEmpty) {
-              locationProvider.updateSelectedLocation(userProfile.preferredLocation, '');
+            if (branchId.isEmpty) {
+              branchId = userProfile.preferredLocation;
+              branchName = ''; // Initialize branchName if necessary
             }
-            branchId = locationProvider.selectedLocation;
-            branchName= locationProvider.branchName;
-            print(branchName);
             return Scaffold(
+              backgroundColor: Colors.white70,
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
                 drawer: ClientAppDrawer(ctx: widget.ctx),
                 appBar: AppBar(
+                  iconTheme: IconThemeData(color: Colors.white),
                   automaticallyImplyLeading: false,
                   foregroundColor: Colors.white,
                   flexibleSpace: Container(
@@ -72,69 +79,71 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       userProfile.profileImage == ""
                           ? GestureDetector(
-                        onTap: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: const CircleAvatar(
-                          radius: 25,
-                          backgroundImage:
-                          AssetImage('assets/images/empty-user.jpeg'),
-                        ),
-                      )
+                              onTap: () {
+                                _scaffoldKey.currentState?.openDrawer();
+                              },
+                              child: const CircleAvatar(
+                                radius: 25,
+                                backgroundImage:
+                                    AssetImage('assets/images/empty-user.jpeg'),
+                              ),
+                            )
                           : GestureDetector(
-                        onTap: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        child: CircleAvatar(
-                          radius: 25,
-                          child: ClipOval(
-                            child: Image.network(
-                              "https://cdcconnect.in/${userProfile.profileImage}",
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value: loadingProgress
-                                          .expectedTotalBytes !=
-                                          null
-                                          ? loadingProgress
-                                          .cumulativeBytesLoaded /
-                                          loadingProgress
-                                              .expectedTotalBytes!
-                                          : null,
-                                    ),
-                                  );
-                                }
+                              onTap: () {
+                                _scaffoldKey.currentState?.openDrawer();
                               },
-                              errorBuilder: (BuildContext context,
-                                  Object error, StackTrace? stackTrace) {
-                                return const Icon(Icons.error);
-                              },
+                              child: CircleAvatar(
+                                radius: 20,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    "https://app.cdcconnect.in/${userProfile.profileImage}",
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (BuildContext context,
+                                        Object error, StackTrace? stackTrace) {
+                                      return const Icon(Icons.error);
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userProfile.parentName,
-                            style: const TextStyle(
-                                fontSize: 17, color: Colors.black),
+                            userProfile.parentName.toUpperCase(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
                         ],
                       ),
                       IconButton(
                         icon: const Icon(
                           Icons.notifications,
-                          color: Colors.black,
                         ),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
@@ -147,212 +156,195 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                body: Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 30),
-                    child: ListView(
-                      children: [
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Container(
-                                  width: double.infinity,
-                                  child: Image.asset(
-                                    'assets/images/children.png',
-                                    fit: BoxFit.contain,
-                                  )),
-                            ),
-                            Positioned(
-                              left: 8,
-                              top: 10,
-                              child: Image.asset(
-                                'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
+                body: ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          scrollPhysics: const BouncingScrollPhysics(),
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          viewportFraction: 0.9,
+                        ),
+                        items: imgList
+                            .map((item) => Container(
+                          child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Image.asset(item, fit: BoxFit.cover, width: 1000),
+                                    Positioned(
+                                      left: 8,
+                                      top: 10,
+                                      child: Image.asset(
+                                        'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                              )),
+                        ))
+                            .toList(),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 0, left: 20, right: 20),
+                      child: FutureBuilder(
+                        future: fetchLocations(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: Loading());
+                          } else if (snapshot.hasError) {
+                            return const Text('Error');
+                          } else if (snapshot.hasData) {
+                            var data = snapshot.data!;
+                            // Initialize branchName based on the first available location data
+                            if (branchName.isEmpty && data.isNotEmpty) {
+                              branchId = data[0]['bran_id'];
+                              branchName = data[0]['bran_name'];
+                            }
+                            return DropdownButton2(
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                ),
+                                iconSize: 20,
+                                iconEnabledColor: Colors.white,
+                                iconDisabledColor: Colors.grey,
                               ),
-                            ),
-                            const Positioned(
-                              top: 40,
-                              child: SizedBox(
-                                width: 250,
-                                child: Text(
-                                  'Children learn more from what you are  than what you teach',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                              buttonStyleData: ButtonStyleData(
+                                width: double.maxFinite,
+                                padding:
+                                    const EdgeInsets.only(left: 14, right: 14),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.black26,
                                   ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
+                                  color: Colors.green.shade600,
+                                ),
+                                elevation: 2,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                  color: Colors.green.shade600,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        FutureBuilder(
-                          future: fetchLocations(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              var data = snapshot.data!;
-                              return DropdownButton(
-                                value: locationProvider.selectedLocation,
-                                items: data.map((location) {
-                                  branchId = location['bran_id'];
-                                  branchName = location['bran_name'];
-                                  return DropdownMenuItem(
-                                    value: branchId,
-                                    child: Text(
-                                      branchName,
-                                      style: khintTextStyle,
+                              menuItemStyleData: const MenuItemStyleData(
+                                padding: EdgeInsets.only(left: 14, right: 14),
+                              ),
+                              value: branchId, // Use locally managed branchId
+                              items: data.map((location) {
+                                String branchId = location['bran_id'];
+                                String branchName = location['bran_name'];
+                                return DropdownMenuItem(
+                                  value: branchId,
+                                  child: Text(
+                                    branchName,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    branchId = value.toString(); // Update branchId
-                                    branchName = data.firstWhere((element) => element['bran_id'] == value)['bran_name'];
-                                    locationProvider.updateSelectedLocation(value.toString(), branchName);
-                                    // Update branchName
-                                  });
-                                },
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  branchId = value
+                                      .toString(); // Update locally managed branchId
+                                  branchName = data.firstWhere((element) =>
+                                      element['bran_id'] == value)['bran_name'];
+                                  // No need to call locationProvider.updateSelectedLocation here
+                                  // Update branchName
+                                });
+                              },
+                            );
+                          } else {
+                            return const Text('No data available');
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20),
+                      child: Text(
+                        'Our Services',
+                        style: TextStyle(
+                            color: Colors.green.shade700,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                    ),
+                    kheight10,
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20),
+                      child: FutureBuilder(
+                          future: TherapistApi().fetchTherapies(branchId),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: Loading(),
                               );
                             } else if (snapshot.hasError) {
-                              return const Text('Error');
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
                             } else {
-                              return Center(child: Loading());
+                              List<Therapy> therapies = snapshot.data!;
+                              return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  for (var i = 0; i < therapies.length; i += 3)
+                                    Row(
+                                      children: therapies
+                                          .sublist(
+                                              i,
+                                              i + 3 > therapies.length
+                                                  ? therapies.length
+                                                  : i + 3)
+                                          .map((therapy) => Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ServiceItem(
+                                                  userId:
+                                                      userProfile.parentUserId,
+                                                  therapy: therapy,
+                                                  branchId: branchId,
+                                                  branchName:
+                                                      branchName, // Pass the correct branchName here
+                                                ),
+                                              ))
+                                          .toList(),
+                                    ),
+                                ],
+                              );
                             }
-                          },
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Text(
-                          'Our Services',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        kheight10,
-                        FutureBuilder(
-                            future: TherapistApi().fetchTherapies(branchId),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                  child: Loading(),
-                                );
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                  child: Text('Error: ${snapshot.error}'),
-                                );
-                              } else {
-                                List<Therapy> therapies = snapshot.data!;
-                                return Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    for (var i = 0;
-                                        i < therapies.length;
-                                        i += 3)
-                                      Row(
-                                        children: therapies
-                                            .sublist(
-                                                i,
-                                                i + 3 > therapies.length
-                                                    ? therapies.length
-                                                    : i + 3)
-                                            .map((therapy) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: ServiceItem(
-                                                    userId: userProfile.parentUserId,
-                                                    therapy: therapy,
-                                                    branchId: branchId,
-                                                    branchName: branchName, // Pass the correct branchName here
-                                                  ),
-                                                ))
-                                            .toList(),
-                                      ),
-                                  ],
-                                );
-                              }
-                            }),
-                        kheight30,
-                        Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                width: double.infinity,
-                                child: Image.asset(
-                                  'assets/images/children-learning-globe-with-woman-bedroom 1.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: 8,
-                              top: 5,
-                              child: Image.asset(
-                                'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 10,
-                              left: 10,
-                              child: SizedBox(
-                                width: 150,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset('assets/images/fb.png'),
-                                        kwidth10,
-                                        const Text(
-                                          'Pragyan CDC',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 3,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Image.asset('assets/images/insta.png'),
-                                        kwidth10,
-                                        const Text(
-                                          'Pragyan CDC',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )));
+                          }),
+                    ),
+                  ],
+                ));
           }
         });
   }
 }
+
+
 
 Future<UserProfile?> fetchUserProfile() async {
   // Use FlutterSecureStorage to get userId and token
@@ -368,11 +360,6 @@ Future<UserProfile?> fetchUserProfile() async {
   } else {
     return null;
   }
-}
-
-Future<List<dynamic>> fetchLocations() async {
-  final response = await ApiServices().getBranches();
-  return response['branch'];
 }
 
 class ServiceItem extends StatefulWidget {
@@ -397,7 +384,10 @@ class ServiceItem extends StatefulWidget {
 class _ServiceItemState extends State<ServiceItem> {
   @override
   Widget build(BuildContext context) {
-    print("branch id is this "+ widget.branchId + "branch name is " + widget.branchName);
+    print("branch id is this " +
+        widget.branchId +
+        "branch name is " +
+        widget.branchName);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -432,7 +422,7 @@ class _ServiceItemState extends State<ServiceItem> {
                   100, // Adjust the width here to control the space for the text
               child: Text(
                 widget.therapy.therapyName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),

@@ -38,7 +38,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
   void initState() {
     super.initState();
 
-    _imagepath = "https://cdcconnect.in/${widget.childData.childImage}";
+    _imagepath = "https://app.cdcconnect.in/${widget.childData.childImage}";
     nameController.text = widget.childData.childName;
     dobController.text = widget.childData.childDob;
     dropdownValue = widget.childData.relationship;
@@ -331,7 +331,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
               _loading =
                   false; // Set loading state to false after uploading image
             });
-            return "https://cdcconnect.in/${response["path"]}"; // Return the path to update the image
+            return "https://app.cdcconnect.in/${response["path"]}"; // Return the path to update the image
           } else {
             setState(() {
               _loading =

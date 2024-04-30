@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
-  static const String baseUrl = 'https://cdcconnect.in/apiservice/auth/';
+  static const String baseUrl = 'https://app.cdcconnect.in/apiservice/auth/';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
 //for testing network issues
@@ -163,12 +163,14 @@ class ApiServices {
           //success
           return jsonResponse;
         } else if (message.contains('Record not found')) {
+          print('getting error here');
           return {'status': 0, 'message': 'Record not found'};
         } else {
           return {'status': 0, 'message': 'Unknown Error'};
         }
       } else {
         // Handle non-200 status codes
+        print("getting erorr in fecthing branch");
         print('Error: ${response.statusCode}');
         return {
           'status': 0,
@@ -312,7 +314,7 @@ class ApiServices {
   //upload image
   Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
       File image, String userId, String token) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/upload_profileimage';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/upload_profileimage';
 
     // Create a multipart request
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
@@ -390,7 +392,7 @@ class ApiServices {
   // }
 
   Future<UserProfile?> fetchUserProfile(String userId, String userToken) async {
-    const String apiUrl = "https://cdcconnect.in/apiservice/parentboard/get_profiledetail";
+    const String apiUrl = "https://app.cdcconnect.in/apiservice/parentboard/get_profiledetail";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
@@ -425,7 +427,7 @@ class ApiServices {
   Future<Map<String, dynamic>?> editUserProfile(
       String userId, String userToken, Map<String, dynamic> inputData) async {
     const String apiUrl =
-        "https://cdcconnect.in/apiservice/parentboard/set_editparent_profile";
+        "https://app.cdcconnect.in/apiservice/parentboard/set_editparent_profile";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
@@ -449,7 +451,7 @@ class ApiServices {
 //change password
   Future<Map<String, dynamic>> changePassword(
       String encodedOldPassword, String encodedNewPassword) async {
-    const String apiUrl = 'https://cdcconnect.in/apiservice/parentboard/set_passwordchange';
+    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_passwordchange';
 
     final String userId = await fetchUserId();
     final String token = await fetchUserToken();

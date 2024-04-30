@@ -55,9 +55,11 @@ dependencies:
   gap: ^3.0.1
   intl:
   expandable: ^5.0.1
- 
-  
-  
+  dropdown_button2: ^2.3.9
+  carousel_slider: ^4.0.0
+
+
+
 
 
 dev_dependencies:

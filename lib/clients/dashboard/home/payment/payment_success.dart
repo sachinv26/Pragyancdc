@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
 
 class SuccessfulPayment extends StatelessWidget {
   const SuccessfulPayment({super.key});
@@ -8,6 +9,7 @@ class SuccessfulPayment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: customAppBar(title: 'Payment Success',showLeading: false),
       body: Center(
         child: Column(
           children: [
@@ -21,26 +23,15 @@ class SuccessfulPayment extends StatelessWidget {
             kheight60,
             Align(
               alignment: Alignment.center,
-              child: TextButton(
+              child: CustomButton(
                 onPressed: () {
-                  Navigator.of(context)
-                      .popUntil((route) => route.settings.name == '/dashboard');
-                  // Navigator.pushReplacement(context,
-                  //     MaterialPageRoute(builder: (context) {
-                  //   return  DashBoard();
-                  // }));
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/dashboard',
+                        (route) => false, // Pop all routes and replace with the dashboard
+                  );
                 },
-                style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.amber[50])),
-                child: const Text(
-                  'Done',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
+                text: 'Done',
               ),
             ),
           ],
@@ -49,3 +40,5 @@ class SuccessfulPayment extends StatelessWidget {
     );
   }
 }
+
+
