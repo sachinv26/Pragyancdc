@@ -57,7 +57,6 @@ class TherapistApi {
     return [];
   }
 
-  //fetch therapists based on selected branch and therapy
   Future<Map<String, dynamic>> fetchTherapists(
       String branchId, String therapyId) async {
     print('branchId: $branchId therapyId: $therapyId');
@@ -109,6 +108,7 @@ class TherapistApi {
         final Map<String, String> headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom':"parent",
           'Content-Type': 'application/json',
         };
         print(bookingData);
@@ -124,6 +124,13 @@ class TherapistApi {
           if (data['status'] == 1) {
             print(data);
             return data;
+          } else if (data['status'] == -2) {
+            // Handle the case where status is -2
+            return {
+              'status': -2,
+              'message': data['message'],
+              'bookeddate': data['bookeddate']
+            };
           } else {
             throw Exception(data['message']);
           }

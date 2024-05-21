@@ -17,8 +17,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ClientAppDrawer extends StatefulWidget {
-  final BuildContext ctx;
-  const ClientAppDrawer({required this.ctx, super.key});
+  // final BuildContext ctx;
+  const ClientAppDrawer({super.key});
 
   @override
   State<ClientAppDrawer> createState() => _ClientAppDrawerState();
@@ -45,7 +45,6 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  // Drawer Header
                   DrawerHeader(
                     margin: EdgeInsets.only(bottom: 15),
                     decoration:  BoxDecoration(
@@ -176,21 +175,25 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
                           return ChangePasswordScreen(
-                            ctx: widget.ctx,
+                            // ctx: widget.ctx,
                           );
                         },
                       ));
                     },
                   ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const FaIcon(FontAwesomeIcons.whatsapp),
-                  //   title: const Text('Chat Support'),
-                  //   onTap: () {
-                  //     // Take to whatsapp
-                  //   },
-                  // ),
-                  // List of items
+                  ListTile(
+                    visualDensity:
+                    const VisualDensity(horizontal: 0, vertical: -4),
+                    leading: const FaIcon(FontAwesomeIcons.children),
+                    title: const Text('Cancel Appointments'),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return const ChildList();
+                        },
+                      ));
+                    },
+                  ),
                   ListTile(
                     visualDensity:
                         const VisualDensity(horizontal: 0, vertical: -4),
@@ -200,46 +203,6 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       // Handle About Pragyan
                     },
                   ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const Icon(Icons.help),
-                  //   title: const Text('Get Help & Support'),
-                  //   onTap: () {
-                  //     // Handle Get Help & Support
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const Icon(Icons.history),
-                  //   title: const Text('History'),
-                  //   onTap: () {
-                  //     // Handle History
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const Icon(Icons.payment),
-                  //   title: const Text('Payment issue'),
-                  //   onTap: () {
-                  //     // Handle Payment issue
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const Icon(Icons.settings),
-                  //   title: const Text('Setting'),
-                  //   onTap: () {
-                  //     // Handle Setting
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-                  //   leading: const Icon(Icons.feedback),
-                  //   title: const Text('Feedback'),
-                  //   onTap: () {
-                  //     // Handle Feedback
-                  //   },
-                  // ),
                   ListTile(
                     visualDensity:
                         const VisualDensity(horizontal: 0, vertical: -4),
@@ -249,7 +212,6 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       // Handle Terms and Conditions
                     },
                   ),
-
                   ListTile(
                     visualDensity:
                         const VisualDensity(horizontal: 0, vertical: -4),
@@ -272,7 +234,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                             fontSize: 16.0,
                           );
                           print('Logout Trigger Context: $context');
-                          await Provider.of<AuthProvider>(widget.ctx,
+                          await Provider.of<AuthProvider>(context,
                                   listen: false)
                               .logout();
                         } else {

@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/cancel_appointments.dart';
 import 'package:pragyan_cdc/therapists/view/apply_leave.dart';
+import 'package:pragyan_cdc/therapists/view/daily_appointments.dart';
 
 class TherapistHome extends StatefulWidget {
   const TherapistHome({Key? key}) : super(key: key);
@@ -61,8 +62,6 @@ class _TherapistHomeState extends State<TherapistHome> {
               },
             ),
             ListTile(
-              visualDensity:
-              const VisualDensity(horizontal: 0, vertical: -4),
               title: Text('Apply leave'),
               onTap: () {
                 Navigator.push(context,
@@ -70,8 +69,14 @@ class _TherapistHomeState extends State<TherapistHome> {
               },
             ),
             ListTile(
-              visualDensity:
-              const VisualDensity(horizontal: 0, vertical: -4),
+
+              title: Text('Daily Appointments'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => DailyAppointments()));
+              },
+            ),
+            ListTile(
               title: Text('Logout'),
               onTap: () {
                 Navigator.pop(context);
@@ -84,6 +89,15 @@ class _TherapistHomeState extends State<TherapistHome> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(screenSize.height * 0.07),
         child: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.green.shade700, Colors.green.shade500],
+              ),
+            ),
+          ),
           backgroundColor: Colors.green.shade700,
           elevation: 0, // No elevation
           leading: IconButton(

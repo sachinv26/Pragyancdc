@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/add_therapist.dart';
 
 import '../../model/therapy_model.dart';
+
 class ServiceItemCard extends StatelessWidget {
   final Therapy therapy;
   final String branchId;
   final String branchName;
-  final String userId;
+  final String parentId;
+  final String therapyId;
+  final String childId;
+  final String childname;
+  final String therapistName;
+  final String therapistId;
+
   final Function(Therapy) onTherapySelected;
 
   const ServiceItemCard({
@@ -14,7 +21,13 @@ class ServiceItemCard extends StatelessWidget {
     required this.branchId,
     required this.branchName,
     required this.therapy,
-    required this.userId, required this.onTherapySelected,
+    required this.parentId,
+    required this.onTherapySelected,
+    required this.therapyId,
+    required this.childId,
+    required this.childname,
+    required this.therapistName,
+    required this.therapistId,
   }) : super(key: key);
 
   @override
@@ -24,9 +37,14 @@ class ServiceItemCard extends StatelessWidget {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AddTherapist(
             branchId: branchId,
-            therapy: therapy,
+            therapyName: therapy.therapyName,
             branchName: branchName,
-            parentId: userId,
+            parentId: parentId,
+            childId:childId,
+            therapistId: therapistId,
+            therapyId: therapyId,
+            childname: childname,
+            therapistName: childname,
           ),
         ));
       },
@@ -36,7 +54,7 @@ class ServiceItemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

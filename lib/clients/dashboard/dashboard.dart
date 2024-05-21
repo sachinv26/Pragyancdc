@@ -5,8 +5,8 @@ import 'package:pragyan_cdc/clients/support/support_home.dart';
 import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
-  BuildContext ctx;
-  DashBoard({required this.ctx, super.key});
+  // BuildContext ctx;
+  DashBoard({super.key});
 
   @override
   _DashBoardState createState() => _DashBoardState();
@@ -21,7 +21,7 @@ class _DashBoardState extends State<DashBoard> {
   void initState() {
     super.initState();
     pages = [
-      HomeScreen(ctx: widget.ctx), // Access widget.ctx after initialization
+      HomeScreen(), // Access widget.ctx after initialization
       const AppointmentScreen(),
       const SupportScreen(),
       const WalletScreen(),

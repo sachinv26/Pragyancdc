@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/admin/admin_login.dart';
 import 'package:pragyan_cdc/clients/auth_wrapper.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/therapists/view/login.dart';
@@ -24,7 +23,10 @@ class SignupSelection extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            const Text('Select Your Perfect Account'),
+            const Text(
+              'Select Your Perfect Account',
+              style: kTextStyle2,
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -46,14 +48,14 @@ class SignupSelection extends StatelessWidget {
                     Radius.circular(10),
                   ),
                 ),
-                padding: const EdgeInsets.only(left: 7, right: 4),
+                padding: const EdgeInsets.only(left: 10, right: 10),
                 width: double.infinity,
-                height: 40,
+                height: 50,
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'For Parent',
+                      'Parent Login',
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -64,57 +66,42 @@ class SignupSelection extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const TherapistLogin(),
-                  ),
-                );
-              },
-              child: ListTile(
-                leading: Image.asset('assets/images/Group 10128.png'),
-                title: const Text(
-                  'Therapist Only',
-                  style: khintTextStyle,
-                ),
-                trailing: const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 7,
-                    child: CircleAvatar(
-                      radius: 5,
-                    )),
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AdminLogin();
-                    },
-                  ),
-                );
-              },
-              child: ListTile(
-                leading: Image.asset('assets/images/Vector (1).png'),
-                title: const Text(
-                  'Admin Only',
-                  style: khintTextStyle,
-                ),
-                trailing: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 7,
-                  child: CircleAvatar(
-                    radius: 5,
-                  ),
-                ),
-              ),
-            )
+            // const SizedBox(
+            //   height: 30,
+            // ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigator.of(context).push(
+            //       MaterialPageRoute(
+            //         builder: (context) => const TherapistLogin(),
+            //       ),
+            //     );
+            //   },
+            //   child: Container(
+            //     decoration: const BoxDecoration(
+            //       color: Color.fromARGB(255, 19, 138, 23),
+            //       borderRadius: BorderRadius.all(
+            //         Radius.circular(10),
+            //       ),
+            //     ),
+            //     padding: const EdgeInsets.only(left: 10, right: 10),
+            //     width: double.infinity,
+            //     height: 50,
+            //     child: const Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Text(
+            //           'Therapist Login',
+            //           style: TextStyle(
+            //               color: Colors.white, fontWeight: FontWeight.bold),
+            //         ),
+            //         CircleAvatar(
+            //           child: Icon(Icons.person),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

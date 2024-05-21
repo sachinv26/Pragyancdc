@@ -19,6 +19,7 @@ class Parent {
         final Map<String, String> headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom': "parent",
           'Content-Type': 'application/json',
         };
 
@@ -29,9 +30,9 @@ class Parent {
           "prag_therapy": "0",
           "prag_therapiest": "0",
           "prag_limitstart": 0,
-          "prag_limitcount": 100,
+          "prag_limitcount": 500,
           "prag_dateorder": 1,
-          "prag_status":status.toString()
+          "prag_status": status.toString()
         };
 
         String jsonBody = jsonEncode(body);
@@ -44,13 +45,14 @@ class Parent {
         if (response.statusCode == 200) {
           final Map<String, dynamic> jsonResponse = json.decode(response.body);
           if (jsonResponse['status'] == 1) {
-            final List<dynamic> parentScheduleList =
-            jsonResponse['parent_schedule'];
+            final List<dynamic> parentScheduleList = jsonResponse['parent_schedule'];
             final List<ParentSchedule> parentAppointments = parentScheduleList
-                .map((parentSchedule) =>
-                ParentSchedule.fromJson(parentSchedule))
+                .map((parentSchedule) => ParentSchedule.fromJson(parentSchedule))
                 .toList();
             return parentAppointments;
+          } else if (jsonResponse['status'] == 0) {
+            // Return an empty list when no appointments are found
+            return [];
           } else {
             throw Exception(jsonResponse['message']);
           }
@@ -68,12 +70,9 @@ class Parent {
   }
 
 
+
   Future<void> cancelAppointment(String appointmentId,String parentId,String appointmentDate,String appointmentTime ) async {
     final Uri uri = Uri.parse('https://app.cdcconnect.in/apiservice/consultation/set_cancelappointment');
-    print(appointmentId);
-    print(parentId);
-    print(appointmentDate);
-    print(appointmentTime);
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(
@@ -84,6 +83,7 @@ class Parent {
         final Map<String, String> headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom': "parent",
           'Content-Type': 'application/json',
         };
 
@@ -136,6 +136,7 @@ class Parent {
         final Map<String, String> headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom':"parent",
           'Content-Type': 'application/json',
         };
 
@@ -165,6 +166,9 @@ class Parent {
                 CancelAppointment.fromJson(parentcancelSchedule))
                 .toList();
             return parentCancelAppointments;
+          } else if (jsonResponse['status'] == 0) {
+            // Return a message indicating no cancelled appointments found
+            return [];
           } else {
             throw Exception(jsonResponse['message']);
           }
@@ -180,6 +184,7 @@ class Parent {
       throw Exception('No Appointments found');
     }
   }
+
 
 
   Future<List<Appointment>> getNotifications() async {

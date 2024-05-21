@@ -8,14 +8,24 @@ class AddTherapy extends StatefulWidget {
   final String branchId;
   final String parentId;
   final String childId;
-
-
+  final String therapistId;
+  final String therapyId;
+  final String branchName;
+  final String childname;
+  final String therapistName;
+  final String therapyName;
 
   const AddTherapy({
     Key? key,
     required this.branchId,
     required this.parentId,
     required this.childId,
+    required this.branchName,
+    required this.therapistId,
+    required this.therapyId,
+    required this.childname,
+    required this.therapistName,
+    required this.therapyName,
   }) : super(key: key);
 
   @override
@@ -38,13 +48,13 @@ class _AddTherapyState extends State<AddTherapy> {
   // Function to handle selected therapy
   void _handleTherapySelected(Therapy selectedTherapy) {
     // Pass the selected therapy back to the BookAppointment page
-    Navigator.pop(context,selectedTherapy);
+    Navigator.pop(context, selectedTherapy);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Add More Therapy'),
+      appBar: customAppBar(title: widget.branchName),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: FutureBuilder(
@@ -66,11 +76,15 @@ class _AddTherapyState extends State<AddTherapy> {
                 itemBuilder: (context, index) {
                   return ServiceItemCard(
                     branchId: widget.branchId,
-                    branchName: '',
+                    branchName: widget.branchName,
                     therapy: therapies[index],
-                    userId: widget.parentId,
-                    // Pass the callback function to the ServiceItemCard
+                    parentId: widget.parentId,
                     onTherapySelected: _handleTherapySelected,
+                    therapyId: widget.therapyId,
+                    childId: widget.childId,
+                    therapistName: widget.therapistName,
+                    childname: widget.childname,
+                    therapistId: widget.therapistId,
                   );
                 },
               );

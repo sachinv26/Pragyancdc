@@ -7,8 +7,8 @@ import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
-  final BuildContext ctx;
-  const ChangePasswordScreen({required this.ctx, super.key});
+  // final BuildContext ctx;
+  const ChangePasswordScreen({ super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       : () async {
                           await provider.changePassword();
                           Future.delayed(const Duration(seconds: 3));
-                          await Provider.of<AuthProvider>(ctx, listen: false)
+                          await Provider.of<AuthProvider>(context, listen: false)
                               .logout();
 
                           if (context.mounted) {

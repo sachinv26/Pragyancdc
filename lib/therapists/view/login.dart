@@ -78,9 +78,9 @@ class _TherapistLoginState extends State<TherapistLogin> {
                       iconData: IconButton(
                         icon: const Icon(Icons.visibility_off),
                         onPressed: () {
-                          PasswordToggle(
-                            controller: _passwordController,
-                          );
+                          // PasswordToggle(
+                          //   controller: _passwordController,
+                          // );
                         },
                       ),
                     ),

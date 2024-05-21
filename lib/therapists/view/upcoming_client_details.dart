@@ -10,7 +10,6 @@ class UpcomingClientDetails extends StatefulWidget {
 }
 
 class _UpcomingClientDetailsState extends State<UpcomingClientDetails> {
-  String _selectedStatus = 'Planned';
   @override
   Widget build(BuildContext context) {
     return Scaffold(

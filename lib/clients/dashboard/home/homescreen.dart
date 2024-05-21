@@ -15,8 +15,8 @@ import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 class HomeScreen extends StatefulWidget {
-  final BuildContext ctx;
-  const HomeScreen({required this.ctx, super.key});
+  // final BuildContext ctx;
+  const HomeScreen({super.key});
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -50,15 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
             return const Center(child: Text('User profile not found'));
           } else {
             final userProfile = snapshot.data!;
-            if (branchId.isEmpty) {
-              branchId = userProfile.preferredLocation;
-              branchName = ''; // Initialize branchName if necessary
-            }
             return Scaffold(
               backgroundColor: Colors.white70,
                 key: _scaffoldKey,
                 endDrawerEnableOpenDragGesture: false,
-                drawer: ClientAppDrawer(ctx: widget.ctx),
+                drawer: ClientAppDrawer(),
                 appBar: AppBar(
                   iconTheme: IconThemeData(color: Colors.white),
                   automaticallyImplyLeading: false,
@@ -205,11 +201,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           } else if (snapshot.hasData) {
                             var data = snapshot.data!;
                             // Initialize branchName based on the first available location data
-                            if (branchName.isEmpty && data.isNotEmpty) {
-                              branchId = data[0]['bran_id'];
-                              branchName = data[0]['bran_name'];
-                            }
+                            // if (branchName.isEmpty && data.isNotEmpty) {
+                            //   branchId = data[0]['bran_id'];
+                            //   branchName = data[0]['bran_name'];
+                            // }
                             return DropdownButton2(
+                              hint: const Text('Please Choose a branch', style: TextStyle(color: Colors.white)),
                               iconStyleData: const IconStyleData(
                                 icon: Icon(
                                   Icons.keyboard_arrow_down_outlined,
@@ -220,8 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               buttonStyleData: ButtonStyleData(
                                 width: double.maxFinite,
-                                padding:
-                                    const EdgeInsets.only(left: 14, right: 14),
+                                padding: const EdgeInsets.only(left: 14, right: 14),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
@@ -240,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               menuItemStyleData: const MenuItemStyleData(
                                 padding: EdgeInsets.only(left: 14, right: 14),
                               ),
-                              value: branchId, // Use locally managed branchId
+                              value: branchId.isEmpty ? null : branchId, // Set initial value to null if branchId is empty
                               items: data.map((location) {
                                 String branchId = location['bran_id'];
                                 String branchName = location['bran_name'];
@@ -259,12 +255,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  branchId = value
-                                      .toString(); // Update locally managed branchId
-                                  branchName = data.firstWhere((element) =>
-                                      element['bran_id'] == value)['bran_name'];
-                                  // No need to call locationProvider.updateSelectedLocation here
-                                  // Update branchName
+                                  if (value != null) {
+                                    branchId = value.toString(); // Update locally managed branchId
+                                    branchName = data.firstWhere((element) => element['bran_id'] == value)['bran_name'];
+                                    // No need to call locationProvider.updateSelectedLocation here
+                                    // Update branchName
+                                  }
                                 });
                               },
                             );

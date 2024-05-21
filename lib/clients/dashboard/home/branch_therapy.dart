@@ -51,99 +51,87 @@ class _BranchTherapiesState extends State<BranchTherapies> {
       final token = await FlutterSecureStorage().read(key: 'authToken');
       final List<ChildModel> childList =
       await ChildApi().getChildList(userId.toString(), token.toString());
+
+      if (childList.length == 1) {
+        _selectedChildId = childList.first.childId;
+        _selectedChildName = childList.first.childName;
+        navigateToNextPage(
+          branchId,
+          parentId,
+          therapistId,
+          therapyId,
+          therapyCost,
+          buttonPressed,
+          therapistName,
+          childname,
+        );
+        return;
+      }
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return FutureBuilder(
-            future: Future.delayed(Duration(milliseconds: 200)),
-            builder: (context, snapshot) {
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    return AlertDialog(
-                      title: const Text(
-                        'Choose your child',
-                        style: kTextStyle1,
-                      ),
-                      content: Container(
-                        height: 150,
-                        child: Column(
-                          children: childList.map((child) {
-                            return Row(
-                              children: [
-                                Radio(
-                                  value: child.childId,
-                                  groupValue: _selectedChildId,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedChildId = value as String?;
-                                      _selectedChildName= child.childName;
-                                    });
-                                  },
-                                ),
-                                Text(
-                                  child.childName,
-                                  style: kTextStyle1,
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text('Cancel'),
-                        ),
-                        CustomButton(
-                          text: 'Done',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  if (buttonPressed == 'consultation') {
-                                    return ConsultationAppointment(
-                                      branchId: branchId,
-                                      parentId: parentId,
-                                      childId: _selectedChildId ?? '',
-                                      therapyCost: therapyCost,
-                                      therapistId: therapistId,
-                                      therapyId: therapyId,
-                                      branchName: widget.branchName,
-                                      childname: _selectedChildName?? '',
-                                      therapyName: widget.therapy.therapyName,
-                                      therapistName: therapistName,
-                                    );
-                                  } else {
-                                    // Navigate to some other page for booking a consultation
-                                    return  ScheduleTherapy(
-                                      branchId: branchId,
-                                      parentId: parentId,
-                                      childId: _selectedChildId ?? '',
-                                      therapyCost: therapyCost,
-                                      therapistId: therapistId,
-                                      therapyId: therapyId,
-                                      branchName: widget.branchName,
-                                      childname: _selectedChildName?? '',
-                                      therapyName: widget.therapy.therapyName,
-                                      therapistName: therapistName,
-                                    );
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                          width: 50,
-                        ),
-                      ],
-                    );
-                  }
-                },
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: const Text(
+                  'Choose your child',
+                  style: kTextStyle1,
+                ),
+                content: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.5,
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: childList.map((child) {
+                        return Row(
+                          children: [
+                            Radio(
+                              value: child.childId,
+                              groupValue: _selectedChildId,
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedChildId = value as String?;
+                                  _selectedChildName = child.childName;
+                                });
+                              },
+                            ),
+                            Text(
+                              child.childName,
+                              style: kTextStyle1,
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  CustomButton(
+                    text: 'Done',
+                    onPressed: () {
+                      Navigator.pop(context);
+                      navigateToNextPage(
+                        branchId,
+                        parentId,
+                        therapistId,
+                        therapyId,
+                        therapyCost,
+                        buttonPressed,
+                        therapistName,
+                        childname,
+                      );
+                    },
+                    width: 50,
+                  ),
+                ],
               );
             },
           );
@@ -153,6 +141,53 @@ class _BranchTherapiesState extends State<BranchTherapies> {
       print('Error fetching child list: $error');
     }
   }
+
+  void navigateToNextPage(
+      String branchId,
+      String parentId,
+      String therapistId,
+      String therapyId,
+      String therapyCost,
+      String buttonPressed,
+      String therapistName,
+      String childname,
+      ) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          if (buttonPressed == 'consultation') {
+            return ConsultationAppointment(
+              branchId: branchId,
+              parentId: parentId,
+              childId: _selectedChildId ?? '',
+              therapyCost: therapyCost,
+              therapistId: therapistId,
+              therapyId: therapyId,
+              branchName: widget.branchName,
+              childname: _selectedChildName ?? '',
+              therapyName: widget.therapy.therapyName,
+              therapistName: therapistName,
+            );
+          } else {
+            // Navigate to some other page for booking a consultation
+            return ScheduleTherapy(
+              branchId: branchId,
+              parentId: parentId,
+              childId: _selectedChildId ?? '',
+              therapistId: therapistId,
+              therapyId: therapyId,
+              branchName: widget.branchName,
+              childname: _selectedChildName ?? '',
+              therapyName: widget.therapy.therapyName,
+              therapistName: therapistName,
+            );
+          }
+        },
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +224,8 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
                   "assets/images/womentherapy.png",
-                  width: 500,
+                  width: 400,
+                  height: 180,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -230,7 +266,6 @@ class _BranchTherapiesState extends State<BranchTherapies> {
                         Therapist.fromJson(therapistData[index]);
                         return TherapistCard(
                           therapist: therapist,
-                          therapyAmount: widget.therapy.cost,
                           branchId: widget.branchId,
                           parentId: widget.parentid,
                           childId: _selectedChildId ?? '',

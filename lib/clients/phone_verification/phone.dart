@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/phone_verification/verify.dart';
+import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'dart:convert';
 
@@ -10,7 +11,8 @@ import 'package:provider/provider.dart';
 class PhoneNumberVerification extends StatefulWidget {
   final String otpFor;
   BuildContext ctx;
-  PhoneNumberVerification({required this.ctx, required this.otpFor, Key? key})
+  final String? userid;
+  PhoneNumberVerification({required this.ctx, required this.otpFor, Key? key, this.userid})
       : super(key: key);
   static String verify = "";
 
@@ -38,8 +40,8 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
       context,
     );
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(),
+      appBar: customAppBar(
+        title: 'Phone Verification'
       ),
       body: SafeArea(
 
@@ -54,15 +56,9 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   kheight30,
+                  kheight30,
                   const Text(
-                    "Phone Verification",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  const Text(
-                    "We need to register your phone before getting started!",
+                    "We need to verify your phone before getting started!",
                     style: TextStyle(
                       fontSize: 16,
                     ),

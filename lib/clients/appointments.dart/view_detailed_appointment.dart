@@ -17,9 +17,6 @@ class AppointmentDetailScreen extends StatefulWidget {
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    print(widget.appointment.appointmentId);
-    print(widget.appointment.appointmentDate);
-    print(widget.appointment.appointmentTime);
     return Scaffold(
       appBar: customAppBar(
           title: 'Appointment Details'
@@ -27,7 +24,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,36 +175,26 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             ),
             kheight10,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: CustomButton(
-                    text: 'Cancel',
-                    onPressed: () async {
-                      // Call the cancellation method
-                      await Parent().cancelAppointment(
-                          widget.appointment.appointmentId,
-                          widget.appointment.parentId,
-                          widget.appointment.appointmentDate,
-                          widget.appointment.appointmentTime.substring(0, 5)
-                      );
-
-                      // Show snackbar to confirm cancellation
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Appointment canceled successfully'),
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-
-                      // Navigate to the dashboard after cancellation
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        '/dashboard',
-                            (route) => false, // Pop all routes and replace with the dashboard
-                      );
-                    },
-                  ),
+                CustomButton(
+                  text: 'Cancel',
+                  onPressed: () async {
+                    // Call the cancellation method
+                    await Parent().cancelAppointment(
+                        widget.appointment.appointmentId,
+                        widget.appointment.parentId,
+                        widget.appointment.appointmentDate,
+                        widget.appointment.appointmentTime.substring(0, 5)
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Appointment canceled successfully'),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
                 ),
               ],
             ),

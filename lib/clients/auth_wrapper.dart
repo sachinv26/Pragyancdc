@@ -28,7 +28,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         if (authProvider.isCheckingLogin) {
           return Center(child: Loading());
         } else if (authProvider.isLoggedIn) {
-          return DashBoard(ctx: context);
+          return DashBoard();
         } else {
           return ClientLogin(ctx: context,);
         }

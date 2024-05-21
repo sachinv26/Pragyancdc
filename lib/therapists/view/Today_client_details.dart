@@ -27,7 +27,7 @@ class _TodayClientDetailsState extends State<TodayClientDetails> {
                 padding: const EdgeInsets.all(12.0),
                 child: Row(
                   children: [
-                    Image.asset('assets/images/service-1.png'),
+                    // Image.asset('assets/images/service-1.png'),
                     kwidth10,
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +124,7 @@ class _TodayClientDetailsState extends State<TodayClientDetails> {
                       _selectedStatus = newValue!;
                     });
                   },
-                  items: <String>['Completed','Child Absent']
+                  items: <String>['Session Started','Completed','Canelled due to Child Absent']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

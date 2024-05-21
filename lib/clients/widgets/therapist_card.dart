@@ -9,14 +9,13 @@ class TherapistCard extends StatelessWidget {
   final String childId;
   final String therapistId;
   final String therapyId;
-  final String therapyAmount;
   final VoidCallback onScheduleTherapyPressed;
   final VoidCallback? onBookConsultationPressed;
 
   const TherapistCard({
     required this.therapist,
     required this.onScheduleTherapyPressed,
-    this.onBookConsultationPressed, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId, required this.therapyAmount,
+    this.onBookConsultationPressed, required this.branchId, required this.parentId, required this.childId, required this.therapistId, required this.therapyId,
   });
 
   @override

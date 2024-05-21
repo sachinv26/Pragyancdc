@@ -3,39 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:pragyan_cdc/clients/dashboard/home/appointment/consultation_appointment_summary.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 
-class ConsultationAppointment extends StatefulWidget {
+class RescheduleAppointment extends StatefulWidget {
   final String branchId;
   final String parentId;
   final String childId;
   final String therapistId;
   final String therapyId;
-  final String therapyCost;
-  final String branchName;
-  final String childname;
-  final String therapistName;
-  final String therapyName;
-  ConsultationAppointment({
+  RescheduleAppointment({
     Key? key,
     required this.branchId,
     required this.parentId,
     required this.childId,
     required this.therapistId,
     required this.therapyId,
-    required this.therapyCost, required this.branchName, required this.childname, required this.therapistName, required this.therapyName,
   }) : super(key: key);
 
   @override
-  State<ConsultationAppointment> createState() =>
-      _ConsultationAppointmentState();
+  State<RescheduleAppointment> createState() =>
+      _RescheduleAppointmentState();
 }
-class _ConsultationAppointmentState extends State<ConsultationAppointment> {
+class _RescheduleAppointmentState extends State<RescheduleAppointment> {
   CalendarFormat _format = CalendarFormat.month;
   late DateTime _focusDay;
   late DateTime _currentDay;
@@ -75,6 +68,7 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
     super.initState();
     _focusDay = DateTime.now();
     _currentDay = DateTime.now();
+    // Fetch booked slots data when widget initializes
     fetchTherapistAppointments();
   }
 
@@ -90,8 +84,8 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
         'https://app.cdcconnect.in/apiservice/consultation/get_therapistconsolidated_info';
 
     final Map<String, dynamic> body = {
-      "prag_branch": widget.branchId,
-      "prag_therapy": widget.therapyId,
+      "prag_branch": "1",
+      "prag_therapy": "1",
       "prag_therapiest": widget.therapistId,
       "prag_fromdate": DateFormat('yyyy-MM-dd').format(_currentDay),
       "prag_todate": DateFormat('yyyy-MM-dd').format(_currentDay),
@@ -185,72 +179,6 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
     }
   }
 
-  Future<void> fetchParentAppointments(DateTime startOfWeek, DateTime endOfWeek) async {
-    setState(() {
-      isFetchingData = true;
-    });
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_parentAppoinment_dateview';
-
-    final Map<String, dynamic> body = {
-      "prag_branch": "0",
-      "prag_therapy": "0",
-      "prag_therapiest": "0",
-      "prag_child": "0",
-      "prag_parent" : widget.parentId,
-      "prag_fromdate": DateFormat('yyyy-MM-dd').format(startOfWeek),
-      "prag_todate": DateFormat('yyyy-MM-dd').format(endOfWeek),
-      "prag_dateorder": 1,
-      "prag_status" :1
-    };
-
-    try {
-      final userId = await const FlutterSecureStorage().read(key: 'userId');
-      final userToken = await const FlutterSecureStorage().read(key: 'authToken');
-
-      if (userId != null && userToken != null) {
-        final Map<String, String> headers = {
-          'praguserid': userId,
-          'pragusertoken': userToken,
-          'pragusercallfrom':"parent",
-          'Content-Type': 'application/json',
-        };
-
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          body: json.encode(body),
-          headers: headers,
-        );
-
-        if (this.mounted) {
-          if (response.statusCode == 200) {
-            final Map<String, dynamic> responseData = json.decode(response.body);
-            List<dynamic>? ParentSchedule = responseData['parent_schedule'];
-            print(responseData);
-
-            if (ParentSchedule != null) {
-              setState(() {
-                bookedSlots = ParentSchedule
-                    .map((appointment) =>
-                '${appointment['appointment_date']} ${appointment['appointment_time'].toString().substring(0, 5)}')
-                    .toList();
-              });
-            }
-          } else {
-            print('Request failed with status: ${response.statusCode}');
-          }
-        }
-      }
-    } catch (e) {
-      print('Error: $e');
-    } finally {
-      if (this.mounted) {
-        setState(() {
-          isFetchingData = false;
-        });
-      }
-    }
-  }
-
   bool isWithinShift(DateTime dateTime) {
     TimeOfDay slotTime = TimeOfDay.fromDateTime(dateTime);
     print('Checking if $slotTime is within shift...');
@@ -306,6 +234,7 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
         }
       }
     }
+
     print('$slotTime is not within any shift');
     return false;
   }
@@ -313,9 +242,8 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.therapistId);
     return Scaffold(
-      appBar: customAppBar(title: 'Book Consultation'),
+      appBar: customAppBar(title: 'Reschedule Appointment'),
       body: CustomScrollView(
         slivers: <Widget>[
           SliverToBoxAdapter(
@@ -432,32 +360,11 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
                       String formattedDate =
                       DateFormat('yyyy-MM-dd').format(_selectedDate!);
                       String formattedTime = chosenTiming;
-                      Map<String, List<String>> dateTimeMap = {
-                        formattedDate: [formattedTime]
-                      };
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookConsultation(
-                            selecteddateslots:
-                            dateTimeMap, // Pass the dateTimeMap to the BookAppointment screen
-                            branchId: widget.branchId,
-                            parentId: widget.parentId,
-                            childId: widget.childId,
-                            therapistId: widget.therapistId,
-                            therapyId: widget.therapyId,
-                            therapyCost: widget.therapyCost,
-                            branchName: widget.branchName,
-                            therapyName: widget.therapyName,
-                            therapistName: widget.therapistName,
-                            childname: widget.childname,
-                          ),
-                        ),
-                      );
+                      Navigator.pop(context, {'date': formattedDate, 'time': formattedTime});
                     }
                   }
                 },
-                text: 'Make Appointment',
+                text: 'Reschedule',
               ),
             ),
           ),

@@ -237,7 +237,13 @@ class ApiServices {
         String message = jsonResponse['message'] ?? 'Unknown error';
         if (status == 1) {
           return jsonResponse;
-        } else if (status == -2) {
+        } else if(status ==-1){
+          return {
+            'status': -1,
+            'message': message,
+            'parent_user_id': jsonResponse['parent_user_id'],
+          };
+        }else if (status == -2) {
           return {
             'status': 0,
             'message':
@@ -495,8 +501,8 @@ class ApiServices {
       'pragusertoken': token,
     };
     final Map<String, dynamic> requestData = {
-      "prag_parent_mobile": mobileNumber,
-      "prag_parent_password": encodedNewPassword
+      "prag_mobile": mobileNumber,
+      "prag_password": encodedNewPassword
     };
     try {
       final response = await http.post(

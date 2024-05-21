@@ -9,7 +9,7 @@ class SuccessfulPayment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Payment Success',showLeading: false),
+      appBar: customAppBar(title: 'Payment Success',showLeading: true),
       body: Center(
         child: Column(
           children: [
@@ -25,11 +25,7 @@ class SuccessfulPayment extends StatelessWidget {
               alignment: Alignment.center,
               child: CustomButton(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/dashboard',
-                        (route) => false, // Pop all routes and replace with the dashboard
-                  );
+                 Navigator.pop(context);
                 },
                 text: 'Done',
               ),

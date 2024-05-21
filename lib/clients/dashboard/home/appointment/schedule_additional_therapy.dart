@@ -9,7 +9,7 @@ import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class ScheduleTherapy extends StatefulWidget {
+class ScheduleAdditionalTherapy extends StatefulWidget {
   final String branchId;
   final String parentId;
   final String childId;
@@ -19,19 +19,20 @@ class ScheduleTherapy extends StatefulWidget {
   final String childname;
   final String therapistName;
   final String therapyName;
-  const ScheduleTherapy(
+  const ScheduleAdditionalTherapy(
       {Key? key,
-      required this.branchId,
-      required this.parentId,
-      required this.childId,
-      required this.therapistId,
-      required this.therapyId, required this.branchName, required this.childname, required this.therapistName, required this.therapyName})
+        required this.branchId,
+        required this.parentId,
+        required this.childId,
+        required this.therapistId,
+        required this.therapyId,
+        required this.branchName, required this.childname, required this.therapistName, required this.therapyName})
       : super(key: key);
   @override
-  State<ScheduleTherapy> createState() => _ScheduleTherapyState();
+  State<ScheduleAdditionalTherapy> createState() => _ScheduleAdditionalTherapyState();
 }
 
-class _ScheduleTherapyState extends State<ScheduleTherapy> {
+class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
   DateTime today = DateTime.now();
   DateTime? selectedDate;
   TimeOfDay? firstShiftStart;
@@ -282,7 +283,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
   bool isWithinNextSevenDays(DateTime date) {
     if (selectedDate == null) return false;
     final nextSevenDays =
-        List.generate(7, (index) => selectedDate!.add(Duration(days: index)));
+    List.generate(7, (index) => selectedDate!.add(Duration(days: index)));
     return nextSevenDays.contains(date);
   }
 
@@ -407,7 +408,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
               const SizedBox(height: 10),
               DaysSlot(
                   selectedWeekDates:
-                      _getSelectedWeekDates(selectedDate ?? DateTime.now())),
+                  _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [
@@ -449,7 +450,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
               const SizedBox(height: 10),
               DaysSlot(
                   selectedWeekDates:
-                      _getSelectedWeekDates(selectedDate ?? DateTime.now())),
+                  _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [
@@ -491,7 +492,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
               const SizedBox(height: 10),
               DaysSlot(
                   selectedWeekDates:
-                      _getSelectedWeekDates(selectedDate ?? DateTime.now())),
+                  _getSelectedWeekDates(selectedDate ?? DateTime.now())),
               const SizedBox(height: 10),
               Column(
                 children: [

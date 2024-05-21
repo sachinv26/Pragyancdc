@@ -11,22 +11,26 @@ class CustomTextFormField extends StatelessWidget {
   final double width;
   final double height;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final bool enabled;
   final String? Function(String?)? validator;
-  const CustomTextFormField(
-      {Key? key,
-      this.validator,
-      this.controller,
-      this.hintText = '',
-      this.keyboardType = TextInputType.text,
-      this.obscureText = false,
-      this.iconData,
-      this.height = 55.0,
-      this.prefixIcon,
-      this.enabled = true,
-      this.errorText,
-      this.width = double.infinity})
-      : super(key: key);
+  final Function()? onTap;
+
+  const CustomTextFormField({
+    Key? key,
+    this.validator,
+    this.controller,
+    this.hintText = '',
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.iconData,
+    this.height = 55.0,
+    this.prefixIcon,
+    this.enabled = true,
+    this.errorText,
+    this.width = double.infinity,
+    this.onTap, this.suffixIcon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,14 +46,15 @@ class CustomTextFormField extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         decoration: InputDecoration(
-            errorText: errorText,
-            contentPadding: const EdgeInsets.all(10),
-            hintText: hintText,
-            hintStyle: khintTextStyle,
-            prefixIcon: prefixIcon, // Change the color as needed
-            suffixIcon: iconData,
-            border: InputBorder.none,
-            constraints: BoxConstraints(maxHeight: height, maxWidth: width)),
+          errorText: errorText,
+          contentPadding: const EdgeInsets.all(10),
+          hintText: hintText,
+          hintStyle: khintTextStyle,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          border: InputBorder.none,
+          constraints: BoxConstraints(maxHeight: height, maxWidth: width),
+        ),
       ),
     );
   }

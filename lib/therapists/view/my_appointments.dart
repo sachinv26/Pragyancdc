@@ -46,36 +46,18 @@ class _MyAppointmentsState extends State<MyAppointments> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.green.shade700,
           elevation: 0, // No elevation
-          leading: IconButton(
-            icon: const CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage(
-                'assets/images/psychologist-cute-young-professional-brunette-lady-providing-online-sessions-glasses 1.png',
-              ),
-            ),
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-          ),
           title: const Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Dr. Amrita Rao',
+                'My Appointments',
                 style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
+                    fontSize: 20,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Speech & Language Therapy',
-                maxLines: 2,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 13,
-                ),
               ),
             ],
           ),

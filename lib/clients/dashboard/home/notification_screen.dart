@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/api/parent_api.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/notifications_model.dart';
@@ -153,23 +154,24 @@ class NotificationScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '🕑: ${appointment.appointmentTime}',
+                                '🕑: ${appointment.appointmentTime.substring(0, 5)}',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 11,
                                 ),
                               ),
-                              SizedBox(height: 10),
+
+                              kheight10,
                               Text(
-                                '📆: ${appointment.appointmentDate}',
+                                '📆: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(appointment.appointmentDate))}',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 11,
                                 ),
                               ),
-                              SizedBox(height: 10),
+                              kheight10,
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

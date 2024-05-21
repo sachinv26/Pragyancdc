@@ -68,12 +68,15 @@ class Pragyan extends StatelessWidget {
         '/introduction': (context) => const OnBoardingScreen(),
         '/signupSelection': (context) => const SignupSelection(),
         '/clientLogin/:context': (context) => ClientLogin(
-            ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
+            ctx: ModalRoute.of(context)?.settings.arguments as BuildContext
+        ),
         '/dashboard/:context': (context) => DashBoard(
-            ctx: ModalRoute.of(context)?.settings.arguments as BuildContext),
+            // ctx: ModalRoute.of(context)?.settings.arguments as BuildContext
+        ),
         '/addChildScreen': (context) => const AddChildScreen(),
         '/therapistDashboard' :(context) => TherapistDashBoard(),
-        '/dashboard': (context) => DashBoard(ctx: context), // Provide the context here
+        '/dashboard': (context) => DashBoard(),
+        // Provide the context here
       },
     );
   }

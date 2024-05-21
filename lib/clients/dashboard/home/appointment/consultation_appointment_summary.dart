@@ -153,7 +153,7 @@ class BookConsultation extends StatelessWidget {
                       // Check if the appointment booking was successful
                       if (response['status'] == 1) {
                         // If successful, navigate to the PaymentModes screen
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => SuccessfulPayment(),
                         ));
                       } else {
