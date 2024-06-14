@@ -16,7 +16,9 @@ class _AuthWrapperState extends State<AuthWrapper> {
   @override
   void initState() {
     super.initState();
-    Provider.of<AuthProvider>(context, listen: false).checkLoginStatus();
+    Future.delayed(Duration.zero, () {
+      Provider.of<AuthProvider>(context, listen: false).checkLoginStatus();
+    });
   }
 
   @override

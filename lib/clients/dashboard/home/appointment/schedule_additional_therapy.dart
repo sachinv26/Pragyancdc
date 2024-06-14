@@ -76,6 +76,8 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
     fetchParentAppointments(startOfWeek, endOfWeek);
   }
 
+
+
   Future<void> fetchTherapistAppointments(DateTime startOfWeek, DateTime endOfWeek) async {
     setState(() {
       isFetchingData = true;
@@ -195,7 +197,6 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
           if (response.statusCode == 200) {
             final Map<String, dynamic> responseData = json.decode(response.body);
             List<dynamic>? ParentSchedule = responseData['parent_schedule'];
-            print(responseData);
 
             if (ParentSchedule != null) {
               setState(() {
@@ -287,14 +288,39 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
     return nextSevenDays.contains(date);
   }
 
-
+  void navigateToNextScreen(
+      BuildContext context, {
+        required Map<String, List<List<String>>> formattedData,
+        required String branchId,
+        required String parentId,
+        required String childId,
+        required String therapistId,
+        required String therapyId,
+        required String branchName,
+        required String childname,
+        required String therapistName,
+        required String therapyName,
+      }) {
+    Navigator.of(context).pushNamed(
+      '/summaryscreen',
+      arguments: {
+        'formattedData': formattedData,
+        'branchId': branchId,
+        'parentId': parentId,
+        'childId': childId,
+        'therapistId': therapistId,
+        'therapyId': therapyId,
+        'branchName': branchName,
+        'childname': childname,
+        'therapistName': therapistName,
+        'therapyName': therapyName,
+      },
+    );
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    print(widget.childId);
-    print(AlreadybookedSlotsbyParent);
-    print(AlreadybookedSlots);
     return Scaffold(
       appBar: customAppBar(title: 'Schedule Therapy'),
       body: Padding(
@@ -537,20 +563,12 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
                           .map((slot) => [slot['time']!, slot['cost']!])
                           .toList();
                     });
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => TherapyAppointmentSummary(
-                        selecteddateslots: formattedData,
-                        branchId: widget.branchId,
-                        parentId: widget.parentId,
-                        childId: widget.childId,
-                        therapistId: widget.therapistId,
-                        therapyId: widget.therapyId,
-                        branchName: widget.branchName,
-                        therapyName: widget.therapyName,
-                        therapistName: widget.therapistName,
-                        childname: widget.childname,
-                      ),
-                    ));
+                    if(formattedData.isNotEmpty){
+                      Navigator.pop(context,formattedData);
+                    }
+                    else{
+                      Navigator.pop(context);
+                    }
                   },
                   text: 'Book Slots',
                 ),

@@ -28,6 +28,14 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We need camera access to take pictures.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need photo library access to select pictures.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>We need photo library access to save pictures.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your app needs access to your location to [explain the reason for needing location access].</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

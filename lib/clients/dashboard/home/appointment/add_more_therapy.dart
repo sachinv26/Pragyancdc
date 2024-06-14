@@ -46,10 +46,7 @@ class _AddTherapyState extends State<AddTherapy> {
   }
 
   // Function to handle selected therapy
-  void _handleTherapySelected(Therapy selectedTherapy) {
-    // Pass the selected therapy back to the BookAppointment page
-    Navigator.pop(context, selectedTherapy);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +76,12 @@ class _AddTherapyState extends State<AddTherapy> {
                     branchName: widget.branchName,
                     therapy: therapies[index],
                     parentId: widget.parentId,
-                    onTherapySelected: _handleTherapySelected,
-                    therapyId: widget.therapyId,
+                    // onTherapySelected: _handleTherapySelected,
+                    therapyId: therapies[index].therapyId,
                     childId: widget.childId,
                     therapistName: widget.therapistName,
                     childname: widget.childname,
-                    therapistId: widget.therapistId,
+                    therapistId:widget.therapistId,
                   );
                 },
               );

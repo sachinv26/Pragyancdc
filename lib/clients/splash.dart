@@ -18,8 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Using an async function to wait for SharedPreferences instance
     _checkIntroduction();
   }
 
@@ -66,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 35,
               ),
               Image.asset(
-                'assets/images/Pragyan_Logo.png',
+                'assets/images/cdc-logo.png',
               ),
               // const SizedBox(
               //   height: 50,

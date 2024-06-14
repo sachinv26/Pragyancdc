@@ -14,6 +14,9 @@ class NotificationScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.white, // Set the back button color to white
+          ),
           centerTitle: true,
           flexibleSpace: Container(
             decoration: BoxDecoration(

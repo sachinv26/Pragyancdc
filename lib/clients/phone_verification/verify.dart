@@ -16,7 +16,6 @@ class VerifyNumber extends StatefulWidget {
   String phone;
   BuildContext ctx;
 
-
   VerifyNumber(
       {required this.otpFor,
       required this.ctx,
@@ -41,6 +40,9 @@ class _VerifyNumberState extends State<VerifyNumber> {
     decoded = decode64(widget.originalCode);
     super.initState();
   }
+
+  final TextEditingController _otpController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,30 +86,23 @@ class _VerifyNumberState extends State<VerifyNumber> {
                 height: 30,
               ),
               Pinput(
+                controller: _otpController,
                 length: 6,
                 onChanged: (value) {
-                  //  print(value);
                   code = value;
                 },
-                // defaultPinTheme: defaultPinTheme,
-                // focusedPinTheme: focusedPinTheme,
-                // submittedPinTheme: submittedPinTheme,
-
-                showCursor: true,
-                //  onCompleted: (pin) => print(pin),
               ),
               Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
                       onPressed: () async {
                         final response = await ApiServices().generateOtp(
-                            mobile: widget.phone, userId: '0', otpFor: '1');
-                        // final status = response['status'];
-                        // print('status is $status');
+                            mobile: widget.phone, userId: '0', otpFor: widget.otpFor);
                         if (response['status'] == 1) {
                           setState(() {
                             widget.originalCode = response['gen'];
                             decoded = decode64(widget.originalCode);
+                            _otpController.clear();
                           });
                           print('successfully generated');
                         } else {

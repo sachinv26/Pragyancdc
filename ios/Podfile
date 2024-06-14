@@ -39,6 +39,22 @@ end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
+    # Geolocator specific settings
+    if target.name == "geolocator_apple"
+      target.build_configurations.each do |config|
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'BYPASS_PERMISSION_LOCATION_ALWAYS=1']
+      end
+    end
+
+    # Flutter specific settings
     flutter_additional_ios_build_settings(target)
+
+    # Remove code signing for Flutter bundle (if applicable)
+    if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+      target.build_configurations.each do |config|
+        config.build_settings['CODE_SIGN_IDENTITY'] = ''
+      end
+    end
   end
 end
+

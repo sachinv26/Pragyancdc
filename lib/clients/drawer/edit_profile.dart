@@ -41,7 +41,7 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: customAppBar(title: 'Edit Profile'),
       body: Padding(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -127,6 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+
                         const Text(
                           'Preferred Location',
                         ),

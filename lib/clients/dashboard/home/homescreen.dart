@@ -14,6 +14,8 @@ import 'package:pragyan_cdc/model/user_details_model.dart';
 import 'package:pragyan_cdc/provider/branch_provider.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+
 class HomeScreen extends StatefulWidget {
   // final BuildContext ctx;
   const HomeScreen({super.key});
@@ -26,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String branchId = ''; // Fix: Remove final keyword
   String branchName = ''; // Fix: Remove final keyword
+
+
   final List<String> imgList = [
     'assets/images/children.png',
     'assets/images/children-learning-globe-with-woman-bedroom 1.png',
@@ -172,13 +176,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Stack(
                                   children: <Widget>[
                                     Image.asset(item, fit: BoxFit.cover, width: 1000),
-                                    Positioned(
-                                      left: 8,
-                                      top: 10,
-                                      child: Image.asset(
-                                        'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
-                                      ),
-                                    ),
+                                    // Positioned(
+                                    //   left: 8,
+                                    //   top: 10,
+                                    //   child: Image.asset(
+                                    //     'assets/images/Pragyan-Logo-New__1_-removebg-preview 1.png',
+                                    //   ),
+                                    // ),
 
                                   ],
                                 ),
@@ -380,10 +384,6 @@ class ServiceItem extends StatefulWidget {
 class _ServiceItemState extends State<ServiceItem> {
   @override
   Widget build(BuildContext context) {
-    print("branch id is this " +
-        widget.branchId +
-        "branch name is " +
-        widget.branchName);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(

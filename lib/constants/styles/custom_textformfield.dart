@@ -40,7 +40,15 @@ class CustomTextFormField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: TextFormField(
-        validator: validator,
+        validator: (value) {
+          // Trim the value to remove leading and trailing spaces
+          final trimmedValue = value?.trim();
+          // Pass the trimmed value to the original validator
+          if (validator != null) {
+            return validator!(trimmedValue);
+          }
+          return null;
+        },
         enabled: enabled,
         controller: controller,
         keyboardType: keyboardType,

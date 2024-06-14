@@ -324,7 +324,7 @@ class _ConsultationAppointmentState extends State<ConsultationAppointment> {
               children: <Widget>[
                 _tableCalendar(),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 25),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Center(
                     child: Text(
                       'Select Consultation Time',

@@ -15,7 +15,7 @@ class _SupportScreenState extends State<SupportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-        title: 'My Appointment',
+        title: 'Support screen',
         showLeading: false,
       ),
       body: Padding(

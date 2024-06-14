@@ -30,7 +30,9 @@ class _SignupSecondState extends State<SignupSecond> {
   Widget build(BuildContext context) {
     var signUpDataProvider = Provider.of<SignUpDataProvider>(context);
     return Scaffold(
-      appBar: customAppBar(),
+      appBar: customAppBar(
+        title: 'Create Password'
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -42,29 +44,13 @@ class _SignupSecondState extends State<SignupSecond> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text(
-                    'Welcome Back!',
-                    style: kTextStyle2,
-                  ),
-                  const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 48, 103, 50)),
-                  ),
-                  const Text('Create a password.'),
+                  const Text('Create a password',style: kTextStyle1,),
                   CustomTextFormField(
                     hintText: 'Create Password',
                     controller: signUpDataProvider.passwordController,
                     obscureText: true,
                     iconData: const Icon(Icons.visibility_off),
                   ),
-                  // const CustomTextFormField(
-                  //   hintText: 'Confirm Password',
-
-                  //   obscureText: true,
-                  // ),
                   Card(
                     elevation: 4,
                     shape: RoundedRectangleBorder(

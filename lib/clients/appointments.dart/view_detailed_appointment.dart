@@ -12,9 +12,13 @@ class AppointmentDetailScreen extends StatefulWidget {
 
   @override
   State<AppointmentDetailScreen> createState() => _AppointmentDetailScreenState();
+
+
 }
 
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,12 +185,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                   text: 'Cancel',
                   onPressed: () async {
                     // Call the cancellation method
-                    await Parent().cancelAppointment(
-                        widget.appointment.appointmentId,
-                        widget.appointment.parentId,
-                        widget.appointment.appointmentDate,
-                        widget.appointment.appointmentTime.substring(0, 5)
-                    );
+                    int appointmentId = int.parse(widget.appointment.appointmentId);
+                    // Call the cancellation method with the converted appointmentId
+                    await Parent().changeAppointmentStatus([appointmentId]);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Appointment canceled successfully'),

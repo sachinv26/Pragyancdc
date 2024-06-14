@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
+import 'package:pragyan_cdc/clients/appointments.dart/multicancel_appointments.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/child_list.dart';
 import 'package:pragyan_cdc/clients/drawer/change_password.dart';
 import 'package:pragyan_cdc/clients/drawer/edit_profile.dart';
@@ -54,65 +55,47 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       // crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         userProfile.profileImage == ""
-                            ? GestureDetector(
-                                child: const CircleAvatar(
-                                  radius: 35,
-                                  backgroundImage: AssetImage(
-                                      'assets/images/empty-user.jpeg'),
-                                ),
-                                onTap: () async {
-                                  await _requestPermissions();
-                                  final result = await _pickImageFromGallery();
-                                  if (result) {
-                                    setState(() {});
-                                  }
-                                },
-                              )
-                            : GestureDetector(
-                                onTap: () async {
-                                  await _requestPermissions();
-                                  final result = await _pickImageFromGallery();
-                                  if (result) {
-                                    setState(() {});
-                                  }
-                                },
-                                child: CircleAvatar(
-                                  radius: 30,
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      "https://app.cdcconnect.in/${userProfile.profileImage}",
-                                      width: 70,
-                                      height: 70,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (BuildContext context,
-                                          Widget child,
-                                          ImageChunkEvent? loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        } else {
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                  : null,
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      errorBuilder: (BuildContext context,
-                                          Object error,
-                                          StackTrace? stackTrace) {
-                                        return const Icon(Icons.error);
-                                      },
-                                    ),
-                                  ),
+                            ? const CircleAvatar(
+                              radius: 35,
+                              backgroundImage: AssetImage(
+                                  'assets/images/empty-user.jpeg'),
+                            )
+                            : CircleAvatar(
+                              radius: 30,
+                              child: ClipOval(
+                                child: Image.network(
+                                  "https://app.cdcconnect.in/${userProfile.profileImage}",
+                                  width: 70,
+                                  height: 70,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object error,
+                                      StackTrace? stackTrace) {
+                                    return const Icon(Icons.error);
+                                  },
                                 ),
                               ),
+                            ),
                         // Column(
                         //   crossAxisAlignment: CrossAxisAlignment.start,
                         //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -189,9 +172,18 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
-                          return const ChildList();
+                          return const MultiCancelAppointments();
                         },
                       ));
+                    },
+                  ),
+                  ListTile(
+                    visualDensity:
+                    const VisualDensity(horizontal: 0, vertical: -4),
+                    leading: const Icon(Icons.currency_rupee),
+                    title: const Text('Transaction History'),
+                    onTap: () {
+                      // Handle About Pragyan
                     },
                   ),
                   ListTile(
@@ -203,6 +195,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       // Handle About Pragyan
                     },
                   ),
+
                   ListTile(
                     visualDensity:
                         const VisualDensity(horizontal: 0, vertical: -4),
@@ -261,50 +254,50 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
         });
   }
 
-  Future _pickImageFromGallery() async {
-    final api = ApiServices();
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  // Future _pickImageFromGallery() async {
+  //   final api = ApiServices();
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  //
+  //   if (image != null) {
+  //     setState(() {
+  //       _selectedImage = File(image.path);
+  //     });
+  //
+  //     final token = await const FlutterSecureStorage().read(key: 'authToken');
+  //     final userId = await const FlutterSecureStorage().read(key: 'userId');
+  //     if (userId != null && token != null) {
+  //       try {
+  //         // Read the raw image data
+  //         // List<int> imageBytes = await File(image.path).readAsBytes();
+  //         // Convert the XFile to a File
+  //         File imageFile = File(image.path);
+  //         //call api
+  //         Map<String, dynamic> response = await api.callImageUploadApi(
+  //             {"child_id": 0, "call_from": 1}, imageFile, userId, token);
+  //         if (response['status'] == 1) {
+  //           debugPrint('image uploaded');
+  //           debugPrint('image saved in ${response["path"]}');
+  //         } else {
+  //           print('failed ${response['message']}');
+  //         }
+  //       } catch (e) {
+  //         debugPrint('Error uploading image: $e');
+  //       }
+  //     }
+  //     return true;
+  //   }
+  // }
 
-    if (image != null) {
-      setState(() {
-        _selectedImage = File(image.path);
-      });
-
-      final token = await const FlutterSecureStorage().read(key: 'authToken');
-      final userId = await const FlutterSecureStorage().read(key: 'userId');
-      if (userId != null && token != null) {
-        try {
-          // Read the raw image data
-          // List<int> imageBytes = await File(image.path).readAsBytes();
-          // Convert the XFile to a File
-          File imageFile = File(image.path);
-          //call api
-          Map<String, dynamic> response = await api.callImageUploadApi(
-              {"child_id": 0, "call_from": 1}, imageFile, userId, token);
-          if (response['status'] == 1) {
-            debugPrint('image uploaded');
-            debugPrint('image saved in ${response["path"]}');
-          } else {
-            print('failed ${response['message']}');
-          }
-        } catch (e) {
-          debugPrint('Error uploading image: $e');
-        }
-      }
-      return true;
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    var status = await Permission.storage.status;
-    if (status != PermissionStatus.granted) {
-      status = await Permission.storage.request();
-      if (status != PermissionStatus.granted) {
-        // Handle the case where the user denied permissions
-        print('Storage permissions denied');
-        return; // Or show a custom message to the user
-      }
-    }
-  }
+  // Future<void> _requestPermissions() async {
+  //   var status = await Permission.storage.status;
+  //   if (status != PermissionStatus.granted) {
+  //     status = await Permission.storage.request();
+  //     if (status != PermissionStatus.granted) {
+  //       // Handle the case where the user denied permissions
+  //       print('Storage permissions denied');
+  //       return; // Or show a custom message to the user
+  //     }
+  //   }
+  // }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
@@ -29,11 +28,6 @@ class _ClientLoginState extends State<ClientLogin> {
   final TextEditingController _passwordController = TextEditingController();
 
 
-  // void _togglePasswordVisibility() {
-  //   setState(() {
-  //     _obscureText = !_obscureText;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +46,11 @@ class _ClientLoginState extends State<ClientLogin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Image.asset('assets/images/2 94701.png'),
-                  const Text(
-                    'Login',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Text('Login to access your account.'),
+                  Container(child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Image.asset('assets/images/cdc-logo.png'),
+                  )),
+                  const Text('Login to access your account',style: kTextStyle1,),
                   CustomTextFormField(
                     controller: _mobileController,
                     hintText: 'Mobile Number',

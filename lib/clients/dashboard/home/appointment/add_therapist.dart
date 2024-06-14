@@ -3,12 +3,12 @@ import 'package:pragyan_cdc/api/therapy_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/schedule_additional_therapy.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/model/therapist_model.dart';
-import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class AddTherapist extends StatefulWidget {
+  Map<String,dynamic> data1;
   final String branchId;
   final String parentId;
   final String childId;
@@ -19,7 +19,8 @@ class AddTherapist extends StatefulWidget {
   final String therapistName;
   final String therapyName;
 
-  const AddTherapist({
+  AddTherapist({
+    required this.data1,
     required this.therapyName,
     required this.branchId,
     required this.branchName,
@@ -35,6 +36,7 @@ class _AddTherapistState extends State<AddTherapist> {
   Therapist? _selectedTherapist;
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: customAppBar(title: widget.therapyName),
       body: Padding(
@@ -97,9 +99,12 @@ class _AddTherapistState extends State<AddTherapist> {
                           branchId: widget.branchId,
                           parentId: widget.parentId,
                           therapyId: widget.therapyId,
-                          childId: '',
-                          therapistId: '',
-                          onScheduleTherapyPressed: () {
+                          childId: widget.childId,
+                          therapistId: widget.therapistId,
+                          onScheduleTherapyPressed: () async{
+                            Map<String,dynamic> data2={};
+                            data2['therapist_name']=therapist.name;
+                            data2['formatted_dates']=await
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -108,14 +113,20 @@ class _AddTherapistState extends State<AddTherapist> {
                                   therapyId: widget.therapyId,
                                   childname: widget.childname,
                                   parentId: widget.parentId,
-                                  therapistId: widget.therapistId,
+                                  therapistId: therapist.id,
                                   childId: widget.childId,
                                   branchName: widget.branchName,
-                                  therapistName:widget.therapistName,
+                                  therapistName:therapist.name,
                                   therapyName: widget.therapyName,
                                 ),
                               ),
-                            );
+                            ) as Map<String, List<List<String>>>;
+                            if(data2.containsKey('therapist_name') && data2.containsKey('formatted_dates')){
+                              Navigator.pop(context,data2);
+                            }else{
+                              Navigator.pop(context);
+                            }
+
                           },
                           onTherapistSelected: (selectedTherapist) {
                             setState(() {
@@ -245,7 +256,7 @@ class TherapistCard extends StatelessWidget {
               children: [
                 CustomButton(
                   text: 'Schedule Therapy',
-                  width: 380,
+                  width: 350,
                   onPressed: onScheduleTherapyPressed,
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/client_login/signup2.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
@@ -165,27 +166,34 @@ class _ClientSignUpState extends State<ClientSignUp> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            child: TextField(
-                              controller: signUpDataProvider.childDOBController,
-                              keyboardType: TextInputType.datetime,
-                              decoration: InputDecoration(
-                                hintText: 'Child DOB - DD/MM/YYYY',
-                                contentPadding: const EdgeInsets.all(10),
-                                border: InputBorder.none,
-                                hintStyle: TextStyle(color: Colors.grey),
-                              ),
-                              onChanged: (value) {
-                                if (value.length == 2 || value.length == 5) {
-                                  signUpDataProvider.childDOBController.value =
-                                      TextEditingValue(
-                                        text: value.substring(0, value.length - 1) +
-                                            '-' +
-                                            value.substring(value.length - 1),
-                                        selection: TextSelection.collapsed(
-                                            offset: value.length),
-                                      );
-                                }
+                            child: GestureDetector(
+                              onTap: () async {
+                                await _selectDate(context, signUpDataProvider);
                               },
+                              child: AbsorbPointer(
+                                child: TextField(
+                                  controller: signUpDataProvider.childDOBController,
+                                  keyboardType: TextInputType.datetime,
+                                  decoration: InputDecoration(
+                                    hintText: 'Child DOB - DD/MM/YYYY',
+                                    contentPadding: const EdgeInsets.all(10),
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                  onChanged: (value) {
+                                    if (value.length == 2 || value.length == 5) {
+                                      signUpDataProvider.childDOBController.value =
+                                          TextEditingValue(
+                                            text: value.substring(0, value.length - 1) +
+                                                '-' +
+                                                value.substring(value.length - 1),
+                                            selection: TextSelection.collapsed(
+                                                offset: value.length),
+                                          );
+                                    }
+                                  },
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -197,6 +205,7 @@ class _ClientSignUpState extends State<ClientSignUp> {
                         ),
                       ],
                     ),
+
                     Text(
                       dobErr,
                       style: const TextStyle(color: Colors.red),
@@ -347,9 +356,11 @@ class _ClientSignUpState extends State<ClientSignUp> {
       lastDate: DateTime(2101),
     );
     if (picked != null) {
+      final formattedDate = DateFormat('dd-MMM-yyyy').format(picked).toUpperCase();
       setState(() {
-        signUpDataProvider.childDOBController.text = "${picked.day}/${picked.month}/${picked.year}";
+        signUpDataProvider.childDOBController.text = formattedDate;
       });
     }
   }
+
 }

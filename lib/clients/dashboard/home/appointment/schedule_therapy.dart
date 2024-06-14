@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:pragyan_cdc/api/parent_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/therapy_appointment_summary.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
+import 'package:pragyan_cdc/shared/loading.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleTherapy extends StatefulWidget {
@@ -32,6 +34,8 @@ class ScheduleTherapy extends StatefulWidget {
 }
 
 class _ScheduleTherapyState extends State<ScheduleTherapy> {
+
+  bool _isLoading = false;
   DateTime today = DateTime.now();
   DateTime? selectedDate;
   TimeOfDay? firstShiftStart;
@@ -525,35 +529,66 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
                 ],
               ),
               const SizedBox(height: 10),
-              Center(
-                child: CustomButton(
-                  onPressed: () {
-                    Map<String, List<List<String>>> formattedData = {};
-                    selectedTimeSlotsWithCost.forEach((date, slots) {
-                      String formattedDate =
-                          "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                      formattedData[formattedDate] = slots
-                          .map((slot) => [slot['time']!, slot['cost']!])
-                          .toList();
-                    });
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => TherapyAppointmentSummary(
-                        selecteddateslots: formattedData,
-                        branchId: widget.branchId,
-                        parentId: widget.parentId,
-                        childId: widget.childId,
-                        therapistId: widget.therapistId,
-                        therapyId: widget.therapyId,
-                        branchName: widget.branchName,
-                        therapyName: widget.therapyName,
-                        therapistName: widget.therapistName,
-                        childname: widget.childname,
-                      ),
-                    ));
-                  },
-                  text: 'Book Slots',
-                ),
-              ),
+        Center(
+          child: _isLoading
+              ? Loading()
+              : CustomButton(
+            onPressed: () async {
+              setState(() {
+                _isLoading = true;
+              });
+
+              Map<String, List<List<String>>> formattedData = {};
+              selectedTimeSlotsWithCost.forEach((date, slots) {
+                String formattedDate =
+                    "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                formattedData[formattedDate] = slots
+                    .map((slot) => [slot['time']!, slot['cost']!])
+                    .toList();
+              });
+
+              Map<String, dynamic> bookingData = {
+                'prag_parent': widget.parentId,
+                'prag_branch': widget.branchId,
+                'prag_therapy': widget.therapyId,
+                'prag_therapiest': widget.therapistId,
+                'prag_child': widget.childId,
+                'prag_bookingdatetime': formattedData,
+              };
+
+              var response = await Parent().bufferTheBookingApi(bookingData);
+
+              setState(() {
+                _isLoading = false;
+              });
+
+              if (response['status'] == 1) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => TherapyAppointmentSummary(
+                      selecteddateslots: formattedData,
+                      branchId: widget.branchId,
+                      parentId: widget.parentId,
+                      childId: widget.childId,
+                      therapistId: widget.therapistId,
+                      therapyId: widget.therapyId,
+                      branchName: widget.branchName,
+                      therapyName: widget.therapyName,
+                      therapistName: widget.therapistName,
+                      childname: widget.childname,
+                    ),
+                  ),
+                );
+              } else {
+                // Handle error or show message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(response['message'])),
+                );
+              }
+            },
+            text: 'Book Slots',
+          ),
+        ),
             ],
           ),
         ),
@@ -688,7 +723,7 @@ class _TimeSlotState extends State<TimeSlot> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text('Slot Already Booked'),
-                    content: Text('The slot is already booked.'),
+                    content: Text('The slot is already booked by you.'),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {

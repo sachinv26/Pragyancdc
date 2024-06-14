@@ -49,7 +49,7 @@ class _ChildListState extends State<ChildList> {
           } else {
             final List<ChildModel> childList = snapshot.data!;
             return Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(5),
               child: Column(
                 children: [
                   kheight30,

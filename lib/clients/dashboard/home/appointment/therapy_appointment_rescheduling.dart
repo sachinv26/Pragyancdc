@@ -10,11 +10,11 @@ import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
 
 class RescheduleAppointment extends StatefulWidget {
-  final String branchId;
-  final String parentId;
-  final String childId;
-  final String therapistId;
-  final String therapyId;
+  final String? branchId;
+  final String? parentId;
+  final String? childId;
+  final String? therapistId;
+  final String? therapyId;
   RescheduleAppointment({
     Key? key,
     required this.branchId,

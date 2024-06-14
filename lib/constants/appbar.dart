@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
-AppBar customAppBar({bool showLeading = true, String? title}) {
+AppBar customAppBar({bool showLeading = true, String? title, List<Widget>? actions}) {
   return AppBar(
+    actions: actions,
     centerTitle: true,
-    backgroundColor: Colors.transparent, // Making the app bar transparent
+    backgroundColor: Colors.transparent,
     automaticallyImplyLeading: showLeading,
     elevation: 0,
     iconTheme: const IconThemeData(color: Colors.white),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
@@ -15,19 +16,36 @@ class AddChildScreen extends StatefulWidget {
 }
 
 class _AddChildScreenState extends State<AddChildScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String dropdownValue = relation.first;
   String _selectedGender = 'male';
-  // String selectedRelationValue = 'parent';
-
   final TextEditingController nameController = TextEditingController();
-
   final TextEditingController dobController = TextEditingController();
-
   final TextEditingController relationController = TextEditingController();
-
   XFile? uploadedImage;
   static const List<String> relation = ['Parent', 'Guardian'];
-  //final TextEditingController genderController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.addListener(() {
+      if (_formKey.currentState != null) {
+        _formKey.currentState!.validate();
+      }
+    });
+    dobController.addListener(() {
+      if (_formKey.currentState != null) {
+        _formKey.currentState!.validate();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    dobController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +57,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -48,67 +67,66 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   style: kTextStyle1,
                 ),
                 kheight10,
-                CustomTextFormField(
-                  hintText: ' Child Name',
-                  iconData: const Icon(Icons.person),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: ' Child Name',
+                    icon: const Icon(Icons.person),
+                  ),
                   controller: nameController,
-                  // validator: (value) {
-                  //   if (value == null || value.isEmpty) {
-                  //     childErr = 'Please enter child name';
-                  //   }
-                  //   return null;
-                  // },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter child name';
+                    }
+                    return null;
+                  },
                 ),
                 kheight30,
+                const Text(
+                  'Date of Birth',
+                  style: kTextStyle1,
+                ),
                 Row(
                   children: [
-                    const Text(
-                      'Child DOB',
-                      style: khintTextStyle,
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
-                          // Open date picker when tapping on Child DOB field
-                          dobController.text =
-                              (await _selectDate(context, dobController.text))!;
-                          // After date is selected, update the text field
+                          String? selectedDate = await _selectDate(context, dobController.text);
+                          if (selectedDate != null) {
+                            dobController.text = selectedDate;
+                          }
                         },
-                        child: CustomTextFormField(
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     setState(() {
-                          //       dobErr = 'Please select date of birth';
-                          //     });
-                          //   }
-                          //   return null;
-                          // },
-                          hintText: 'DD/MM/YYYY',
-                          controller: dobController,
-                          enabled: false,
+                        child: AbsorbPointer(
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.calendar_month),
+                              hintText: 'DD-MMM-YYYY',
+                            ),
+                            controller: dobController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select date of birth';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 kheight30,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       'Relation with the child',
-                      style: khintTextStyle,
+                      style: kTextStyle1,
                     ),
                     DropdownButton(
                       value: dropdownValue,
-                      // icon: const Icon(Icons.arrow_downward),
                       elevation: 16,
                       style: const TextStyle(color: Colors.black),
-                      items: relation
-                          .map<DropdownMenuItem<String>>((String value) {
+                      items: relation.map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -122,26 +140,22 @@ class _AddChildScreenState extends State<AddChildScreen> {
                     ),
                   ],
                 ),
-
-                // CustomTextFormField(
-                //   controller: relationController,
-                // ),
                 kheight30,
                 const Text(
                   'Child Gender:',
-                  style: khintTextStyle,
+                  style: kTextStyle1,
                 ),
                 Row(
                   children: [
                     Radio<String>(
-                        value: 'male',
-                        groupValue: _selectedGender,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedGender = value!;
-                            print('selected gender: $_selectedGender');
-                          });
-                        }),
+                      value: 'male',
+                      groupValue: _selectedGender,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedGender = value!;
+                        });
+                      },
+                    ),
                     const Text('Male'),
                     const SizedBox(width: 4.0),
                     Radio<String>(
@@ -150,7 +164,6 @@ class _AddChildScreenState extends State<AddChildScreen> {
                       onChanged: (value) {
                         setState(() {
                           _selectedGender = value!;
-                          print('selected gender: $_selectedGender');
                         });
                       },
                     ),
@@ -162,7 +175,6 @@ class _AddChildScreenState extends State<AddChildScreen> {
                       onChanged: (value) {
                         setState(() {
                           _selectedGender = value!;
-                          print('selected gender: $_selectedGender');
                         });
                       },
                     ),
@@ -172,10 +184,19 @@ class _AddChildScreenState extends State<AddChildScreen> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    // Handle form submission
-                    final result = await submitForm(context);
-                    if (context.mounted) {
-                      Navigator.of(context).pop(result);
+                    if (_formKey.currentState!.validate()) {
+                      final result = await submitForm(context);
+                      if (context.mounted) {
+                        Navigator.of(context).pop(result);
+                      }
+                    } else {
+                      Fluttertoast.showToast(
+                        msg: 'Please fill all required fields',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                      );
                     }
                   },
                   child: const Text('Submit'),
@@ -188,9 +209,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
     );
   }
 
-  // Function to open date picker
-  Future<String?> _selectDate(
-      BuildContext context, String dobController) async {
+  Future<String?> _selectDate(BuildContext context, String dobController) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(2015),
@@ -198,16 +217,16 @@ class _AddChildScreenState extends State<AddChildScreen> {
       lastDate: DateTime.now(),
     );
 
-    if (picked != null && picked != DateTime.now()) {
-      // Update the Child DOB field with the selected date
-      dobController = picked.toLocal().toString().split(' ')[0];
-      // Save the selected date to the separate controller
-      return dobController;
+    if (picked != null) {
+      // Format the selected date
+      final DateFormat formatter = DateFormat('dd-MMM-yyyy');
+      String formattedDate = formatter.format(picked);
+      return formattedDate;
     }
     return null;
   }
 
-  submitForm(BuildContext context) async {
+  Future<Map<String, dynamic>> submitForm(BuildContext context) async {
     final name = nameController.text;
     final gender = _selectedGender;
     final dob = dobController.text;
@@ -222,13 +241,12 @@ class _AddChildScreenState extends State<AddChildScreen> {
     final token = await const FlutterSecureStorage().read(key: 'authToken');
     if (userId != null && token != null) {
       Map<String, dynamic> result = await ChildApi().addNewChild(
-          userId: userId, userToken: token, childDetails: childDetails);
+        userId: userId,
+        userToken: token,
+        childDetails: childDetails,
+      );
 
-// Check the result for success or error
       if (result['status'] == 1) {
-        // Updated successfully
-
-        //final childId = result['child_id'];
         Fluttertoast.showToast(
           msg: result['message'],
           toastLength: Toast.LENGTH_SHORT,
@@ -236,12 +254,8 @@ class _AddChildScreenState extends State<AddChildScreen> {
           backgroundColor: Colors.green,
           textColor: Colors.white,
         );
-        print('Child added successfully');
         return result;
-
-        // return result['child_id'];
       } else {
-        // Handle error
         Fluttertoast.showToast(
           msg: result['message'],
           toastLength: Toast.LENGTH_SHORT,
@@ -251,8 +265,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         );
         print('Failed to add child: ${result['message']}');
       }
-
-      // After submitting, close the popup form
     }
+    return {};
   }
 }

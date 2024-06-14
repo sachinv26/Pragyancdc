@@ -14,7 +14,7 @@ class ServiceItemCard extends StatelessWidget {
   final String therapistName;
   final String therapistId;
 
-  final Function(Therapy) onTherapySelected;
+  // final Function(Therapy) onTherapySelected;
 
   const ServiceItemCard({
     Key? key,
@@ -22,7 +22,7 @@ class ServiceItemCard extends StatelessWidget {
     required this.branchName,
     required this.therapy,
     required this.parentId,
-    required this.onTherapySelected,
+    // required this.onTherapySelected,
     required this.therapyId,
     required this.childId,
     required this.childname,
@@ -33,7 +33,9 @@ class ServiceItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        Map<String,dynamic> newdata1={};
+        newdata1=await
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AddTherapist(
             branchId: branchId,
@@ -45,8 +47,15 @@ class ServiceItemCard extends StatelessWidget {
             therapyId: therapyId,
             childname: childname,
             therapistName: childname,
+            data1: newdata1,
           ),
         ));
+        newdata1['therapyName']=therapy.therapyName;
+        if(newdata1.containsKey('therapyName') && newdata1.containsKey('therapist_name') && newdata1.containsKey('formatted_dates')){
+          Navigator.pop(context,newdata1);
+        }else{
+          Navigator.pop(context);
+        }
       },
       child: Card(
         elevation: 4,

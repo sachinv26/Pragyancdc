@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/dashboard/child/add_child.dart';
 import 'package:pragyan_cdc/clients/dashboard/dashboard.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/therapy_appointment_summary.dart';
 import 'package:pragyan_cdc/clients/signup_selection.dart';
 import 'package:pragyan_cdc/clients/intro/intro_outline.dart';
 import 'package:pragyan_cdc/clients/splash.dart';
@@ -59,6 +60,7 @@ class Pragyan extends StatelessWidget {
               fontSize: 1.7 * SizeConfig.textMultiplier,
             ),
           ),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade600),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           primarySwatch: Colors.green),
       title: 'Pragyan',
@@ -71,12 +73,11 @@ class Pragyan extends StatelessWidget {
             ctx: ModalRoute.of(context)?.settings.arguments as BuildContext
         ),
         '/dashboard/:context': (context) => DashBoard(
-            // ctx: ModalRoute.of(context)?.settings.arguments as BuildContext
+          // ctx: ModalRoute.of(context)?.settings.arguments as BuildContext
         ),
         '/addChildScreen': (context) => const AddChildScreen(),
-        '/therapistDashboard' :(context) => TherapistDashBoard(),
+        '/therapistDashboard': (context) => TherapistDashBoard(),
         '/dashboard': (context) => DashBoard(),
-        // Provide the context here
       },
     );
   }

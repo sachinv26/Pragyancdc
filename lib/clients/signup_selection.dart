@@ -19,7 +19,7 @@ class SignupSelection extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Image.asset('assets/images/Pragyan_Logo.png'),
+            Image.asset('assets/images/cdc-logo.png'),
             const SizedBox(
               height: 30,
             ),
@@ -66,42 +66,6 @@ class SignupSelection extends StatelessWidget {
                 ),
               ),
             ),
-            // const SizedBox(
-            //   height: 30,
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     Navigator.of(context).push(
-            //       MaterialPageRoute(
-            //         builder: (context) => const TherapistLogin(),
-            //       ),
-            //     );
-            //   },
-            //   child: Container(
-            //     decoration: const BoxDecoration(
-            //       color: Color.fromARGB(255, 19, 138, 23),
-            //       borderRadius: BorderRadius.all(
-            //         Radius.circular(10),
-            //       ),
-            //     ),
-            //     padding: const EdgeInsets.only(left: 10, right: 10),
-            //     width: double.infinity,
-            //     height: 50,
-            //     child: const Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Text(
-            //           'Therapist Login',
-            //           style: TextStyle(
-            //               color: Colors.white, fontWeight: FontWeight.bold),
-            //         ),
-            //         CircleAvatar(
-            //           child: Icon(Icons.person),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

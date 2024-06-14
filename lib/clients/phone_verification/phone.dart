@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/clients/phone_verification/verify.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
+import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'dart:convert';
 
@@ -16,6 +19,7 @@ class PhoneNumberVerification extends StatefulWidget {
       : super(key: key);
   static String verify = "";
 
+
   @override
   State<PhoneNumberVerification> createState() =>
       _PhoneNumberVerificationState();
@@ -24,6 +28,7 @@ class PhoneNumberVerification extends StatefulWidget {
 class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
   TextEditingController countryController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String? _phoneErrorMessage;
 
   var phone = '';
 
@@ -33,7 +38,13 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
     countryController.text = "+91";
     super.initState();
   }
-
+  void _showPhoneErrorSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
   @override
   Widget build(BuildContext context) {
     var phoneVerificationProvider = Provider.of<PhoneVerificationProvider>(
@@ -56,7 +67,7 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   kheight30,
-                  kheight30,
+
                   const Text(
                     "We need to verify your phone before getting started!",
                     style: TextStyle(
@@ -76,10 +87,10 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                     height: 30,
                   ),
                   Container(
-                    height: 55,
                     decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: Colors.grey),
-                        borderRadius: BorderRadius.circular(10)),
+                      border: Border.all(width: 1, color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -103,72 +114,62 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                         const SizedBox(
                           width: 10,
                         ),
-                        Expanded(
-                            child: TextFormField(
-                          cursorColor: Colors.black,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          onChanged: (value) {
-                            phone = value;
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              phoneVerificationProvider
-                                  .setErrorMessage('Phone is required');
-                            }
-                            if (value.length > 10) {
-                              phoneVerificationProvider.setErrorMessage(
-                                  'Phone number should not exceed 10 digits');
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.phone,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Phone",
+                        Flexible(
+                          child: TextFormField(
+                            cursorColor: Colors.black,
+                            inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            onChanged: (value) {
+                              phone = value;
+                              _phoneErrorMessage = null; // Reset the error message
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Phone is required';
+                              }
+                              if (value.length != 10) {
+                                return 'number should be exactly 10 digits';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Phone",
+                              errorText: null, // Remove the default error text
+                            ),
                           ),
-                        ))
+                        ),
                       ],
                     ),
                   ),
-                  Text(
-                    phoneVerificationProvider.errMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 45,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green.shade600,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        onPressed: () async {
-                          //final mobNumber = countryController.text + phone;
-                          if (_formKey.currentState!.validate()) {
-                            Map<String, dynamic> result = await ApiServices()
-                                .generateOtp(
-                                    mobile: phone,
-                                    userId: '0',
-                                    otpFor: widget.otpFor);
-                            print('Result is $result');
-                            final String rawCode = result['gen'];
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) {
-                                return VerifyNumber(
-                                  ctx: widget.ctx,
-                                  otpFor: widget.otpFor,
-                                  phone: phone,
-                                  originalCode: rawCode,
-                                );
-                              },
-                            ));
-                          }
-                        },
-                        child: const Text("Send the code")),
-                  )
+                  // Call the SnackBar method when the error message changes
+                  kheight30,
+                  CustomButton(
+                      onPressed: () async {
+                        //final mobNumber = countryController.text + phone;
+                        if (_formKey.currentState!.validate()) {
+                          Map<String, dynamic> result = await ApiServices()
+                              .generateOtp(
+                                  mobile: phone,
+                                  userId: '0',
+                                  otpFor: widget.otpFor);
+                          print('Result is $result');
+                          final String rawCode = result['gen'];
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return VerifyNumber(
+                                ctx: widget.ctx,
+                                otpFor: widget.otpFor,
+                                phone: phone,
+                                originalCode: rawCode,
+                              );
+                            },
+                          ));
+                        }
+                      },
+                    text: 'Send the Code',
+                      )
                 ],
               ),
             ),

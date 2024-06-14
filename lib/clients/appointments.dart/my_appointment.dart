@@ -15,7 +15,7 @@ class AppointmentScreen extends StatefulWidget {
   State<AppointmentScreen> createState() => _AppointmentScreenState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> {
+class _AppointmentScreenState extends State<AppointmentScreen> with RouteAware {
   String? userId;
   List<ParentSchedule>? appointments;
 
@@ -55,6 +55,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       length: 2, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -123,6 +124,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         builder: (context) => AppointmentDetailScreen(appointment: appointment),
                       ),
                     );
+                    setState(() {
+
+                    });
                   },
                   child: Column(
                     children: [
@@ -208,7 +212,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   ],
                                 ),
                               ),
-                              kwidth30,
+                              kwidth10,
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -223,7 +227,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                                   kheight10,
                                   Text(
-                                    '📆: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(appointment.appointmentDate))}',
+                                    '📆: ${DateFormat('dd-MMM-yyyy').format(DateTime.parse(appointment.appointmentDate))}',
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 11,
@@ -270,12 +274,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               CancelAppointment appointment = appointments[index];
               return GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => AppointmentDetailScreen(appointment: appointment),
-                  //   ),
-                  // );
                 },
                 child: Column(
                   children: [
@@ -331,7 +329,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '🕑: ${appointment.appointmentTime}',
+                                  '🕑: ${appointment.appointmentTime.substring(0, 5)}',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
@@ -339,7 +337,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 ),
                                 kheight10,
                                 Text(
-                                  '📆: ${appointment.appointmentDate}',
+                                  '📆: ${DateFormat('dd-MM-yyyy').format(DateTime.parse(appointment.appointmentDate))}',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 11,
