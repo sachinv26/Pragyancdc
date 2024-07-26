@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/appointments.dart/my_appointment.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/homescreen.dart';
 import 'package:pragyan_cdc/clients/support/support_home.dart';
+import 'package:pragyan_cdc/clients/wallet/wallet_demo.dart';
 import 'package:pragyan_cdc/clients/wallet/wallet_screen.dart';
 
 class DashBoard extends StatefulWidget {
@@ -24,7 +25,7 @@ class _DashBoardState extends State<DashBoard> {
       HomeScreen(), // Access widget.ctx after initialization
       const AppointmentScreen(),
       const SupportScreen(),
-      const WalletScreen(),
+      WalletScreen(),
     ];
   }
 

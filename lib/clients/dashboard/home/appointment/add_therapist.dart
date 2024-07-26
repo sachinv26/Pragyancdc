@@ -104,6 +104,8 @@ class _AddTherapistState extends State<AddTherapist> {
                           onScheduleTherapyPressed: () async{
                             Map<String,dynamic> data2={};
                             data2['therapist_name']=therapist.name;
+                            //new line added
+                            data2['therapist_id']=therapist.id;
                             data2['formatted_dates']=await
                             Navigator.push(
                               context,
@@ -121,7 +123,7 @@ class _AddTherapistState extends State<AddTherapist> {
                                 ),
                               ),
                             ) as Map<String, List<List<String>>>;
-                            if(data2.containsKey('therapist_name') && data2.containsKey('formatted_dates')){
+                            if(data2.containsKey('therapist_name') && data2.containsKey('therapist_id') && data2.containsKey('formatted_dates')){
                               Navigator.pop(context,data2);
                             }else{
                               Navigator.pop(context);

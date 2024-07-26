@@ -6,6 +6,7 @@ class UserProfile {
   final String parentAddress;
   final String parentUserId;
   final String profileName;
+  final String parentWallet;
   final String profileImage;
   //final String parentAuthToken;
 
@@ -17,6 +18,7 @@ class UserProfile {
     required this.parentAddress,
     required this.parentUserId,
     required this.profileName,
+    required this.parentWallet,
     required this.profileImage,
     // required this.parentAuthToken,
   });
@@ -31,6 +33,7 @@ class UserProfile {
       parentUserId: json['parent_user_id'] ?? '',
       profileName: json['profile_name'] ?? '',
       profileImage: json['profile_image'] ?? '',
+      parentWallet: json['parent_wallet']?? '',
       // parentAuthToken: json['prag_parent_auth_token'] ?? '',
     );
   }

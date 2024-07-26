@@ -117,16 +117,18 @@ class _AppointmentScreenState extends State<AppointmentScreen> with RouteAware {
               itemBuilder: (context, index) {
                 ParentSchedule appointment = appointments![index];
                 return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    var status = await  Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AppointmentDetailScreen(appointment: appointment),
                       ),
                     );
-                    setState(() {
+                    if(status==true){
+                      setState(() {
 
-                    });
+                      });
+                    }
                   },
                   child: Column(
                     children: [

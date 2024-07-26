@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/appointment/add_therapist.dart';
 
@@ -50,8 +52,10 @@ class ServiceItemCard extends StatelessWidget {
             data1: newdata1,
           ),
         ));
+        print(newdata1);
         newdata1['therapyName']=therapy.therapyName;
-        if(newdata1.containsKey('therapyName') && newdata1.containsKey('therapist_name') && newdata1.containsKey('formatted_dates')){
+        newdata1['therapy_id']=therapy.therapyId;
+        if(newdata1.containsKey('therapyName') && newdata1.containsKey('therapist_name') && newdata1.containsKey('therapist_id') && newdata1.containsKey('therapy_id')  && newdata1.containsKey('formatted_dates')){
           Navigator.pop(context,newdata1);
         }else{
           Navigator.pop(context);

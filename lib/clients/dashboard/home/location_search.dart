@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/branch_therapy.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/branch_therapy.dart';
 
 class LocationSearch extends StatelessWidget {
   final List<String> suggestions = [

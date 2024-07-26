@@ -216,7 +216,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
                   ),
                   kheight10,
                   Text(
-                    'Status: ${widget.appointment.appointmentId}',
+                    'Status: ${widget.appointment.appointmentStatus}',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,

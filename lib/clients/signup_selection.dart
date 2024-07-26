@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pragyan_cdc/clients/auth_wrapper.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
-import 'package:pragyan_cdc/therapists/view/login.dart';
 
 class SignupSelection extends StatelessWidget {
   const SignupSelection({super.key});

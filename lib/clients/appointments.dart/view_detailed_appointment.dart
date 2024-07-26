@@ -194,7 +194,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                         duration: Duration(seconds: 1),
                       ),
                     );
-                    Navigator.pop(context);
+                    Navigator.pop(context,true);
                   },
                 ),
               ],

@@ -5,22 +5,22 @@ class CustomButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final double width;
   final double height;
-  final bool isLoading; // Add this property
+  final bool isLoading;
 
   const CustomButton({
-    Key? key, // Add this line
+    Key? key,
     required this.text,
     this.onPressed,
     this.width = 170,
     this.height = 40,
-    this.isLoading = false,  // Add this line
+    this.isLoading = false,
   }) : super(key: key);
+
   @override
   State<CustomButton> createState() => _CustomButtonState();
 }
 
 class _CustomButtonState extends State<CustomButton> {
- // Add this line
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
@@ -29,9 +29,8 @@ class _CustomButtonState extends State<CustomButton> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
-        padding: EdgeInsets.zero, // Remove padding
-        minimumSize: Size(widget.width, widget.height), // Width and height of the button
-        elevation: 0, // Remove elevation// Set primary color to transparent
+        padding: EdgeInsets.zero,
+        elevation: 0,
       ),
       child: Ink(
         decoration: BoxDecoration(
@@ -47,7 +46,7 @@ class _CustomButtonState extends State<CustomButton> {
           height: widget.height,
           alignment: Alignment.center,
           child: widget.isLoading
-              ? CircularProgressIndicator() // Show CircularProgressIndicator when isLoading is true
+              ? CircularProgressIndicator(color: Colors.white)
               : Text(
             widget.text,
             style: const TextStyle(

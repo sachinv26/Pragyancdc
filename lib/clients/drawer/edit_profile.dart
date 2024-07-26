@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,12 +27,16 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController adressController = TextEditingController();
+  TextEditingController motherNameController = TextEditingController();
+  TextEditingController motherTongueController = TextEditingController();
+  TextEditingController alternatePhoneController = TextEditingController();
+
   bool _loading = false;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _imagepath="https://app.cdcconnect.in/${widget.userProfile.profileImage}";
+    _imagepath = "https://app.cdcconnect.in/${widget.userProfile.profileImage}";
   }
 
   @override
@@ -88,10 +91,8 @@ class _EditProfileState extends State<EditProfile> {
                                   backgroundColor: Colors.green),
                               onPressed: () async {
                                 if (!_loading) {
-                                  // Check if not loading before allowing image selection
                                   await _requestPermissions();
-                                  final result =
-                                  await _pickImageFromGallery(widget.userProfile);
+                                  final result = await _pickImageFromGallery(widget.userProfile);
                                   if (result != null && result.isNotEmpty) {
                                     setState(() {
                                       _imagepath = result;
@@ -109,41 +110,29 @@ class _EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-
               Form(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildTextField(
-                        'Name', widget.userProfile.parentName, nameController),
-
-                    // buildTextField('DOB', 'DD/MM/YYYY', hasEditIcon: false),
-                    // buildTextField('Mobile Number', '9876543210'),
-                    buildTextField('Email', widget.userProfile.parentEmail,
-                        emailController),
-                    buildTextField('Address', widget.userProfile.parentAddress,
-                        adressController),
+                    buildTextField('Father\'s Name', widget.userProfile.parentName, nameController),
+                    buildTextField('Email', widget.userProfile.parentEmail, emailController),
+                    buildTextField('Address', widget.userProfile.parentAddress, adressController),
+                    buildTextField('Mother\'s Name', '', motherNameController),
+                    buildTextField('Mother\'s Tongue', '', motherTongueController),
+                    buildTextField('Alternate Phone Number', '', alternatePhoneController),
                     kheight10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-
-                        const Text(
-                          'Preferred Location',
-                        ),
+                        const Text('Preferred Location'),
                         FutureBuilder(
                           future: fetchLocations(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              // print('has data');
                               var data = snapshot.data;
-                              // print('snapshot.data : $data');
-                              //return Text(data![0]['bran_name ']);
                               return DropdownButton(
-                                // hint: const Text('Preferred Location'),
-                                //  isExpanded: true,
                                 value: selectedBranchId ?? data![0]['bran_id'],
-                                items: data!.map((location) {
+                                items: data!.map<DropdownMenuItem>((location) {
                                   return DropdownMenuItem(
                                     value: location['bran_id'],
                                     child: Text(
@@ -155,7 +144,6 @@ class _EditProfileState extends State<EditProfile> {
                                 onChanged: (value) {
                                   setState(() {
                                     selectedBranchId = value;
-                                    // print(SelectedBranchId);
                                   });
                                 },
                               );
@@ -168,22 +156,26 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 16.0),
-
                     Center(
-                      child: CustomButton(text: 'Save Changes',onPressed: ()async{
-                        Map<String, dynamic> data = {
-                          'prag_parent_name': nameController.text,
-                          'prag_parent_email': emailController.text,
-                          'prag_preferred_location': selectedBranchId,
-                          'prag_parent_address': adressController.text
-                        };
-                        final result = await editUserProfile(data);
-                        if (context.mounted) {
-                          Navigator.of(context).pop(result);
-                        }
-                      },),
+                      child: CustomButton(
+                        text: 'Save Changes',
+                        onPressed: () async {
+                          Map<String, dynamic> data = {
+                            'prag_parent_name': nameController.text,
+                            'prag_parent_email': emailController.text,
+                            'prag_preferred_location': selectedBranchId,
+                            'prag_parent_address': adressController.text,
+                            'prag_mother_name': motherNameController.text,
+                            'prag_mother_tongue': motherTongueController.text,
+                            'prag_alternate_phone': alternatePhoneController.text,
+                          };
+                          final result = await editUserProfile(data);
+                          if (context.mounted) {
+                            Navigator.of(context).pop(result);
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -199,10 +191,8 @@ class _EditProfileState extends State<EditProfile> {
     final userId = await const FlutterSecureStorage().read(key: 'userId');
     final token = await const FlutterSecureStorage().read(key: 'authToken');
     if (userId != null && token != null) {
-      final result =
-          await ApiServices().editUserProfile(userId, token, inputData);
+      final result = await ApiServices().editUserProfile(userId, token, inputData);
       if (result!['status'] == 1) {
-        //success
         Fluttertoast.showToast(
           msg: result['message'],
           toastLength: Toast.LENGTH_SHORT,
@@ -212,7 +202,6 @@ class _EditProfileState extends State<EditProfile> {
         );
         return result;
       } else {
-        //failed
         Fluttertoast.showToast(
           msg: result['message'],
           toastLength: Toast.LENGTH_SHORT,
@@ -231,7 +220,7 @@ class _EditProfileState extends State<EditProfile> {
 
     if (image != null) {
       setState(() {
-        _loading = true; // Set loading state to true when uploading image
+        _loading = true;
       });
 
       final token = await const FlutterSecureStorage().read(key: 'authToken');
@@ -247,30 +236,18 @@ class _EditProfileState extends State<EditProfile> {
           if (response['status'] == 1) {
             debugPrint('Image uploaded successfully');
             debugPrint('Image saved in ${response["path"]}');
-            // setState(() {
-            //   // _loading =
-            //   // false; // Set loading state to false after uploading image
-            // });
-            return "https://app.cdcconnect.in/${response["path"]}"; // Return the path to update the image
+            return "https://app.cdcconnect.in/${response["path"]}";
           } else {
-            // setState(() {
-            //   // _loading =
-            //   // false; // Set loading state to false if image upload fails
-            // });
             print('Image upload failed: ${response['message']}');
             return null;
           }
         } catch (e) {
-          // setState(() {
-          //   // _loading =
-          //   // false; // Set loading state to false if error occurs during image upload
-          // });
           debugPrint('Error uploading image: $e');
           return null;
         }
       }
     }
-    return null; // Return null if image selection fails
+    return null;
   }
 
   Future<List<dynamic>> fetchLocations() async {
@@ -283,23 +260,18 @@ class _EditProfileState extends State<EditProfile> {
     if (status != PermissionStatus.granted) {
       status = await Permission.storage.request();
       if (status != PermissionStatus.granted) {
-        // Handle the case where the user denied permissions
         print('Storage permissions denied');
-        return; // Or show a custom message to the user
+        return;
       }
     }
   }
 
-  Widget buildTextField(
-      String label, String value, TextEditingController controller) {
+  Widget buildTextField(String label, String value, TextEditingController controller) {
     if (controller.text.isEmpty) {
       controller.text = value;
     }
     return TextFormField(
-      //readOnly: true,
-
       controller: controller,
-
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.grey),

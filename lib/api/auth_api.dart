@@ -17,6 +17,39 @@ class ApiServices {
     print(response);
   }
 
+  Future<Map<String, dynamic>> getAppVersion() async {
+    const String apiUrl = 'https://app.cdcconnect.in//apiservice/auth/get_appVersion';
+    const Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
+    const Map<String, dynamic> body = {
+      "prag_apptype": "1"
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        if (jsonResponse['status'] == 1) {
+          return jsonResponse;
+        } else {
+          throw Exception(jsonResponse['message']);
+        }
+      } else {
+        throw Exception('Failed to fetch app version. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error: $error');
+      throw Exception('Failed to fetch app version.');
+    }
+  }
+
 // API Method to generate OTP
   Future<Map<String, dynamic>> generateOtp({
     required String mobile,
@@ -42,6 +75,7 @@ class ApiServices {
       if (response.statusCode == 200) {
         // Assuming the API returns a JSON response
         Map<String, dynamic> jsonResponse = json.decode(response.body);
+        print(jsonResponse);
 
         int status = jsonResponse['status'] ?? 0;
         String message = jsonResponse['message'] ?? 'Unknown error';
@@ -57,7 +91,9 @@ class ApiServices {
             return {'status': 0, 'message': 'Invalid user ID'};
           } else if (message.contains('Mobile number inactive')) {
             return {'status': -2, 'message': 'Inactive mobile number'};
-          } else {
+          } else if (message.contains('Mobile number is available')) {
+            return {'status': -3, 'message': 'Mobile number is available'};
+          }else {
             return {'status': 0, 'message': 'Unknown error'};
           }
         } else {

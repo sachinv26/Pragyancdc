@@ -80,8 +80,6 @@ class _SplashScreenState extends State<SplashScreen> {
                   color: Colors.green,
                 ),
               ),
-
-              // Text
             ],
           ),
         ),

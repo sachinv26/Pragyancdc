@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
 import 'package:pragyan_cdc/api/therapy_api.dart';
 import 'package:pragyan_cdc/clients/dashboard/home/notification_screen.dart';
-import 'package:pragyan_cdc/clients/dashboard/home/branch_therapy.dart';
+import 'package:pragyan_cdc/clients/dashboard/home/appointment/branch_therapy.dart';
 import 'package:pragyan_cdc/clients/drawer/drawer_client.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/therapy_model.dart';
