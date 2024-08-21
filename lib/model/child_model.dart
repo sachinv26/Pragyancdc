@@ -7,16 +7,21 @@ class ChildModel {
   final String childGender;
   final String childImage;
   final String relationship;
+  final String mothertounge;
+  final String childEducation;
   File? selectedImage;
 
-  ChildModel({
+  ChildModel( {
     required this.childId,
     required this.childName,
     required this.childDob,
     required this.childGender,
     required this.childImage,
     required this.relationship,
+    required this.mothertounge,
+    required this.childEducation,
     this.selectedImage,
+
   });
 
   factory ChildModel.fromJson(Map<String, dynamic> json) {
@@ -27,7 +32,8 @@ class ChildModel {
       childGender: json['child_gender'] ?? '',
       childImage: json['child_image'] ?? '',
       relationship: json['relationship'] ?? '',
-      selectedImage: null,
+      mothertounge: json['child_mother_tongue']?? '',
+      selectedImage: null, childEducation:json['child_education']?? '',
     );
   }
 }

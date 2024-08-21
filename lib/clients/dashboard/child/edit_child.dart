@@ -11,12 +11,12 @@ import 'package:pragyan_cdc/constants/styles/custom_button.dart';
 import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/model/child_model.dart';
-import 'package:pragyan_cdc/shared/loading.dart'; // Import your loading widget
+import 'package:pragyan_cdc/shared/loading.dart';
 
 import '../../../api/auth_api.dart';
 
 class EditChildScreen extends StatefulWidget {
-  final ChildModel childData; // Pass the existing ChildModel to the Edit screen
+  final ChildModel childData;
 
   const EditChildScreen({Key? key, required this.childData}) : super(key: key);
 
@@ -29,24 +29,35 @@ class _EditChildScreenState extends State<EditChildScreen> {
 
   String _imagepath = '';
   String dropdownValue = relation.first;
-  String _selectedGender = ''; // Initialize with an empty string
+  String _selectedGender = '';
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  bool _loading = false; // Added loading state variable
+  TextEditingController motherTongueController = TextEditingController();
+  TextEditingController educationController = TextEditingController();
+  bool _loading = false;
 
   @override
   void initState() {
     super.initState();
 
-    _imagepath = "https://app.cdcconnect.in/${widget.childData.childImage}";
+    _imagepath = "https://dev.cdcconnect.in/${widget.childData.childImage}";
     nameController.text = widget.childData.childName;
     dobController.text = widget.childData.childDob;
     dropdownValue = widget.childData.relationship;
     _selectedGender = widget.childData.childGender;
+    motherTongueController.text = widget.childData.mothertounge ?? '';
+    educationController.text = widget.childData.childEducation ?? '';
+
+    print('Dropdown Value: $dropdownValue');
+    print('Available Relations: $relation');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!relation.contains(dropdownValue)) {
+      dropdownValue = relation.first;
+    }
+
     return Scaffold(
       appBar: customAppBar(title: 'Edit Child'),
       body: Container(
@@ -55,180 +66,19 @@ class _EditChildScreenState extends State<EditChildScreen> {
         child: Form(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Stack(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(7),
-                      child: CircleAvatar(
-                        radius: 35,
-                        child: ClipOval(
-                          child: Image.network(
-                            _imagepath,
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Center(
-                                  child: Loading(),
-                                );
-                              }
-                            },
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
-                              return const Icon(Icons.error);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -5,
-                      right: -8,
-                      child: Transform.scale(
-                        scale: 0.8, // Adjust the scale factor as needed
-                        child: IconButton(
-                          style: IconButton.styleFrom(
-                              backgroundColor: Colors.green),
-                          onPressed: () async {
-                            if (!_loading) {
-                              // Check if not loading before allowing image selection
-                              await _requestPermissions();
-                              final result =
-                                  await _pickImageFromGallery(widget.childData);
-                              if (result != null && result.isNotEmpty) {
-                                setState(() {
-                                  _imagepath = result;
-                                });
-                              }
-                            }
-                          },
-                          icon: Icon(Icons.camera_alt, size: 20), // Edit icon
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Text(
-                  'Name',
-                  style: kTextStyle1,
-                ),
-                kheight10,
-                CustomTextFormField(
-                  hintText: ' Child Name',
-                  iconData: const Icon(Icons.person),
-                  controller: nameController,
-                ),
-                kheight30,
-                Row(
-                  children: [
-                    const Text(
-                      'Child DOB',
-                      style: khintTextStyle,
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
-                          // Open date picker when tapping on Child DOB field
-                          dobController.text =
-                              (await _selectDate(context, dobController.text))!;
-                          // After date is selected, update the text field
-                        },
-                        child: CustomTextFormField(
-                          hintText: 'DD/MM/YYYY',
-                          controller: dobController,
-                          enabled: false,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                kheight30,
-                Row(
-                  children: [
-                    const Text(
-                      'Relationship:',
-                      style: khintTextStyle,
-                    ),
-                    const SizedBox(width: 10),
-                    DropdownButton<String>(
-                      value: dropdownValue,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                      },
-                      items: relation
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-                kheight30,
-                Row(
-                  children: [
-                    const Text(
-                      'Gender:',
-                      style: khintTextStyle,
-                    ),
-                    Radio<String>(
-                      value: 'male',
-                      groupValue: _selectedGender,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text('Male'),
-                    const SizedBox(width: 4.0),
-                    Radio<String>(
-                      value: 'female',
-                      groupValue: _selectedGender,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text('Female'),
-                    const SizedBox(width: 4.0),
-                    Radio<String>(
-                      value: 'other',
-                      groupValue: _selectedGender,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedGender = value!;
-                        });
-                      },
-                    ),
-                    const Text('Other'),
-                  ],
-                ),
-                kheight30,
-                CustomButton(
-                  text: 'Save Changes',
-                  onPressed: () async {
-                    final result =
-                        await submitEditForm(context, widget.childData.childId);
-                    if (context.mounted) {
-                      Navigator.of(context).pop(result);
-                    }
-                  },
-                ),
+                _buildAvatarSection(),
+                _buildInputField('Name', 'Child Name', Icons.person, nameController),
+                _buildDateField(),
+                _buildDropdownField('Relationship', dropdownValue, relation, (String? newValue) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                  });
+                }),
+                _buildGenderField(),
+                _buildInputField('Mother Tongue', 'Mother Tongue', Icons.language, motherTongueController),
+                _buildInputField('Education', 'Education', Icons.school, educationController),
+                _buildSaveButton(),
               ],
             ),
           ),
@@ -237,10 +87,171 @@ class _EditChildScreenState extends State<EditChildScreen> {
     );
   }
 
-  // Rest of the code...
+  Widget _buildAvatarSection() {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(7),
+          child: CircleAvatar(
+            radius: 35,
+            child: ClipOval(
+              child: Image.network(
+                _imagepath,
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return Center(child: Loading());
+                  }
+                },
+                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                  return const Icon(Icons.error);
+                },
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -5,
+          right: -8,
+          child: Transform.scale(
+            scale: 0.8,
+            child: IconButton(
+              style: IconButton.styleFrom(backgroundColor: Colors.green),
+              onPressed: () async {
+                if (!_loading) {
+                  await _requestPermissions();
+                  final result = await _pickImageFromGallery(widget.childData);
+                  if (result != null && result.isNotEmpty) {
+                    setState(() {
+                      _imagepath = result;
+                    });
+                  }
+                }
+              },
+              icon: const Icon(Icons.camera_alt, size: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-  Future<String?> _selectDate(
-      BuildContext context, String dobController) async {
+  Widget _buildInputField(String label, String hintText, IconData icon, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: kTextStyle1),
+          const SizedBox(height: 10),
+          CustomTextFormField(
+            hintText: hintText,
+            iconData: Icon(icon),
+            controller: controller,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        children: [
+          const Text('Child DOB', style: khintTextStyle),
+          const SizedBox(width: 25),
+          Expanded(
+            child: GestureDetector(
+              onTap: () async {
+                dobController.text = (await _selectDate(context, dobController.text))!;
+              },
+              child: CustomTextFormField(
+                hintText: 'DD/MM/YYYY',
+                controller: dobController,
+                enabled: false,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdownField(String label, String value, List<String> items, ValueChanged<String?> onChanged) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        children: [
+          Text('$label:', style: khintTextStyle),
+          const SizedBox(width: 10),
+          DropdownButton<String>(
+            value: value,
+            onChanged: onChanged,
+            items: items.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenderField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: Row(
+        children: [
+          const Text('Gender:', style: khintTextStyle),
+          _buildRadio('Male', 'male'),
+          _buildRadio('Female', 'female'),
+          _buildRadio('Other', 'other'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRadio(String label, String value) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: value,
+          groupValue: _selectedGender,
+          onChanged: (value) {
+            setState(() {
+              _selectedGender = value!;
+            });
+          },
+        ),
+        Text(label),
+        const SizedBox(width: 4.0),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      child: CustomButton(
+        text: 'Save Changes',
+        onPressed: () async {
+          final result = await submitEditForm(context, widget.childData.childId);
+          if (context.mounted) {
+            Navigator.of(context).pop(result);
+          }
+        },
+      ),
+    );
+  }
+
+  Future<String?> _selectDate(BuildContext context, String dobController) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime(2015),
@@ -249,9 +260,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
     );
 
     if (picked != null && picked != DateTime.now()) {
-      // Update the Child DOB field with the selected date
       dobController = picked.toLocal().toString().split(' ')[0];
-      // Save the selected date to the separate controller
       return dobController;
     }
     return null;
@@ -262,12 +271,16 @@ class _EditChildScreenState extends State<EditChildScreen> {
     final gender = _selectedGender;
     final dob = dobController.text;
     final relation = dropdownValue;
+    final motherTongue = motherTongueController.text;
+    final education = educationController.text;
 
     Map<String, String> childDetails = {
       'prag_child_name': name,
       'prag_child_dob': dob,
       'prag_child_gender': gender,
       'prag_child_relation': relation,
+      'prag_child_mother_tongue': motherTongue,
+      'prag_child_education': education,
     };
 
     final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -311,7 +324,7 @@ class _EditChildScreenState extends State<EditChildScreen> {
 
     if (image != null) {
       setState(() {
-        _loading = true; // Set loading state to true when uploading image
+        _loading = true;
       });
 
       final token = await const FlutterSecureStorage().read(key: 'authToken');
@@ -328,29 +341,26 @@ class _EditChildScreenState extends State<EditChildScreen> {
             debugPrint('Image uploaded successfully');
             debugPrint('Image saved in ${response["path"]}');
             setState(() {
-              _loading =
-                  false; // Set loading state to false after uploading image
+              _loading = false;
             });
-            return "https://app.cdcconnect.in/${response["path"]}"; // Return the path to update the image
+            return "https://dev.cdcconnect.in/${response["path"]}";
           } else {
             setState(() {
-              _loading =
-                  false; // Set loading state to false if image upload fails
+              _loading = false;
             });
             print('Image upload failed: ${response['message']}');
             return null;
           }
         } catch (e) {
           setState(() {
-            _loading =
-                false; // Set loading state to false if error occurs during image upload
+            _loading = false;
           });
           debugPrint('Error uploading image: $e');
           return null;
         }
       }
     }
-    return null; // Return null if image selection fails
+    return null;
   }
 
   Future<void> _requestPermissions() async {
@@ -358,9 +368,8 @@ class _EditChildScreenState extends State<EditChildScreen> {
     if (status != PermissionStatus.granted) {
       status = await Permission.storage.request();
       if (status != PermissionStatus.granted) {
-        // Handle the case where the user denied permissions
         print('Storage permissions denied');
-        return; // Or show a custom message to the user
+        return;
       }
     }
   }

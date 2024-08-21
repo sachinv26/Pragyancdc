@@ -7,15 +7,15 @@ import 'package:pragyan_cdc/model/parent_cancel_schedulemodel.dart';
 import 'package:pragyan_cdc/model/parent_schedule_model.dart';
 
 import '../model/buffer_model.dart';
+import '../model/support_ticket_model.dart';
 import '../model/wallet_model.dart';
 
 
 class Parent {
 
-
+  static const String baseUrl = 'https://dev.cdcconnect.in/apiservice/';
   Future<List<ParentSchedule>> getParentAppointments(int status) async {
-    const String apiUrl =
-        'https://app.cdcconnect.in/apiservice/consultation/get_parentAppoinment_listview';
+    const String apiUrl = '${baseUrl}consultation/get_parentAppoinment_listview';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -76,7 +76,7 @@ class Parent {
   }
 
   Future<void> cancelAppointment(String appointmentId,String parentId,String appointmentDate,String appointmentTime ) async {
-    final Uri uri = Uri.parse('https://app.cdcconnect.in/apiservice/consultation/set_cancelappointment');
+    final Uri uri = Uri.parse('${baseUrl}consultation/set_cancelappointment');
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(
@@ -129,7 +129,7 @@ class Parent {
 
   Future<List<CancelAppointment>> getCanelAppointments() async {
     const String apiUrl =
-        'https://app.cdcconnect.in/apiservice/consultation/get_cancelledAppoinment_listview';
+        '${baseUrl}consultation/get_cancelledAppoinment_listview';
 
     try {
       final FlutterSecureStorage storage = FlutterSecureStorage();
@@ -200,7 +200,7 @@ class Parent {
   }
 
   Future<void> changeAppointmentStatus(List<int> appointmentIds) async {
-    final Uri uri = Uri.parse('https://app.cdcconnect.in/apiservice/consultation/set_appointmentStatuschange');
+    final Uri uri = Uri.parse('${baseUrl}consultation/set_appointmentStatuschange');
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -249,7 +249,7 @@ class Parent {
   }
 
   Future<Map<String, dynamic>> bufferTheBookingApi(Map<String, dynamic> bookingData) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/set_bufferbooking_bulk';
+    const String apiUrl = '${baseUrl}consultation/set_bufferbooking_bulk';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -298,7 +298,7 @@ class Parent {
   }
 
   Future<Map<String, dynamic>> removeBufferApi(Map<String, dynamic> bookingData) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/set_bufferthebooking';
+    const String apiUrl = '${baseUrl}consultation/set_bufferthebooking';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -345,7 +345,7 @@ class Parent {
   }
 
   Future<Map<String, dynamic>> checkParentScheduleApi(Map<String, dynamic> bookingData) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/check_parentscheduledate';
+    const String apiUrl = '${baseUrl}consultation/check_parentscheduledate';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -394,7 +394,7 @@ class Parent {
 
 
   Future<List<Appointment>> getNotifications() async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_notification';
+    const String apiUrl = '${baseUrl}parentboard/get_notification';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -449,7 +449,7 @@ class Parent {
   }
 
   Future<ParentWalletResponse> getWalletTransactions() async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_myWalletlistview';
+    const String apiUrl = '${baseUrl}parentboard/get_myWalletlistview';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -506,7 +506,7 @@ class Parent {
   }
 
   Future<List<BufferSlot>> getBufferSlots() async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_bufferingDatelist';
+    const String apiUrl = '${baseUrl}consultation/get_bufferingDatelist';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -560,8 +560,8 @@ class Parent {
 
 
 
-  Future<Map<String, dynamic>> fetchSupportTickets() async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_supportTicketlist';
+  Future<SupportTicketResponse> fetchSupportTickets() async {
+    const String apiUrl = '${baseUrl}parentboard/get_supportTicketlist';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -588,7 +588,17 @@ class Parent {
         );
 
         if (response.statusCode == 200) {
-          return json.decode(response.body);
+          final responseJson = json.decode(response.body);
+          if (responseJson['status'] == 1) {
+            return SupportTicketResponse.fromJson(responseJson);
+          } else {
+            // Handle case where no tickets are available
+            return SupportTicketResponse(
+              status: responseJson['status'],
+              message: responseJson['message'],
+              supportTickets: [], totalTicket: '',
+            );
+          }
         } else {
           throw Exception('Failed to load support tickets. Status code: ${response.statusCode}');
         }
@@ -603,7 +613,7 @@ class Parent {
 
 
   Future<Map<String, dynamic>> fetchTicketDetails(int ticketId) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_individualTicketlist';
+    const String apiUrl = '${baseUrl}parentboard/get_individualTicketlist';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -613,6 +623,7 @@ class Parent {
         final headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom':"parent",
           'Content-Type': 'application/json',
         };
 
@@ -648,7 +659,7 @@ class Parent {
     required String comment,
     File? image,
   }) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_newCommentsinTicket';
+    const String apiUrl = '${baseUrl}parentboard/set_newCommentsinTicket';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -658,6 +669,7 @@ class Parent {
         final headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom':"parent"
         };
 
         var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
@@ -708,7 +720,7 @@ class Parent {
     required String comments,
     File? ticketImage,
   }) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_newSupportTicket';
+    const String apiUrl = '${baseUrl}parentboard/set_newSupportTicket';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -718,6 +730,7 @@ class Parent {
         final headers = {
           'praguserid': userId,
           'pragusertoken': userToken,
+          'pragusercallfrom':"parent"
         };
 
         var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
@@ -767,7 +780,7 @@ class Parent {
 
 
   Future<Map<String, dynamic>> getAppVersion() async {
-    const String apiUrl = 'https://app.cdcconnect.in//apiservice/auth/get_appVersion';
+    const String apiUrl = '${baseUrl}auth/get_appVersion';
     const Map<String, String> headers = {
       'Content-Type': 'application/json',
     };

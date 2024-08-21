@@ -5,13 +5,14 @@ import 'package:http/http.dart' as http;
 
 class ChildApi {
   //to fetch child list
+  static const String baseUrl = 'https://dev.cdcconnect.in/apiservice/';
   Future<List<ChildModel>> getChildList(String userId, String userToken) async {
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
     };
 
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_childlist';
+    const String apiUrl = '${baseUrl}parentboard/get_childlist';
 
     try {
       final response = await http.post(Uri.parse(apiUrl), headers: headers);
@@ -47,7 +48,7 @@ class ChildApi {
     required String userToken,
     required Map<String, String> childDetails,
   }) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_addnewchild';
+    const String apiUrl = '${baseUrl}parentboard/set_addnewchild';
 
     final Map<String, String> headers = {
       'praguserid': userId,
@@ -84,7 +85,7 @@ class ChildApi {
     required String childId,
     required Map<String, String> childDetails,
   }) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_editexitingchild';
+    const String apiUrl = '${baseUrl}parentboard/set_editexitingchild';
 
     try {
       final Map<String, String> headers = {
@@ -98,6 +99,8 @@ class ChildApi {
         'prag_child_dob': childDetails['prag_child_dob'] ?? '',
         'prag_child_gender': childDetails['prag_child_gender'] ?? '',
         'prag_child_relation': childDetails['prag_child_relation'] ?? '',
+        'prag_child_mother_tongue':childDetails['prag_child_mother_tongue'] ?? '',
+        'prag_child_education':childDetails['prag_child_education'],
         'prag_child_id': childId,
       };
 
@@ -124,7 +127,7 @@ class ChildApi {
     required String childId,
   }) async {
     const String apiUrl =
-        'https://app.cdcconnect.in/apiservice/parentboard/set_deleteexitingchild';
+        '${baseUrl}parentboard/set_deleteexitingchild';
 
     try {
       final Map<String, String> headers = {

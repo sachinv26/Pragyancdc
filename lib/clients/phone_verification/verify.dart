@@ -3,6 +3,7 @@ import 'package:pinput/pinput.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
+import 'package:pragyan_cdc/clients/auth_wrapper.dart';
 import 'package:pragyan_cdc/clients/client_login/login.dart';
 import 'package:pragyan_cdc/clients/client_login/signup.dart';
 import 'package:pragyan_cdc/clients/phone_verification/forgot_password.dart';
@@ -143,6 +144,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             return ClientSignUp(phoneNumber: widget.phone);
                           },
                         ));
+                      }else if( widget.otpFor =='3') {
+                        //otpfor is 2, for forgot password
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return AuthWrapper(
+                        //     );
+                        //   },
+                        // ));
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
                       } else {
                         //otpfor is 2, for forgot password
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -164,14 +175,13 @@ class _VerifyNumberState extends State<VerifyNumber> {
                       );
                     }
                   },
-
                 ),
               ),
               kheight10,
               Text(
                 errMessage,
                 style: const TextStyle(color: Colors.red),
-              )
+              ),
             ],
           ),
         ),

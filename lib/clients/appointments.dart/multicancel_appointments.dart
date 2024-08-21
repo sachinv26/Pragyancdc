@@ -168,7 +168,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
               radius: 25,
               child: ClipOval(
                 child: Image.network(
-                  "https://app.cdcconnect.in/${widget.appointment.therapistImg}",
+                  "https://dev.cdcconnect.in/${widget.appointment.therapistImg}",
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,

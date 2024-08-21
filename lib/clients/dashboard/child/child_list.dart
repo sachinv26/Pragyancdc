@@ -76,7 +76,7 @@ class _ChildListState extends State<ChildList> {
                                       radius: 35,
                                       child: ClipOval(
                                         child: Image.network(
-                                          "https://app.cdcconnect.in/${childData.childImage}",
+                                          "https://dev.cdcconnect.in/${childData.childImage}",
                                           width: 70,
                                           height: 70,
                                           fit: BoxFit.cover,

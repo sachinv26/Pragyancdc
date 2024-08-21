@@ -8,7 +8,8 @@ class UserProfile {
   final String profileName;
   final String parentWallet;
   final String profileImage;
-  //final String parentAuthToken;
+  final String parentAlternateNumber;
+  final String parentMotherName;
 
   UserProfile({
     required this.parentName,
@@ -20,7 +21,8 @@ class UserProfile {
     required this.profileName,
     required this.parentWallet,
     required this.profileImage,
-    // required this.parentAuthToken,
+    required this.parentAlternateNumber,
+    required this.parentMotherName,
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
@@ -32,9 +34,10 @@ class UserProfile {
       parentAddress: json['prag_parent_address'] ?? '',
       parentUserId: json['parent_user_id'] ?? '',
       profileName: json['profile_name'] ?? '',
+      parentWallet: json['parent_wallet'] ?? '',
       profileImage: json['profile_image'] ?? '',
-      parentWallet: json['parent_wallet']?? '',
-      // parentAuthToken: json['prag_parent_auth_token'] ?? '',
+      parentAlternateNumber: json['prag_parent_alternate_number'] ?? '',
+      parentMotherName: json['prag_parent_mother_name'] ?? '',
     );
   }
 }

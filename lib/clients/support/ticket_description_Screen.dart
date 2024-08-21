@@ -146,7 +146,7 @@ class _TicketDescriptionScreenState extends State<TicketDescriptionScreen> {
                                       SizedBox(
                                         height: 150,
                                         child: Image.network(
-                                          'https://app.cdcconnect.in/${comment['comment_image']}',
+                                          'https://dev.cdcconnect.in/${comment['comment_image']}',
                                           fit: BoxFit.cover,
                                         ),
                                       ),

@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:pragyan_cdc/model/user_details_model.dart';
 
 class ApiServices {
-  static const String baseUrl = 'https://app.cdcconnect.in/apiservice/auth/';
+  static const String baseUrl = 'https://dev.cdcconnect.in/apiservice/';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
 //for testing network issues
@@ -18,13 +18,14 @@ class ApiServices {
   }
 
   Future<Map<String, dynamic>> getAppVersion() async {
-    const String apiUrl = 'https://app.cdcconnect.in//apiservice/auth/get_appVersion';
+    const String apiUrl = '${baseUrl}auth/get_appVersion';
     const Map<String, String> headers = {
       'Content-Type': 'application/json',
     };
 
     const Map<String, dynamic> body = {
-      "prag_apptype": "1"
+      "prag_apptype": "1",
+      "prag_appstoretype":"1"
     };
 
     try {
@@ -56,8 +57,7 @@ class ApiServices {
     required String userId,
     required String otpFor,
   }) async {
-    const String apiUrl =
-        '${baseUrl}user_generate_otp'; // Replace with your actual API endpoint
+    const String apiUrl = '${baseUrl}auth/user_generate_otp'; // Replace with your actual API endpoint
 
     try {
       final response = await http.post(
@@ -83,6 +83,9 @@ class ApiServices {
         if (status == 1) {
           // OTP generated successfully
           return jsonResponse;
+        } else if (status == -3) {
+          // Handle specific status -3 dynamically
+          return {'status': -3, 'message': message};
         } else if (status == 0) {
           // Handle specific error messages
           if (message.contains('Mobile number is invalid')) {
@@ -91,14 +94,12 @@ class ApiServices {
             return {'status': 0, 'message': 'Invalid user ID'};
           } else if (message.contains('Mobile number inactive')) {
             return {'status': -2, 'message': 'Inactive mobile number'};
-          } else if (message.contains('Mobile number is available')) {
-            return {'status': -3, 'message': 'Mobile number is available'};
-          }else {
+          } else {
             return {'status': 0, 'message': 'Unknown error'};
           }
         } else {
           // Handle other status codes if needed
-          return {'status': 0, 'message': 'Unknown error'};
+          return {'status': status, 'message': message};
         }
       } else {
         // Handle non-200 status codes
@@ -118,6 +119,8 @@ class ApiServices {
     }
   }
 
+
+
 //API method to validate Otp
   Future<Map<String, dynamic>> validateOtp(
       {required String mobile,
@@ -126,7 +129,7 @@ class ApiServices {
       required String otpCode}) async {
     try {
       const String apiUrl =
-          '${baseUrl}user_validate_otp'; // Replace with your actual OTP validation API endpoint
+          '${baseUrl}auth/user_validate_otp'; // Replace with your actual OTP validation API endpoint
 
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -185,7 +188,7 @@ class ApiServices {
 
   //API method to get branches of pragyan
   Future<Map<String, dynamic>> getBranches() async {
-    const String apiUrl = '${baseUrl}get_pragyanbranch';
+    const String apiUrl = '${baseUrl}auth/get_pragyanbranch';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -225,7 +228,7 @@ class ApiServices {
 //API Method for client sign up
   Future<Map<String, dynamic>> parentSignup(
       Map<String, dynamic> inputData) async {
-    const String apiUrl = '${baseUrl}parent_signup';
+    const String apiUrl = '${baseUrl}auth/parent_signup';
 
     try {
       final response = await http.post(
@@ -260,7 +263,7 @@ class ApiServices {
   //API Method for Client Login
   Future<Map<String, dynamic>> parentLogin(
       String phoneNo, String passwordEncoded) async {
-    const String apiUrl = '${baseUrl}parent_login';
+    const String apiUrl = '${baseUrl}auth/parent_login';
     try {
       final response = await http.post(Uri.parse(apiUrl),
           body: jsonEncode({
@@ -311,7 +314,7 @@ class ApiServices {
   //API method to logout
   Future<Map<String, dynamic>> parentLogout(
       String userId, String authtoken) async {
-    const String apiUrl = "${baseUrl}parent_logout";
+    const String apiUrl = "${baseUrl}auth/parent_logout";
     try {
       final response = await http.post(Uri.parse(apiUrl),
           headers: {'praguserid': userId, 'pragusertoken': authtoken});
@@ -356,7 +359,7 @@ class ApiServices {
   //upload image
   Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
       File image, String userId, String token) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/upload_profileimage';
+    const String apiUrl = '${baseUrl}parentboard/upload_profileimage';
 
     // Create a multipart request
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
@@ -382,6 +385,7 @@ class ApiServices {
 
       // Get the response from the stream
       final response = await http.Response.fromStream(streamedResponse);
+      print(response);
 
       if (response.statusCode == 200) {
         // Successful API call
@@ -397,44 +401,9 @@ class ApiServices {
       return {"status": 0, "message": error.toString()};
     }
   }
-  // Future<Map<String, dynamic>> callImageUploadApi(Map<String, dynamic> data,
-  //     dynamic image, String userId, String token) async {
-  //   const String apiUrl = 'https://askmyg.com/parentboard/upload_profileimage';
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(apiUrl),
-  //       headers: {
-  //         'praguserid': userId,
-  //         'pragusertoken': token,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: jsonEncode({
-  //         'profileimage': image,
-  //         'data': data,
-  //       }),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       // Successful API call
-
-  //       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-  //       return jsonResponse;
-  //       // Handle success as needed
-  //     } else {
-  //       // API call failed
-  //       print('Failed to upload image. Status code: ${response.statusCode}');
-  //       // Handle failure as needed
-  //       return {"status": 0, "message": "Failed to upload"};
-  //     }
-  //   } catch (error) {
-  //     print('Error making API call: $error');
-  //     // Handle error as needed
-  //     return {"status": 0, "message": error};
-  //   }
-  // }
 
   Future<UserProfile?> fetchUserProfile(String userId, String userToken) async {
-    const String apiUrl = "https://app.cdcconnect.in/apiservice/parentboard/get_profiledetail";
+    const String apiUrl = "${baseUrl}parentboard/get_profiledetail";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
@@ -469,16 +438,18 @@ class ApiServices {
   Future<Map<String, dynamic>?> editUserProfile(
       String userId, String userToken, Map<String, dynamic> inputData) async {
     const String apiUrl =
-        "https://app.cdcconnect.in/apiservice/parentboard/set_editparent_profile";
+        "${baseUrl}parentboard/set_editparent_profile";
     final Map<String, String> headers = {
       'praguserid': userId,
       'pragusertoken': userToken,
     };
     try {
+      print(inputData);
       final response = await http.post(Uri.parse(apiUrl),
           headers: headers, body: jsonEncode(inputData));
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = json.decode(response.body);
+        print(jsonResponse);
         return jsonResponse;
       } else {
         debugPrint('HTTP error ${response.statusCode}');
@@ -493,7 +464,7 @@ class ApiServices {
 //change password
   Future<Map<String, dynamic>> changePassword(
       String encodedOldPassword, String encodedNewPassword) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/set_passwordchange';
+    const String apiUrl = '${baseUrl}parentboard/set_passwordchange';
 
     final String userId = await fetchUserId();
     final String token = await fetchUserToken();
@@ -516,6 +487,7 @@ class ApiServices {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        print(response.body);
         return responseData;
       } else {
         throw Exception('Failed to change password');
@@ -529,7 +501,7 @@ class ApiServices {
 
   Future<Map<String, dynamic>> forgotPassword(
       String encodedNewPassword, String mobileNumber) async {
-    const String apiUrl = '${baseUrl}set_forgotpasswordchange';
+    const String apiUrl = '${baseUrl}auth/set_forgotpasswordchange';
     final String userId = await fetchUserId();
     final String token = await fetchUserToken();
     final Map<String, String> headers = {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pragyan_cdc/api/auth_api.dart';
@@ -8,60 +7,68 @@ class ForgotPasswordProvider extends ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
 
   final _newPasswordController = TextEditingController();
-  String errText1 = '';
-  String errText2 = '';
-
   final _confirmPasswordController = TextEditingController();
-  bool isLoading = false;
-  get formKey => _formKey;
 
-  get confirmPasswordController => _confirmPasswordController;
-  get newPasswordController => _newPasswordController;
+  String? errText1;
+  String? errText2;
+  bool isLoading = false;
+
+  GlobalKey<FormState> get formKey => _formKey;
+  TextEditingController get newPasswordController => _newPasswordController;
+  TextEditingController get confirmPasswordController => _confirmPasswordController;
 
   @override
   void dispose() {
-    super.dispose();
-
     _newPasswordController.dispose();
     _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   String? validateNewPassword(String? value) {
     if (value!.isEmpty) {
       errText1 = 'Password cannot be empty';
       notifyListeners();
-      // return 'Password cannot be empty'; // Return the error message
+      return errText1;
     } else if (value.length < 6) {
       errText1 = 'Password must be at least 6 characters long';
       notifyListeners();
-      // return 'Password must be at least 6 characters long'; // Return the error message
+      return errText1;
+    } else {
+      errText1 = null;
+      notifyListeners();
+      return null;
     }
-
-    return null;
-
-    // Add validation logic for new password
   }
 
   String? validateConfirmPassword(String? value) {
-    if (value != _newPasswordController.text) {
-      // return 'Passwords do not match';
+    if (value!.isEmpty) {
+      errText2 = 'Confirm Password cannot be empty';
+      notifyListeners();
+      return errText2;
+    } else if (value != _newPasswordController.text) {
       errText2 = 'Passwords do not match';
       notifyListeners();
+      return errText2;
+    } else {
+      errText2 = null;
+      notifyListeners();
+      return null;
     }
-    return null;
   }
 
-  Future forgotPassword(String phone) async {
+  Future<bool> forgotPassword(String phone) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       notifyListeners();
 
-      final String encodedNewPass =
-          base64.encode(utf8.encode(newPasswordController.text));
-      //api call
+      final String encodedNewPass = base64.encode(utf8.encode(newPasswordController.text));
+
       try {
-        final response =
-            await ApiServices().forgotPassword(encodedNewPass, phone);
+        final response = await ApiServices().forgotPassword(encodedNewPass, phone);
+        print(response);
+        isLoading = false;
+        notifyListeners();
+
         if (response['status'] == 1) {
           Fluttertoast.showToast(
             msg: '${response['message']}.',
@@ -81,11 +88,12 @@ class ForgotPasswordProvider extends ChangeNotifier {
           );
         }
       } catch (e) {
-        debugPrint('catch error: $e');
+        debugPrint('Error: $e');
+      } finally {
+        isLoading = false;
+        notifyListeners();
       }
-
-      isLoading = false;
-      notifyListeners();
     }
+    return false;
   }
 }

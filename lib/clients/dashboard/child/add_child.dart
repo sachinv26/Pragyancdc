@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pragyan_cdc/api/child_api.dart';
 import 'package:pragyan_cdc/constants/appbar.dart';
-import 'package:pragyan_cdc/constants/styles/custom_textformfield.dart';
 import 'package:pragyan_cdc/constants/styles/styles.dart';
 
 class AddChildScreen extends StatefulWidget {
@@ -22,6 +21,8 @@ class _AddChildScreenState extends State<AddChildScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController dobController = TextEditingController();
   final TextEditingController relationController = TextEditingController();
+  final TextEditingController motherTongueController = TextEditingController();
+  final TextEditingController educationController = TextEditingController();
   XFile? uploadedImage;
   static const List<String> relation = ['Parent', 'Guardian'];
 
@@ -44,6 +45,8 @@ class _AddChildScreenState extends State<AddChildScreen> {
   void dispose() {
     nameController.dispose();
     dobController.dispose();
+    motherTongueController.dispose();
+    educationController.dispose();
     super.dispose();
   }
 
@@ -69,7 +72,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                 kheight10,
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: ' Child Name',
+                    hintText: 'Child Name',
                     icon: const Icon(Icons.person),
                   ),
                   controller: nameController,
@@ -181,6 +184,44 @@ class _AddChildScreenState extends State<AddChildScreen> {
                     const Text('Other'),
                   ],
                 ),
+                kheight30,
+                const Text(
+                  'Mother Tongue',
+                  style: kTextStyle1,
+                ),
+                kheight10,
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Mother Tongue',
+                    icon: const Icon(Icons.language),
+                  ),
+                  controller: motherTongueController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter mother tongue';
+                    }
+                    return null;
+                  },
+                ),
+                kheight30,
+                const Text(
+                  'Education',
+                  style: kTextStyle1,
+                ),
+                kheight10,
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Education',
+                    icon: const Icon(Icons.school),
+                  ),
+                  controller: educationController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter education';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -231,11 +272,15 @@ class _AddChildScreenState extends State<AddChildScreen> {
     final gender = _selectedGender;
     final dob = dobController.text;
     final relation = dropdownValue;
+    final motherTongue = motherTongueController.text;
+    final education = educationController.text;
     Map<String, String> childDetails = {
       'prag_child_name': name,
       'prag_child_dob': dob,
       'prag_child_gender': gender,
       'prag_child_relation': relation,
+      'prag_child_mother_tongue': motherTongue,
+      'prag_child_education': education,
     };
     final userId = await const FlutterSecureStorage().read(key: 'userId');
     final token = await const FlutterSecureStorage().read(key: 'authToken');

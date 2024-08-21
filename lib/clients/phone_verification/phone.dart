@@ -29,6 +29,7 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
   TextEditingController countryController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _phoneErrorMessage;
+  bool _isLoading = false;
 
   var phone = '';
 
@@ -38,13 +39,54 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
     countryController.text = "+91";
     super.initState();
   }
+
   void _showPhoneErrorSnackBar(BuildContext context, String message) {
     final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.red,
+      duration: Duration(seconds: 1),
+      content: Center(child: Text(message)),
+      backgroundColor: Colors.green.shade800,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
+
+  void _sendCode() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Map<String, dynamic> result = await ApiServices()
+          .generateOtp(
+          mobile: phone,
+          userId: '0',
+          otpFor: widget.otpFor);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      print('Result is $result');
+
+      if (result['status'] == -3) {
+        _showPhoneErrorSnackBar(context, result['message']);
+      } else if (result['status'] == 1) {
+        final String rawCode = result['gen'];
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) {
+            return VerifyNumber(
+              ctx: widget.ctx,
+              otpFor: widget.otpFor,
+              phone: phone,
+              originalCode: rawCode,
+            );
+          },
+        ));
+      } else {
+        _showPhoneErrorSnackBar(context, result['message']);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var phoneVerificationProvider = Provider.of<PhoneVerificationProvider>(
@@ -52,10 +94,9 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
     );
     return Scaffold(
       appBar: customAppBar(
-        title: 'Phone Verification'
+          title: 'Phone Verification'
       ),
       body: SafeArea(
-
         child: Container(
           margin: const EdgeInsets.only(left: 25, right: 25),
           padding: const EdgeInsets.all(10),
@@ -69,7 +110,7 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                   kheight30,
 
                   const Text(
-                    "We need to verify your phone before getting started!",
+                    "We need to verify your phone number before getting started!",
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -135,7 +176,7 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                             keyboardType: TextInputType.phone,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Phone",
+                              hintText: "Whatsapp Number",
                               errorText: null, // Remove the default error text
                             ),
                           ),
@@ -143,33 +184,13 @@ class _PhoneNumberVerificationState extends State<PhoneNumberVerification> {
                       ],
                     ),
                   ),
-                  // Call the SnackBar method when the error message changes
                   kheight30,
-                  CustomButton(
-                      onPressed: () async {
-                        //final mobNumber = countryController.text + phone;
-                        if (_formKey.currentState!.validate()) {
-                          Map<String, dynamic> result = await ApiServices()
-                              .generateOtp(
-                                  mobile: phone,
-                                  userId: '0',
-                                  otpFor: widget.otpFor);
-                          print('Result is $result');
-                          final String rawCode = result['gen'];
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) {
-                              return VerifyNumber(
-                                ctx: widget.ctx,
-                                otpFor: widget.otpFor,
-                                phone: phone,
-                                originalCode: rawCode,
-                              );
-                            },
-                          ));
-                        }
-                      },
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : CustomButton(
+                    onPressed: _isLoading ? null : _sendCode,
                     text: 'Send the Code',
-                      )
+                  )
                 ],
               ),
             ),

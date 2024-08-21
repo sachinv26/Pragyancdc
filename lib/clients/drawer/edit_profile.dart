@@ -28,7 +28,6 @@ class _EditProfileState extends State<EditProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController adressController = TextEditingController();
   TextEditingController motherNameController = TextEditingController();
-  TextEditingController motherTongueController = TextEditingController();
   TextEditingController alternatePhoneController = TextEditingController();
 
   bool _loading = false;
@@ -36,7 +35,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    _imagepath = "https://app.cdcconnect.in/${widget.userProfile.profileImage}";
+    _imagepath = "https://dev.cdcconnect.in/${widget.userProfile.profileImage}";
   }
 
   @override
@@ -117,9 +116,8 @@ class _EditProfileState extends State<EditProfile> {
                     buildTextField('Father\'s Name', widget.userProfile.parentName, nameController),
                     buildTextField('Email', widget.userProfile.parentEmail, emailController),
                     buildTextField('Address', widget.userProfile.parentAddress, adressController),
-                    buildTextField('Mother\'s Name', '', motherNameController),
-                    buildTextField('Mother\'s Tongue', '', motherTongueController),
-                    buildTextField('Alternate Phone Number', '', alternatePhoneController),
+                    buildTextField('Mother\'s Name', widget.userProfile.parentMotherName, motherNameController),
+                    buildTextField('Alternate Phone Number', widget.userProfile.parentAlternateNumber, alternatePhoneController),
                     kheight10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,9 +164,8 @@ class _EditProfileState extends State<EditProfile> {
                             'prag_parent_email': emailController.text,
                             'prag_preferred_location': selectedBranchId,
                             'prag_parent_address': adressController.text,
-                            'prag_mother_name': motherNameController.text,
-                            'prag_mother_tongue': motherTongueController.text,
-                            'prag_alternate_phone': alternatePhoneController.text,
+                            'prag_parent_mother_name': motherNameController.text,
+                            'prag_parent_alternate_number': alternatePhoneController.text,
                           };
                           final result = await editUserProfile(data);
                           if (context.mounted) {
@@ -236,7 +233,7 @@ class _EditProfileState extends State<EditProfile> {
           if (response['status'] == 1) {
             debugPrint('Image uploaded successfully');
             debugPrint('Image saved in ${response["path"]}');
-            return "https://app.cdcconnect.in/${response["path"]}";
+            return "https://dev.cdcconnect.in/${response["path"]}";
           } else {
             print('Image upload failed: ${response['message']}');
             return null;

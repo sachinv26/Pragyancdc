@@ -6,11 +6,11 @@ import 'package:pragyan_cdc/model/therapy_model.dart';
 import 'package:http/http.dart' as http;
 
 class TherapistApi {
-  static const String baseUrl = 'https://app.cdcconnect.in/apiservice/parentboard/';
+  static const String baseUrl = 'https://dev.cdcconnect.in/apiservice/';
 
   //fetch list of therapies
   Future<List<Therapy>> fetchTherapies(String branchid) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/parentboard/get_theropy_frombranch';
+    const String apiUrl = '${baseUrl}parentboard/get_theropy_frombranch';
 
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
@@ -60,7 +60,7 @@ class TherapistApi {
   Future<Map<String, dynamic>> fetchTherapists(
       String branchId, String therapyId) async {
     print('branchId: $branchId therapyId: $therapyId');
-    const String apiUrl = '${baseUrl}get_therapist_frombranch';
+    const String apiUrl = '${baseUrl}parentboard/get_therapist_frombranch';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken =
@@ -99,7 +99,7 @@ class TherapistApi {
   }
 
   Future<Map<String, dynamic>> bookAppointmentApi(Map<String, dynamic> bookingData) async {
-    const String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/set_bookappointment';
+    const String apiUrl = '${baseUrl}consultation/set_bookappointment';
     try {
       final userId = await const FlutterSecureStorage().read(key: 'userId');
       final userToken = await const FlutterSecureStorage().read(key: 'authToken');
@@ -146,6 +146,5 @@ class TherapistApi {
     // Default return statement in case none of the conditions are met
     return {'status': 0, 'message': 'Unknown error occurred'};
   }
-
 
 }

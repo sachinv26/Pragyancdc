@@ -99,7 +99,7 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
     setState(() {
       isFetchingData = true;
     });
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_therapistconsolidated_info';
+    final String apiUrl = 'https://dev.cdcconnect.in/apiservice/consultation/get_therapistconsolidated_info';
 
     final Map<String, dynamic> body = {
       "prag_branch": widget.branchId,
@@ -187,7 +187,7 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
     setState(() {
       isFetchingData = true;
     });
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_parentAppoinment_dateview';
+    final String apiUrl = 'https://dev.cdcconnect.in/apiservice/consultation/get_parentAppoinment_dateview';
     final Map<String, dynamic> body = {
       "prag_branch": "0",
       "prag_therapy": "0",
@@ -247,7 +247,7 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
   }
 
   Future<void> fetchBufferSlots() async {
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_bufferingDatelist';
+    final String apiUrl = 'https://dev.cdcconnect.in/apiservice/consultation/get_bufferingDatelist';
 
     final Map<String, dynamic> body = {
       "prag_parentid": widget.parentId,

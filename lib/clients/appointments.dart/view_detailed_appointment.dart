@@ -58,7 +58,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               radius: 70,
                               child: ClipOval(
                                 child: Image.network(
-                                  "https://app.cdcconnect.in/${widget.appointment.therapistImg}",
+                                  "https://dev.cdcconnect.in/${widget.appointment.therapistImg}",
                                   width: 140,
                                   height: 140,
                                   fit: BoxFit.cover,

@@ -152,7 +152,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> with RouteAware {
                                 radius: 25,
                                 child: ClipOval(
                                   child: Image.network(
-                                    "https://app.cdcconnect.in/${appointment.therapistImg}",
+                                    "https://dev.cdcconnect.in/${appointment.therapistImg}",
                                     width: 70,
                                     height: 70,
                                     fit: BoxFit.cover,

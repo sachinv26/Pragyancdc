@@ -96,7 +96,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
     setState(() {
       isFetchingData = true;
     });
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_therapistconsolidated_info';
+    final String apiUrl = 'https://dev.cdcconnect.in/apiservice/consultation/get_therapistconsolidated_info';
 
     final Map<String, dynamic> body = {
       "prag_branch": widget.branchId,
@@ -184,7 +184,7 @@ class _ScheduleTherapyState extends State<ScheduleTherapy> {
     setState(() {
       isFetchingData = true;
     });
-    final String apiUrl = 'https://app.cdcconnect.in/apiservice/consultation/get_parentAppoinment_dateview';
+    final String apiUrl = 'https://dev.cdcconnect.in/apiservice/consultation/get_parentAppoinment_dateview';
 
     final Map<String, dynamic> body = {
       "prag_branch": "0",

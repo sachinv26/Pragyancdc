@@ -56,7 +56,7 @@ class TherapistCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          "https://app.cdcconnect.in/${therapist.image}",
+                          "https://dev.cdcconnect.in/${therapist.image}",
                           fit: BoxFit.cover,
                           height: 100,
                           width: 100,

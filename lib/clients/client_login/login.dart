@@ -22,19 +22,22 @@ class ClientLogin extends StatefulWidget {
 
 class _ClientLoginState extends State<ClientLogin> {
   bool _isLoading = false;
-  bool _obscureText = true; // Define _obscureText here
+  bool _obscureText = true;
 
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-
+  @override
+  void dispose() {
+    _mobileController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-        title: 'Login'
-      ),
+      appBar: customAppBar(title: 'Login'),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -46,11 +49,13 @@ class _ClientLoginState extends State<ClientLogin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Image.asset('assets/images/cdc-logo.png'),
-                  )),
-                  const Text('Login to access your account',style: kTextStyle1,),
+                  Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Image.asset('assets/images/cdc-logo.png'),
+                    ),
+                  ),
+                  const Text('Login to access your account', style: kTextStyle1),
                   CustomTextFormField(
                     controller: _mobileController,
                     hintText: 'Mobile Number',
@@ -67,7 +72,6 @@ class _ClientLoginState extends State<ClientLogin> {
                         color: Colors.black,
                       ),
                       onPressed: () {
-                        // Toggle the visibility of the password
                         setState(() {
                           _obscureText = !_obscureText;
                         });
@@ -116,10 +120,11 @@ class _ClientLoginState extends State<ClientLogin> {
                           final userProfile = UserProfile.fromJson(response['profile']);
                           Provider.of<UserProvider>(widget.ctx, listen: false).setUserProfile(userProfile);
                         } else if (response['status'] == -1) {
-                          // Navigate to PhoneNumberVerification screen
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => PhoneNumberVerification(ctx: context, otpFor: '3',
+                            MaterialPageRoute(builder: (context) => PhoneNumberVerification(
+                              ctx: context,
+                              otpFor: '3',
                               userid: response['parent_user_id'],
                             )),
                           );
@@ -174,6 +179,3 @@ class _ClientLoginState extends State<ClientLogin> {
     );
   }
 }
-
-
-

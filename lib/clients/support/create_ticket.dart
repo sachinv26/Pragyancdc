@@ -68,7 +68,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             content: Text(response['message']),
           ),
         );
-        Navigator.of(context).pop();
+        Navigator.pop(context,true);
       } catch (e) {
         setState(() {
           _isLoading = false;

@@ -16,8 +16,7 @@ class SupportScreen extends StatefulWidget {
 
 class _SupportScreenState extends State<SupportScreen> {
   Future<SupportTicketResponse> fetchSupportTickets() async {
-    final response = await Parent().fetchSupportTickets();
-    return SupportTicketResponse.fromJson(response);
+    return await Parent().fetchSupportTickets();
   }
 
   @override
@@ -68,15 +67,8 @@ class _SupportScreenState extends State<SupportScreen> {
               } else if (!snapshot.hasData || snapshot.data!.status != 1) {
                 return Center(child: Text('No tickets found.'));
               } else {
-                final List<SupportTicket> pendingTickets = snapshot
-                    .data!.supportTickets
-                    .where((ticket) => ticket.ticketStatus == 'Under Process')
-                    .toList();
-
-                final List<SupportTicket> resolvedTickets = snapshot
-                    .data!.supportTickets
-                    .where((ticket) => ticket.ticketStatus == 'Resolved')
-                    .toList();
+                final List<SupportTicket> pendingTickets = snapshot.data!.supportTickets.where((ticket) => ticket.ticketStatusNum == '1').toList();
+                final List<SupportTicket> resolvedTickets = snapshot.data!.supportTickets.where((ticket) => ticket.ticketStatusNum == '2').toList();
 
                 return TabBarView(
                   children: [
@@ -97,12 +89,15 @@ class _SupportScreenState extends State<SupportScreen> {
           child: CustomButton(
             width: double.infinity,
             text: 'Create Ticket',
-            onPressed: () {
-              Navigator.of(context).push(
+            onPressed: () async {
+              var status = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => CreateTicketScreen(),
                 ),
               );
+              if (status == true) {
+                setState(() {});
+              }
             },
           ),
         ),

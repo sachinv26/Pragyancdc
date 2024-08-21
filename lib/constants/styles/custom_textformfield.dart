@@ -34,6 +34,9 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Adjust the height based on the presence of an error message
+    final adjustedHeight = errorText != null && errorText!.isNotEmpty ? height + 20.0 : height;
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -61,7 +64,7 @@ class CustomTextFormField extends StatelessWidget {
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          constraints: BoxConstraints(maxHeight: height, maxWidth: width),
+          constraints: BoxConstraints(maxHeight: adjustedHeight, maxWidth: width),
         ),
       ),
     );

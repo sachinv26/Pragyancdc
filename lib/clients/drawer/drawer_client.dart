@@ -65,7 +65,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                         radius: 30,
                         child: ClipOval(
                           child: Image.network(
-                            "https://app.cdcconnect.in/${userProfile.profileImage}",
+                            "https://dev.cdcconnect.in/${userProfile.profileImage}",
                             width: 70,
                             height: 70,
                             fit: BoxFit.cover,
