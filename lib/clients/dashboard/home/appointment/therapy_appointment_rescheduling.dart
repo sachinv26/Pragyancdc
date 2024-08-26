@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:pragyan_cdc/constants/appbar.dart';
 import 'package:pragyan_cdc/constants/styles/custom_button.dart';
+import 'package:pragyan_cdc/constants/styles/styles.dart';
 import 'package:pragyan_cdc/shared/loading.dart';
 import 'dart:convert';
 import 'package:table_calendar/table_calendar.dart';
@@ -43,7 +44,6 @@ class _RescheduleAppointmentState extends State<RescheduleAppointment> {
     '11:00',
     '11:45',
     '12:30',
-    '13:15',
     '14:00',
     '14:45',
     '15:30',
@@ -51,7 +51,6 @@ class _RescheduleAppointmentState extends State<RescheduleAppointment> {
     '17:00',
     '17:45',
     '18:30',
-    '19:15',
   ];
   List<String> bookedSlots = [];
   List<String> parentBookedSlots = [];
@@ -297,7 +296,68 @@ class _RescheduleAppointmentState extends State<RescheduleAppointment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(title: 'Reschedule Appointment'),
+      appBar: customAppBar(title: 'Reschedule Appointment',
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Information'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Row(
+                            children: [
+                              Container(color:  const Color(0XFF06D001), height: 20, width: 20),
+                              kwidth10,
+                              const Expanded(child: Text('slots selected by you.')),
+                            ],
+                          ),
+                          kheight10,
+                          Row(
+                            children: [
+                              Container(color: Colors.grey, height: 20, width: 20),
+                              kwidth10,
+                              const Text('slots are already booked.'),
+                            ],
+                          ),
+                          kheight10,
+                          Row(
+                            children: [
+                              Container(color: const Color(0XFFFF7D29), height: 20, width: 20),
+                              kwidth10,
+                              const Text('slots are already booked by you.'),
+                            ],
+                          ),
+                          kheight10,
+                          Row(
+                            children: [
+                              Container(color: const Color(0XFF373A40).withOpacity(0.7), height: 20, width: 20),
+                              kwidth10,
+                              const Expanded(child: Text('slots are unavailable due to week off or holiday.')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.info_outline_rounded),
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           CustomScrollView(
@@ -400,16 +460,22 @@ class _RescheduleAppointmentState extends State<RescheduleAppointment> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: _currentIndex == index
-                                ? Colors.white
-                                : Colors.black,
+                                ? const Color(0XFF06D001)
+                                : isParentBooked
+                                ? const Color(0XFFFF7D29)
+                                : isHolidaySlot || isWeekOffSlot
+                                ? Color(0XFF373A40).withOpacity(0.7)
+                                : !isTimingWithinShift || isBooked
+                                ? Colors.grey
+                                : Colors.grey,
                           ),
                           borderRadius: BorderRadius.circular(15),
-                          color: _currentIndex == index
-                              ? Colors.green
+                          color:_currentIndex == index
+                              ? const Color(0XFF06D001)
                               : isParentBooked
-                              ? Colors.orange
+                              ? const Color(0XFFFF7D29)
                               : isHolidaySlot || isWeekOffSlot
-                              ? Colors.black
+                              ? Color(0XFF373A40).withOpacity(0.7)
                               : !isTimingWithinShift || isBooked
                               ? Colors.grey
                               : null,

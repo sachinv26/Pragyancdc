@@ -66,7 +66,6 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
   List<DateTime> bufferSlots = [];
 
   List<String> timesMorning = [
-    '09:00',
     '09:30',
     '10:15',
   ];
@@ -76,10 +75,10 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
     '15:30',
     '16:15',
     '17:00',
-    '17:45',
+    '17:45'
   ];
   List<String> timesEvening = ['18:30', '19:15'];
-  List<String> timesBeforenoon = ['11:00', '11:30', '12:00', '12:30'];
+  List<String> timesBeforenoon = ['11:00', '11:45', '12:30'];
 
   bool showSlotSelectionMessage = false;
   bool isFetchingData = false;
@@ -376,31 +375,39 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Information'),
+                    title: const Text('Information'),
                     content: SingleChildScrollView(
                       child: ListBody(
                         children: <Widget>[
                           Row(
                             children: [
+                              Container(color:  const Color(0XFF06D001), height: 20, width: 20),
+                              kwidth10,
+                              const Expanded(child: Text('slots selected by you.')),
+                            ],
+                          ),
+                          kheight10,
+                          Row(
+                            children: [
                               Container(color: Colors.grey, height: 20, width: 20),
                               kwidth10,
-                              Text('slots are already booked.'),
+                              const Text('slots are already booked.'),
                             ],
                           ),
                           kheight10,
                           Row(
                             children: [
-                              Container(color: Colors.orange, height: 20, width: 20),
+                              Container(color: const Color(0XFFFF7D29), height: 20, width: 20),
                               kwidth10,
-                              Text('slots are already booked by you.'),
+                              const Text('slots are already booked by you.'),
                             ],
                           ),
                           kheight10,
                           Row(
                             children: [
-                              Container(color: Colors.black, height: 20, width: 20),
+                              Container(color: const Color(0XFF373A40).withOpacity(0.7), height: 20, width: 20),
                               kwidth10,
-                              Expanded(child: Text('slots are unavailable due to week off or holiday.')),
+                              const Expanded(child: Text('slots are unavailable due to week off or holiday.')),
                             ],
                           ),
                         ],
@@ -408,7 +415,7 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
                     ),
                     actions: <Widget>[
                       TextButton(
-                        child: Text('OK'),
+                        child: const Text('OK'),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -418,7 +425,7 @@ class _ScheduleAdditionalTherapyState extends State<ScheduleAdditionalTherapy> {
                 },
               );
             },
-            icon: Icon(Icons.info_outline_rounded),
+            icon: const Icon(Icons.info_outline_rounded),
           ),
         ],
       ),
@@ -988,18 +995,32 @@ class _TimeSlotState extends State<TimeSlot> {
             padding: EdgeInsets.all(2),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: isPastTime
+                  ? Colors.grey
+                  : isBookedbyParent
+                  ? const Color(0XFFFF7D29)
+                  : isBooked
+                  ? Colors.grey
+                  : isSelected
+                  ? const Color(0XFF06D001)
+                  : isWeekOffDay || isHoliday
+                  ? Color(0XFF373A40).withOpacity(0.7)
+                  : isBufferSlot
+                  ? Colors.grey // Change color to gray for buffer slots
+                  : isWithinShifts
+                  ? Colors.grey
+                  : Colors.grey,),
               borderRadius: BorderRadius.circular(5),
               color: isPastTime
                   ? Colors.grey
                   : isBookedbyParent
-                  ? Colors.orange
+                  ? const Color(0XFFFF7D29)
                   : isBooked
                   ? Colors.grey
                   : isSelected
-                  ? Colors.green
+                  ? const Color(0XFF06D001)
                   : isWeekOffDay || isHoliday
-                  ? Colors.black
+                  ? Color(0XFF373A40).withOpacity(0.7)
                   : isBufferSlot
                   ? Colors.grey // Change color to gray for buffer slots
                   : isWithinShifts

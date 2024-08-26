@@ -98,6 +98,58 @@ class TherapistApi {
     return {'status': 0, 'message': 'Unknown error occurred'};
   }
 
+
+  Future<Map<String, dynamic>> getTransactionIdApi(Map<String, dynamic> transactionData) async {
+    String apiUrl = '${baseUrl}consultation/set_bookingTransaction';
+    try {
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      final userToken = await const FlutterSecureStorage().read(key: 'authToken');
+
+      if (userId != null && userToken != null) {
+        final Map<String, String> headers = {
+          'praguserid': userId,
+          'pragusertoken': userToken,
+          'pragusercallfrom': "parent",
+          'Content-Type': 'application/json',
+        };
+
+        print("trans data is ");
+        print(transactionData);
+
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          headers: headers,
+          body: jsonEncode(transactionData),
+        );
+
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          print("id is ");
+          print(data['transaction_id']);
+          if (data['status'] == 1) {
+            return {
+              'status': 1,
+              'message': data['message'],
+              'transaction_id': data['transaction_id'],
+              'transaction_num': data['transaction_num'],
+            };
+          } else {
+            // Handle other statuses and messages
+            throw Exception(data['message']);
+          }
+        } else {
+          throw Exception('Failed to get transaction ID. Status code: ${response.statusCode}');
+        }
+      } else {
+        throw Exception('User ID or Token is missing');
+      }
+    } catch (e) {
+      return {'status': 0, 'message': e.toString()};
+    }
+
+    return {'status': 0, 'message': 'Unknown error occurred'};
+  }
+
   Future<Map<String, dynamic>> bookAppointmentApi(Map<String, dynamic> bookingData) async {
     const String apiUrl = '${baseUrl}consultation/set_bookappointment';
     try {

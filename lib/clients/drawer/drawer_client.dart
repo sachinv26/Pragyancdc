@@ -195,7 +195,7 @@ class _ClientAppDrawerState extends State<ClientAppDrawer> {
                       final appVersion = snapshot.data!['app_version'];
                       return ListTile(
                         leading: const Icon(Icons.app_shortcut),
-                        title: const Text('Version'),
+                        title: const Text('Dev Version'),
                         subtitle: Text(appVersion),
                       );
                     }
